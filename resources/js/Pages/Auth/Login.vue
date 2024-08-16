@@ -1,5 +1,5 @@
-<template>
+<template lang="">
     <div>
-        welcome
+        
     </div>
 </template>
