@@ -17,6 +17,8 @@ export default {
         TopPage,
     },
 
+    props: ['user'],
+
     data() {
         return {
             form: useForm({
@@ -28,8 +30,16 @@ export default {
                 email: null,
                 password: null
             }),
-            err: false
+            err: false,
+            switch: false
         }        
+    },
+
+    mounted() {
+        if (this.user) {
+            this.switch = true
+            this.form = this.user
+        }
     },
 
     methods: {
@@ -39,6 +49,15 @@ export default {
             }).catch((err) => {
                 this.err = true
             })
+        },
+        update () {
+            console.log(this.form)
+            // axios.put('/agents-add', this.form).then((res) => {
+            //     // router.replace('/agents')
+            // })
+            // .catch((err) => {
+            //     this.err = true
+            // })
         }
     }
 };
@@ -70,7 +89,7 @@ export default {
                                 </p>
                             </div>
                             <div class="card-body">
-                                <form method="post" @submit.prevent="create()">
+                                <form method="post" @submit.prevent="!this.switch ? create() : update()">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6">
                                             <div class="mt-2 mb-2">
@@ -161,7 +180,7 @@ export default {
                                             class="btn btn-primary"
                                             type="submit"
                                         >
-                                            Créer un agent
+                                            {{ !this.switch ? 'Créer un agent' : 'Mettre à jour' }}
                                         </button>
                                     </div>
                                 </form>

@@ -8,6 +8,7 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import ResetModal from "./Components/reset-modal.vue";
 import DeleteModal from "./Components/delete-modal.vue";
+import PaginationAgents from "./Components/pagination-agents.vue";
 import { Link } from '@inertiajs/vue3'
 
 export default {
@@ -21,17 +22,16 @@ export default {
         SearchBarAgents,
         ResetModal,
         DeleteModal,
+        PaginationAgents,
         Link
     },
+    props: ['users'],
     datas() {
         return {
-            datas: []
+            // search: ""
         }
     },
-    props: ['users'],
-    mounted() {
-        console.log(this.users)
-    }
+    
 };
 </script>
 
@@ -71,7 +71,7 @@ export default {
                                             ></div>
                                         </div>
                                         <div class="col-md-6">
-                                            <SearchBarAgents/>
+                                            <SearchBarAgents />
                                         </div>
                                     </div>
                                     <div
@@ -116,7 +116,7 @@ export default {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="user in this.users">
+                                                <tr v-for="(user, index) in this.users.data" :key="index">
                                                     <td class="text-capitalize">
                                                         <div class="d-flex">
                                                             <img
@@ -171,11 +171,18 @@ export default {
                                                                 <Link
                                                                     style="cursor: pointer;"
                                                                     class="dropdown-item"
+                                                                    :href="`/agents-add/${user.id}`"
+                                                                    method="get"
+                                                                    >Mettre à jour</Link
+                                                                >
+                                                                <Link
+                                                                    style="cursor: pointer;"
+                                                                    class="dropdown-item"
                                                                     href="/agents"
                                                                     method="put"
                                                                     type="button"
                                                                     data-bs-target="#reset-modal"
-                                                                    data-bs-toggle="lodal"
+                                                                    data-bs-toggle="modal"
                                                                     :data="{id: user.id}"
                                                                     >Reinitialiser</Link
                                                                 >
@@ -231,66 +238,7 @@ export default {
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <div class="row">
-                                        <div
-                                            class="col-md-6 align-self-center"
-                                        ></div>
-                                        <div class="col-md-6">
-                                            <nav
-                                                class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers"
-                                            >
-                                                <ul class="pagination">
-                                                    <li
-                                                        class="page-item disabled"
-                                                    >
-                                                        <a
-                                                            class="page-link"
-                                                            aria-label="Previous"
-                                                            href="#"
-                                                            ><span
-                                                                aria-hidden="true"
-                                                                >«</span
-                                                            ></a
-                                                        >
-                                                    </li>
-                                                    <li
-                                                        class="page-item active"
-                                                    >
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >1</a
-                                                        >
-                                                    </li>
-                                                    <li class="page-item">
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >2</a
-                                                        >
-                                                    </li>
-                                                    <li class="page-item">
-                                                        <a
-                                                            class="page-link"
-                                                            href="#"
-                                                            >3</a
-                                                        >
-                                                    </li>
-                                                    <li class="page-item">
-                                                        <a
-                                                            class="page-link"
-                                                            aria-label="Next"
-                                                            href="#"
-                                                            ><span
-                                                                aria-hidden="true"
-                                                                >»</span
-                                                            ></a
-                                                        >
-                                                    </li>
-                                                </ul>
-                                            </nav>
-                                        </div>
-                                    </div>
+                                    <PaginationAgents :datas="users" />
                                 </div>
                             </div>
                         </div>

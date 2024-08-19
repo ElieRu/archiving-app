@@ -47,8 +47,10 @@ use Illuminate\Support\Facades\Route;
     Route::post('/agents', [Agents::class, 'create'])->name('agents');
     Route::put('/agents', [Agents::class, 'resetPassword'])->name('agents');
     Route::delete('/agents', [Agents::class, 'delete'])->name('agents.delete');
-
+    Route::get('/agents-add/{id}', [Agents::class, 'findById'])->name('addAgents');
     Route::get('/agents-add', [AddAgents::class, 'show'])->name('addAgents');
+    Route::put('/agents-add', [Agents::class, 'update'])->name('addAgents');
+
     Route::get('/admin', [Admin::class, 'show'])->name('admin');
 // });
 

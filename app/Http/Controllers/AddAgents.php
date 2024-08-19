@@ -7,7 +7,7 @@ use Inertia\Inertia;
 
 class AddAgents extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
         return Inertia::render('AddAgents');
     }

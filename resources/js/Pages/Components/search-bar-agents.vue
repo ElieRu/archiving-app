@@ -1,3 +1,37 @@
+<script>
+export default {
+    data() {
+        return {
+            search: "",
+        };
+    },
+    watch: {
+        search() {
+            this.$inertia.get(
+                "/agents", {
+                    search: this.search,
+                }, {
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        },
+    },
+    methods: {
+        sortPoste (poste) {
+            this.$inertia.get(
+                "/agents", {
+                    sort: poste,
+                }, {
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }
+    }
+};
+</script>
+
 <template>
     <div
         id="dataTable_filter-1"
@@ -7,8 +41,10 @@
             <input
                 class="border-0 shadow-none form-control form-control-sm"
                 type="search"
+                @input="searching"
                 aria-controls="dataTable"
                 placeholder="Recherche"
+                v-model="search"
             />
             <div class="dropdown">
                 <button
@@ -16,7 +52,7 @@
                     aria-expanded="false"
                     data-bs-toggle="dropdown"
                     type="button"
-                    style="height: 29px;"
+                    style="height: 29px"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -33,9 +69,10 @@
                 </button>
                 <div class="dropdown-menu">
                     <h6 class="dropdown-header">Poste</h6>
-                    <a class="dropdown-item" href="#">First Item</a
-                    ><a class="dropdown-item" href="#">Second Item</a
-                    ><a class="dropdown-item" href="#">Third Item</a>
+                    <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('')">Tous récupéré</a>
+                    <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('caissier')">Caissiers</a>
+                    <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('agent')">Agents</a
+                    >
                 </div>
             </div>
         </div>
