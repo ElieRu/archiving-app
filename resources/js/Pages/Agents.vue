@@ -173,6 +173,8 @@ export default {
                                                                     class="dropdown-item"
                                                                     :href="`/agents-add/${user.id}`"
                                                                     method="get"
+                                                                    as="button"
+                                                                    type="button"
                                                                     >Mettre à jour</Link
                                                                 >
                                                                 <Link
@@ -180,6 +182,7 @@ export default {
                                                                     class="dropdown-item"
                                                                     href="/agents"
                                                                     method="put"
+                                                                    as="button"
                                                                     type="button"
                                                                     data-bs-target="#reset-modal"
                                                                     data-bs-toggle="modal"
@@ -191,6 +194,8 @@ export default {
                                                                     class="dropdown-item"
                                                                     href="/agents"
                                                                     method='delete'
+                                                                    as="button"
+                                                                    type="button"
                                                                     :data="{id: user.id}"
                                                                     >Supprimer</Link
                                                                 >

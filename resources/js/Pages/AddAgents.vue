@@ -31,6 +31,7 @@ export default {
                 password: null
             }),
             err: false,
+            id: null,
             switch: false
         }        
     },
@@ -38,6 +39,7 @@ export default {
     mounted() {
         if (this.user) {
             this.switch = true
+            // this.id = this.user.id
             this.form = this.user
         }
     },
@@ -51,13 +53,11 @@ export default {
             })
         },
         update () {
-            console.log(this.form)
-            // axios.put('/agents-add', this.form).then((res) => {
-            //     // router.replace('/agents')
-            // })
-            // .catch((err) => {
-            //     this.err = true
-            // })
+            axios.put('/agents-add', this.form).then((res) => {
+                router.replace('/agents')
+            }).catch((err) => {
+                this.err = true
+            })
         }
     }
 };

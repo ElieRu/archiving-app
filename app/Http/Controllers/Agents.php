@@ -53,9 +53,22 @@ class Agents extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UserRequest $request)
     {
-        dd("updated");
+        DB::table('users')
+            ->where('id', $request->id)
+            ->update([
+                'name' => $request->name,
+                'postname' => $request->postname,
+                'sexe' => $request->sexe,
+                'matricule' => $request->matricule,
+                'poste' => $request->poste,
+                'email' => $request->email,
+            ]);
+            
+        return Inertia::render('Agents', [
+            'users' => User::all()
+        ]);
     }
 
     public function resetPassword(Request $request)
@@ -73,7 +86,7 @@ class Agents extends Controller
 
     public function findById(Request $request)
     {
-        $user = User::select('name', 'postname', 'poste', 'sexe', 'matricule', 'email', )->findOrFail($request->id);
+        $user = User::select('id', 'name', 'postname', 'poste', 'sexe', 'matricule', 'email', )->findOrFail($request->id);
         
         return Inertia::render('AddAgents', [
             'user' => $user
