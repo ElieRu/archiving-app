@@ -32,7 +32,6 @@ use Illuminate\Support\Facades\Route;
     Route::get('/archivage', [Documents::class, 'show'])->name('classeurs');
     Route::get('/services', [Services::class, 'show'])->name('services');
     Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');
-    Route::get('/agents', [Agents::class, 'show'])->name('agents');
     Route::get('/agents-add', [AddAgents::class, 'show'])->name('addAgents');
     Route::get('/admin', [Admin::class, 'show'])->name('admin');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
@@ -46,7 +45,9 @@ use Illuminate\Support\Facades\Route;
     
     Route::get('/agents', [Agents::class, 'show'])->name('agents');
     Route::post('/agents', [Agents::class, 'create'])->name('agents');
-    
+    Route::put('/agents', [Agents::class, 'resetPassword'])->name('agents');
+    Route::delete('/agents', [Agents::class, 'delete'])->name('agents.delete');
+
     Route::get('/agents-add', [AddAgents::class, 'show'])->name('addAgents');
     Route::get('/admin', [Admin::class, 'show'])->name('admin');
 // });

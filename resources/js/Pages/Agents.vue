@@ -8,6 +8,8 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import ResetModal from "./Components/reset-modal.vue";
 import DeleteModal from "./Components/delete-modal.vue";
+import { Link } from '@inertiajs/vue3'
+
 export default {
     components: {
         NavBar,
@@ -18,8 +20,18 @@ export default {
         TopPage,
         SearchBarAgents,
         ResetModal,
-        DeleteModal
+        DeleteModal,
+        Link
     },
+    datas() {
+        return {
+            datas: []
+        }
+    },
+    props: ['users'],
+    mounted() {
+        console.log(this.users)
+    }
 };
 </script>
 
@@ -104,34 +116,31 @@ export default {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <img
-                                                            class="rounded-circle me-2"
-                                                            width="30"
-                                                            height="30"
-                                                            src="/assets/img/avatars/avatar1.jpeg"
-                                                        />Airi Satou
+                                                <tr v-for="user in this.users">
+                                                    <td class="text-capitalize">
+                                                        <div class="d-flex">
+                                                            <img
+                                                                class="rounded-circle me-2"
+                                                                width="30"
+                                                                height="30"
+                                                                src="/assets/img/avatars/avatar1.jpeg"
+                                                            />{{ user.name }} {{ user.postname }}
+                                                        </div>
                                                     </td>
                                                     <td
-                                                        class="d-none d-lg-table-cell"
+                                                        class="d-none d-lg-table-cell text-lowercase"
                                                     >
-                                                        Accountant
+                                                        {{ user.email }}
                                                     </td>
                                                     <td
-                                                        class="d-none d-lg-table-cell"
+                                                        class="d-none d-lg-table-cell text-capitalize"
                                                     >
-                                                        Tokyo
+                                                        {{ user.poste }}
                                                     </td>
                                                     <td
-                                                        class="d-none d-xl-table-cell"
+                                                        class="d-none d-xl-table-cell text-capitalize"
                                                     >
-                                                        33
-                                                    </td>
-                                                    <td
-                                                        class="d-none d-print-table-cell"
-                                                    >
-                                                        2008/11/28
+                                                        {{ user.sexe }}
                                                     </td>
                                                     <td
                                                         class="d-flex justify-content-center"
@@ -159,18 +168,24 @@ export default {
                                                             <div
                                                                 class="dropdown-menu"
                                                             >
-                                                                <a
+                                                                <Link
+                                                                    style="cursor: pointer;"
                                                                     class="dropdown-item"
-                                                                    href="#"
+                                                                    href="/agents"
+                                                                    method="put"
+                                                                    type="button"
                                                                     data-bs-target="#reset-modal"
-                                                                    data-bs-toggle="modal"
-                                                                    >Reinitialiser</a
-                                                                ><a
+                                                                    data-bs-toggle="lodal"
+                                                                    :data="{id: user.id}"
+                                                                    >Reinitialiser</Link
+                                                                >
+                                                                <Link
+                                                                    style="cursor: pointer;"
                                                                     class="dropdown-item"
-                                                                    href="#"
-                                                                    data-bs-target="#delete-modal"
-                                                                    data-bs-toggle="modal"
-                                                                    >Supprimer</a
+                                                                    href="/agents"
+                                                                    method='delete'
+                                                                    :data="{id: user.id}"
+                                                                    >Supprimer</Link
                                                                 >
                                                             </div>
                                                         </div>
