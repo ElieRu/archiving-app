@@ -41,6 +41,14 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+// $app->routeMiddleware([
+//     'auth'       => App\Http\Middleware\Authenticate::class,
+//     'permission' => Spatie\Permission\Middlewares\PermissionMiddleware::class,
+//     'role'       => Spatie\Permission\Middlewares\RoleMiddleware::class,
+// ]);
+
+$app->register(App\Providers\AuthServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

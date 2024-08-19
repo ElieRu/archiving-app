@@ -5,6 +5,8 @@ import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import { router, useForm } from "@inertiajs/vue3";
+import axios from "axios";
 export default {
     components: {
         NavBar,
@@ -14,6 +16,31 @@ export default {
         MyButtons,
         TopPage,
     },
+
+    data() {
+        return {
+            form: useForm({
+                name: null,
+                postname: null,
+                sexe: null,
+                matricule: null,
+                poste: null,
+                email: null,
+                password: null
+            }),
+            err: false
+        }        
+    },
+
+    methods: {
+        create() {
+            axios.post('/agents', this.form).then((res) => {
+                router.replace('/agents')
+            }).catch((err) => {
+                this.err = true
+            })
+        }
+    }
 };
 </script>
 
@@ -43,7 +70,7 @@ export default {
                                 </p>
                             </div>
                             <div class="card-body">
-                                <form method="post">
+                                <form method="post" @submit.prevent="create()">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6">
                                             <div class="mt-2 mb-2">
@@ -53,6 +80,7 @@ export default {
                                                     class="form-control"
                                                     type="text"
                                                     placeholder="Nom"
+                                                    v-model="form.name"
                                                 />
                                             </div>
                                             <div class="mt-2 mb-2">
@@ -62,12 +90,13 @@ export default {
                                                     class="form-control"
                                                     type="text"
                                                     placeholder="Postnom"
+                                                    v-model="form.postname"
                                                 />
                                             </div>
                                             <div class="mt-2 mb-2">
                                                 <label class="form-label"
                                                     >Sexe</label
-                                                ><select class="form-select">
+                                                ><select class="form-select" v-model="form.sexe">
                                                     <optgroup
                                                         label="Selectionnez"
                                                     >
@@ -77,7 +106,7 @@ export default {
                                                         >
                                                             Homme
                                                         </option>
-                                                        <option value="Femme">
+                                                        <option value="femme">
                                                             Femme
                                                         </option>
                                                     </optgroup>
@@ -92,26 +121,24 @@ export default {
                                                     class="form-control"
                                                     type="text"
                                                     placeholder="Matricule"
+                                                    v-model="form.matricule"
                                                 />
                                             </div>
                                             <div class="mt-2 mb-2">
                                                 <label class="form-label"
                                                     >Poste occupé</label
-                                                ><select class="form-select">
+                                                ><select class="form-select" v-model="form.poste">
                                                     <optgroup
                                                         label="This is a group"
                                                     >
                                                         <option
-                                                            value="12"
+                                                            value="caissier"
                                                             selected
                                                         >
-                                                            This is item 1
+                                                            Caisser
                                                         </option>
-                                                        <option value="13">
-                                                            This is item 2
-                                                        </option>
-                                                        <option value="14">
-                                                            This is item 3
+                                                        <option value="agent">
+                                                            Agent
                                                         </option>
                                                     </optgroup>
                                                 </select>
@@ -123,10 +150,12 @@ export default {
                                                     class="form-control"
                                                     type="email"
                                                     placeholder="Addresse mail"
+                                                    v-model="form.email"
                                                 />
                                             </div>
                                         </div>
                                     </div>
+                                    <div v-if="err" class="bg-danger-subtle rounded mb-2" style="padding: 5px;">Formulaire invalide</div>
                                     <div>
                                         <button
                                             class="btn btn-primary"
