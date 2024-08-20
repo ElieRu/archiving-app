@@ -1,3 +1,14 @@
+
+<script>
+import { Link } from "@inertiajs/vue3";
+
+export default {
+    components: {
+        Link
+    }
+}
+</script>
+
 <template>
     <nav
         class="navbar navbar-expand bg-white shadow mb-4 topbar static-top navbar-light"
@@ -59,11 +70,16 @@
                                 > Profile</a
                             >
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="login"
+                            <Link 
+                                class="dropdown-item" 
+                                href="/logout"
+                                method="post"
+                                as="button"
+                                style="cursor: pointer;"
                                 ><i
                                     class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"
                                 ></i
-                                > Déconnexion</a
+                                > Déconnexion</Link
                             >
                         </div>
                     </div>

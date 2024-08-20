@@ -30,7 +30,7 @@ class Agents extends Controller
 
     public function create(UserRequest $request)
     {
-        $agent = User::create([
+        User::create([
             'name' => $request->name,
             'postname' => $request->postname,
             'sexe' => $request->sexe,

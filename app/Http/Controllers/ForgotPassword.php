@@ -9,6 +9,6 @@ class ForgotPassword extends Controller
 {
     public function show()
     {
-        return Inertia::render('ForgotPassword');
+        return Inertia::render('Auth/ForgotPassword');
     }
 }
