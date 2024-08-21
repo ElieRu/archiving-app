@@ -7,7 +7,7 @@ export default {
         return {
             form: {
                 email: "admin@gmail.com",
-                password: "#Pass081",
+                password: "$Regi094",
                 remember: null,
             },
             disable: false,

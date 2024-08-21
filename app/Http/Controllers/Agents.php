@@ -77,7 +77,7 @@ class Agents extends Controller
 
     public function resetPassword(Request $request)
     {
-        $defaultPassword = Hash::make("#Pass081");
+        $defaultPassword = Hash::make('$Regi094');
         DB::table('users')
             ->where('id', $request->id)
             ->update([
@@ -97,9 +97,31 @@ class Agents extends Controller
         ]);
     }
 
-    public function updatePassword(UserRequest $request)
+    public function updatePassword(Request $request)
     {
-        dd('updated');
+        if (Hash::check($request->current_password, Auth::user()->password)) {
+            if ($request->password == $request->confirmation) {
+                DB::table('users')
+                    ->where('id', $request->id)
+                    ->update([
+                        'password' => Hash::make($request->current_password)
+                    ]);
+                return Inertia('Profile', [
+                    'user' => Auth::user(),
+                    'errorPassword' => false
+                ]);
+            } else {
+                return Inertia('Profile', [
+                    'user' => Auth::user(),
+                    'errorPassword' => true
+                ]);
+            }
+        } else {
+            return Inertia('Profile', [
+                'user' => Auth::user(),
+                'errorPassword' => true
+            ]);
+        }
     }
     
     public function uploadImage(Request $request)

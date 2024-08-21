@@ -86,7 +86,7 @@ export default {
 <template>
     <body id="page-top">
         <div id="wrapper">
-            <NavBar role="user.role" />
+            <NavBar :role="user.role" />
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
                     <NavBarTop :user="user" />

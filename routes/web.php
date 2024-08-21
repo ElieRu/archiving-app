@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
+    Route::put('/user/password', [Agents::class, 'updatePassword']);
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -49,7 +50,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/agents-add', [AddAgents::class, 'show']);
     Route::put('/agents-add', [Agents::class, 'update']);
     Route::put('/upload-image', [Agents::class, 'uploadImage']);
-    // Route::post('/user/password', [Agents::class, 'updatePassword']);
 });
 
 Route::middleware(['guest'])->group(function () {

@@ -6,7 +6,7 @@ import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import axios from "axios";
-import { router } from '@inertiajs/vue3'
+import { router, useForm } from "@inertiajs/vue3";
 
 export default {
     components: {
@@ -17,7 +17,7 @@ export default {
         MyButtons,
         TopPage,
     },
-    props: ["user"],
+    props: ["user", "errorPassword"],
     data() {
         return {
             form: {
@@ -31,7 +31,7 @@ export default {
             },
             formPassword: {
                 id: this.user.id,
-                current_password: "#Pass081",
+                current_password: "$Regi094",
                 password: "#Elie000",
                 confirmation: "#Elie000",
             },
@@ -55,20 +55,27 @@ export default {
                 });
         },
         updatePassword() {
-            // console.log(this.formPassword)
-            router.put('/user/password', this.formPassword, {
+            this.$inertia.put("/user/password", this.formPassword, {
                 onSuccess: () => {
-                    alert('updated')
-                }
+                    // 
+                }, preserveScroll: true, preserveState: true,
             })
         },
         onChange(e) {
-            this.image = e.target.files[0]
-            this.$inertia.post('/upload-image', {
-                _method: 'put',
-                id: this.user.id,
-                image: this.image
-            })
+            this.image = e.target.files[0];
+            this.$inertia.post(
+                "/upload-image",
+                {
+                    _method: "put",
+                    id: this.user.id,
+                    image: this.image,
+                },
+                {
+                    onSuccess: () => {
+                        this.$inertia.replace("/profile");
+                    },
+                }
+            );
         },
     },
 };
@@ -92,7 +99,7 @@ export default {
                                         >
                                             <img
                                                 class="rounded-circle mb-3 mt-4"
-                                                :src="'/storage'+user.image"
+                                                :src="'/storage' + user.image"
                                                 width="160"
                                                 height="160"
                                             />
@@ -165,6 +172,12 @@ export default {
                                                         formPassword.confirmation
                                                     "
                                                 />
+                                            </div>
+                                            <div v-if="errorPassword"
+                                                class="bg-danger-subtle rounded mb-2"
+                                                style="padding: 5px"
+                                            >
+                                                Formulaire invalide
                                             </div>
                                             <button
                                                 class="btn btn-primary"
