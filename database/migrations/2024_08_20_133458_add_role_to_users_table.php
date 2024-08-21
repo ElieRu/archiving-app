@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('postname')->max(50)->nullable(true);
-            $table->string('sexe')->max(50)->nullable(true);
-            $table->string('matricule')->max(50)->nullable(true);
-            $table->string('poste')->max(50)->nullable(true);
-            $table->string('image')->max(50)->nullable(true)->default("/profile/default-img.png");
+            $table->string('role')->max(50)->nullable(true);
         });
     }
 

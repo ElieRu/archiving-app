@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 import axios from "axios";
 import { router } from "@inertiajs/vue3";
 
@@ -30,6 +30,14 @@ export default {
         },
     },
 };
+</script> -->
+
+<script setup>
+import { useForm } from "@inertiajs/vue3";
+
+const forgotPassword = useForm({
+    email: "",
+});
 </script>
 
 <template>
@@ -49,7 +57,7 @@ export default {
                                         </div>
                                         <form
                                             class="user"
-                                            @submit.prevent="submit()"
+                                            @submit.prevent="forgotPassword.post('/forgot-password')"
                                         >
                                             <div class="mb-3">
                                                 <input
@@ -59,13 +67,13 @@ export default {
                                                     aria-describedby="emailHelp"
                                                     placeholder="Addresse mail"
                                                     name="email"
-                                                    v-model="form.email"
+                                                    v-model="forgotPassword.email"
                                                 />
                                             </div>
                                             <button
                                                 class="btn btn-primary d-block btn-user w-100"
                                                 type="submit"
-                                                :disabled="disable"
+                                                
                                             >
                                                 Récuperer le Mot De Passe
                                             </button>

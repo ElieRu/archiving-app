@@ -6,7 +6,7 @@ export default {
     data() {
         return {
             form: {
-                email: "ruhamyaelie3@gmail.com",
+                email: "admin@gmail.com",
                 password: "#Pass081",
                 remember: null,
             },
@@ -120,15 +120,15 @@ export default {
                                             >
                                                 Connexion
                                             </button>
-                                            <hr />
+                                            <!-- <hr /> -->
                                         </form>
-                                        <div class="text-center">
+                                        <!-- <div class="text-center">
                                             <a
                                                 class="small"
                                                 href="forgot-password"
                                                 >Mot De Passe Oublié<br />?</a
                                             >
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

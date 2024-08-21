@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -24,7 +25,8 @@ class Agents extends Controller
             ->withQueryString();
 
         return Inertia::render('Agents', [
-            'users' => $users
+            'users' => $users,
+            'user' => Auth::user()
         ]);
     }
 
@@ -41,7 +43,8 @@ class Agents extends Controller
         ]);
 
         return Inertia::render('Agents', [
-            'users' => User::all()
+            'users' => User::all(),
+            'user' => Auth::user() 
         ]);
     }
 
@@ -67,7 +70,8 @@ class Agents extends Controller
             ]);
             
         return Inertia::render('Agents', [
-            'users' => User::all()
+            'users' => User::all(),
+            'user' => Auth::user()
         ]);
     }
 
@@ -86,12 +90,34 @@ class Agents extends Controller
 
     public function findById(Request $request)
     {
-        $user = User::select('id', 'name', 'postname', 'poste', 'sexe', 'matricule', 'email', )->findOrFail($request->id);
+        $user = User::select('id', 'name', 'postname', 'poste', 'sexe', 'matricule', 'email', 'image')->findOrFail($request->id);
         
         return Inertia::render('AddAgents', [
             'user' => $user
         ]);
     }
 
+    public function updatePassword(UserRequest $request)
+    {
+        dd('updated');
+    }
     
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('image')) {
+
+            $file = $request->file('image');
+            $image = $file->store("profile", 'public');
+            $image = "/" . $image;
+
+            User::where('id', $request->id)
+                ->update([
+                    'image' => $image
+                ]);
+
+                return Inertia::render('Profile', [
+                    'user' => Auth::user()
+                ]);
+        }
+    }
 }

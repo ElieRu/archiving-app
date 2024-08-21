@@ -4,6 +4,7 @@ use App\Http\Controllers\AddAgents;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Agents;
 use App\Http\Controllers\Apropos;
+use App\Http\Controllers\Archivage;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Documents;
 use App\Http\Controllers\ForgotPassword;
@@ -25,21 +26,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// The password.reset route must be created...
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [Dashboard::class, 'show'])->name('dashboard');
     Route::get('/home', [Dashboard::class, 'show'])->name('dashboard');
     Route::get('/documents', [Documents::class, 'show'])->name('documents');
-    Route::get('/archivage', [Documents::class, 'show'])->name('classeurs');
+    Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/services', [Services::class, 'show'])->name('services');
     Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
 });
 
-// Route::middleware(['auth', 'role:admin'])->group(function () {
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/services', [Services::class, 'show'])->name('services');
     Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');
     
@@ -48,14 +46,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/agents', [Agents::class, 'resetPassword'])->name('agents');
     Route::delete('/agents', [Agents::class, 'delete'])->name('agents.delete');
     Route::get('/agents-add/{id}', [Agents::class, 'findById'])->name('addAgents');
-    Route::get('/agents-add', [AddAgents::class, 'show'])->name('addAgents');
-    Route::put('/agents-add', [Agents::class, 'update'])->name('addAgents');
-
-    Route::get('/admin', [Admin::class, 'show'])->name('admin');
+    Route::get('/agents-add', [AddAgents::class, 'show']);
+    Route::put('/agents-add', [Agents::class, 'update']);
+    Route::put('/upload-image', [Agents::class, 'uploadImage']);
+    // Route::post('/user/password', [Agents::class, 'updatePassword']);
 });
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [Login::class, 'show'])->name('login');
-    Route::get('/forgot-password', [ForgotPassword::class, 'show'])->name('forgotPassword');
-    Route::get('/reset-password', [ResetPassword::class, 'show'])->name('password.reset');
+    // Route::get('/forgot-password', [ForgotPassword::class, 'show'])->name('forgotPassword');
+    // Route::get('/reset-password', [ResetPassword::class, 'show'])->name('password.reset');
 });

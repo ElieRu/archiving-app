@@ -16,26 +16,44 @@ export default {
         MyButtons,
         TopPage,
         ServiceModal,
-        DeleteServiceModal
+        DeleteServiceModal,
     },
+    props: ["user"],
 };
 </script>
 
 <template>
     <body id="page-top">
         <div id="wrapper">
-            <NavBar />
+            <NavBar :role="user.role" />
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <NavBarTop />
+                    <NavBarTop :user="user" />
                     <div class="container-fluid">
-                        <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex">
-        <h3 style="margin: 0px;"><a href="#">Services</a></h3>
-        <h3 style="margin-bottom: 0px;margin-right: 10px;margin-left: 10px;">•</h3>
-        <h3 class="text-body-secondary" style="margin: 0px;margin-bottom: 0px;">Name</h3>
-    </div>
-</div>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
+                            <div class="d-flex">
+                                <h3 style="margin: 0px">
+                                    <a href="#">Services</a>
+                                </h3>
+                                <h3
+                                    style="
+                                        margin-bottom: 0px;
+                                        margin-right: 10px;
+                                        margin-left: 10px;
+                                    "
+                                >
+                                    •
+                                </h3>
+                                <h3
+                                    class="text-body-secondary"
+                                    style="margin: 0px; margin-bottom: 0px"
+                                >
+                                    Name
+                                </h3>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 text-nowrap">
                                 <div
@@ -71,10 +89,7 @@ export default {
                                                     text-decoration: underline;
                                                 "
                                             >
-                                                <a
-                                                    href="services-more"
-                                                    >Link</a
-                                                >
+                                                <a href="services-more">Link</a>
                                             </h4>
                                             <div>
                                                 <div class="dropdown">
@@ -137,7 +152,7 @@ export default {
             </div>
             <TopPage />
         </div>
-        <ServiceModal/>
-        <DeleteServiceModal/>
+        <ServiceModal />
+        <DeleteServiceModal />
     </body>
 </template>

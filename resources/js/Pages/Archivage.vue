@@ -30,7 +30,7 @@ export default {
                             class="d-flex justify-content-between align-items-center"
                         >
                             <div class="d-flex">
-                                <h3 class="text-dark mb-1">Documents</h3>
+                                <h3 class="text-dark mb-1">Archivage</h3>
                             </div>
                         </div>
                         <div class="row my-3">

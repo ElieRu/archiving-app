@@ -1,12 +1,12 @@
-
 <script>
 import { Link } from "@inertiajs/vue3";
 
 export default {
     components: {
-        Link
-    }
-}
+        Link,
+    },
+    props: ['user']
+};
 </script>
 
 <template>
@@ -53,12 +53,15 @@ export default {
                             aria-expanded="false"
                             data-bs-toggle="dropdown"
                             href="#"
-                            ><span
-                                class="d-none d-lg-inline me-2 text-gray-600 small"
-                                >Valerie Luna</span
-                            ><img
+                            ><div class="d-flex flex-column text-right">
+                                <span
+                                class="d-none d-lg-inline me-2 text-gray-600 text-capitalize small"
+                                >{{ user.name }} {{ user.postname }}</span
+                            >
+                            <span class="d-none d-lg-inline text-capitalize" style="font-size: 12px; margin-top: -5px; margin-right: 10px;">{{ user.role === 'admin' ? 'administrateur' : user.poste }}</span>
+                            </div><img
                                 class="border rounded-circle img-profile"
-                                src="/assets/img/avatars/avatar1.jpeg"
+                                :src="'/storage'+user.image"
                         /></a>
                         <div
                             class="dropdown-menu shadow dropdown-menu-end animated--grow-in"
@@ -70,12 +73,12 @@ export default {
                                 > Profile</a
                             >
                             <div class="dropdown-divider"></div>
-                            <Link 
-                                class="dropdown-item" 
+                            <Link
+                                class="dropdown-item"
                                 href="/logout"
                                 method="post"
                                 as="button"
-                                style="cursor: pointer;"
+                                style="cursor: pointer"
                                 ><i
                                     class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"
                                 ></i

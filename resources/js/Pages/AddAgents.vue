@@ -17,7 +17,7 @@ export default {
         TopPage,
     },
 
-    props: ['user'],
+    props: ["user"],
 
     data() {
         return {
@@ -28,48 +28,68 @@ export default {
                 matricule: null,
                 poste: null,
                 email: null,
-                password: null
+                password: null,
             }),
             err: false,
             id: null,
-            switch: false
-        }        
+            switch: false,
+        };
     },
 
     mounted() {
-        if (this.user) {
-            this.switch = true
-            // this.id = this.user.id
-            this.form = this.user
+        const url = new URL(window.location.href)
+        const pathname = url.pathname.split('/')
+        const userId = parseInt(pathname[pathname.length-1])
+        // parseInt(userId)
+        console.log(typeof userId)
+        if (userId) {
+            this.switch = true;
+            this.form = this.user;
+        } else {
+            this.form = {
+                name: null,
+                postname: null,
+                sexe: null,
+                matricule: null,
+                poste: null,
+                email: null,
+                password: null,
+            }
         }
     },
 
     methods: {
         create() {
-            axios.post('/agents', this.form).then((res) => {
-                router.replace('/agents')
-            }).catch((err) => {
-                this.err = true
-            })
+            axios
+                .post("/agents", this.form)
+                .then((res) => {
+                    router.replace("/agents");
+                })
+                .catch((err) => {
+                    this.err = true;
+                });
         },
-        update () {
-            axios.put('/agents-add', this.form).then((res) => {
-                router.replace('/agents')
-            }).catch((err) => {
-                this.err = true
-            })
-        }
-    }
+        update() {
+            axios
+                .put("/agents-add", this.form)
+                .then((res) => {
+                    router.replace("/agents");
+                })
+                .catch((err) => {
+                    this.err = true;
+                });
+        },
+    },
 };
 </script>
 
 <template>
     <body id="page-top">
         <div id="wrapper">
-            <NavBar />
+            <NavBar role="user.role" />
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <NavBarTop />
+                    <NavBarTop :user="user" />
                     <div class="container-fluid">
                         <div
                             class="d-flex justify-content-between align-items-center"
@@ -89,7 +109,12 @@ export default {
                                 </p>
                             </div>
                             <div class="card-body">
-                                <form method="post" @submit.prevent="!this.switch ? create() : update()">
+                                <form
+                                    method="post"
+                                    @submit.prevent="
+                                        !this.switch ? create() : update()
+                                    "
+                                >
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6">
                                             <div class="mt-2 mb-2">
@@ -115,7 +140,10 @@ export default {
                                             <div class="mt-2 mb-2">
                                                 <label class="form-label"
                                                     >Sexe</label
-                                                ><select class="form-select" v-model="form.sexe">
+                                                ><select
+                                                    class="form-select"
+                                                    v-model="form.sexe"
+                                                >
                                                     <optgroup
                                                         label="Selectionnez"
                                                     >
@@ -146,7 +174,10 @@ export default {
                                             <div class="mt-2 mb-2">
                                                 <label class="form-label"
                                                     >Poste occupé</label
-                                                ><select class="form-select" v-model="form.poste">
+                                                ><select
+                                                    class="form-select"
+                                                    v-model="form.poste"
+                                                >
                                                     <optgroup
                                                         label="This is a group"
                                                     >
@@ -174,13 +205,23 @@ export default {
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-if="err" class="bg-danger-subtle rounded mb-2" style="padding: 5px;">Formulaire invalide</div>
+                                    <div
+                                        v-if="err"
+                                        class="bg-danger-subtle rounded mb-2"
+                                        style="padding: 5px"
+                                    >
+                                        Formulaire invalide
+                                    </div>
                                     <div>
                                         <button
                                             class="btn btn-primary"
                                             type="submit"
                                         >
-                                            {{ !this.switch ? 'Créer un agent' : 'Mettre à jour' }}
+                                            {{
+                                                !this.switch
+                                                    ? "Créer un agent"
+                                                    : "Mettre à jour"
+                                            }}
                                         </button>
                                     </div>
                                 </form>

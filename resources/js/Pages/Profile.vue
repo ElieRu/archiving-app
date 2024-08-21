@@ -5,6 +5,9 @@ import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import axios from "axios";
+import { router } from '@inertiajs/vue3'
+
 export default {
     components: {
         NavBar,
@@ -14,18 +17,72 @@ export default {
         MyButtons,
         TopPage,
     },
+    props: ["user"],
+    data() {
+        return {
+            form: {
+                id: this.user.id,
+                name: this.user.name,
+                postname: this.user.postname,
+                sexe: this.user.sexe,
+                matricule: this.user.matricule,
+                email: this.user.email,
+                poste: this.user.poste,
+            },
+            formPassword: {
+                id: this.user.id,
+                current_password: "#Pass081",
+                password: "#Elie000",
+                confirmation: "#Elie000",
+            },
+            image: "",
+            disable: false,
+            err: false,
+        };
+    },
+    methods: {
+        submit() {
+            this.disable = true;
+            this.err = false;
+            axios
+                .put("/agents-add", this.form)
+                .then((res) => {
+                    this.disable = false;
+                })
+                .catch((err) => {
+                    this.err = true;
+                    this.disable = false;
+                });
+        },
+        updatePassword() {
+            // console.log(this.formPassword)
+            router.put('/user/password', this.formPassword, {
+                onSuccess: () => {
+                    alert('updated')
+                }
+            })
+        },
+        onChange(e) {
+            this.image = e.target.files[0]
+            this.$inertia.post('/upload-image', {
+                _method: 'put',
+                id: this.user.id,
+                image: this.image
+            })
+        },
+    },
 };
 </script>
 
 <template>
     <body id="page-top">
         <div id="wrapper">
-            <NavBar />
+            <NavBar :role="user.role" />
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <NavBarTop />
+                    <NavBarTop :user="user" />
                     <div class="container-fluid">
-                        <h3 class="text-dark mb-4">Administrateur</h3>
+                        <h3 class="text-dark mb-4">Profile</h3>
                         <div class="row mb-3">
                             <div class="col-lg-4">
                                 <div class="card mb-3">
@@ -35,7 +92,7 @@ export default {
                                         >
                                             <img
                                                 class="rounded-circle mb-3 mt-4"
-                                                src="/assets/img/dogs/image2.jpeg"
+                                                :src="'/storage'+user.image"
                                                 width="160"
                                                 height="160"
                                             />
@@ -55,6 +112,9 @@ export default {
                                                 id="img-profile"
                                                 class="d-none"
                                                 type="file"
+                                                accept="image/*"
+                                                @change="onChange"
+                                                ref="callButton"
                                             />
                                         </div>
                                     </div>
@@ -66,7 +126,22 @@ export default {
                                         </h6>
                                     </div>
                                     <div class="card-body">
-                                        <form>
+                                        <form
+                                            method="post"
+                                            @submit.prevent="updatePassword()"
+                                        >
+                                            <div class="mb-2 mt-2">
+                                                <label class="form-label"
+                                                    >Actuel</label
+                                                ><input
+                                                    class="form-control"
+                                                    type="password"
+                                                    placeholder="Actuel"
+                                                    v-model="
+                                                        formPassword.current_password
+                                                    "
+                                                />
+                                            </div>
                                             <div class="mb-2 mt-2">
                                                 <label class="form-label"
                                                     >Nouveau</label
@@ -74,6 +149,9 @@ export default {
                                                     class="form-control"
                                                     type="password"
                                                     placeholder="Nouveau"
+                                                    v-model="
+                                                        formPassword.password
+                                                    "
                                                 />
                                             </div>
                                             <div class="mb-2 mt-2">
@@ -83,11 +161,14 @@ export default {
                                                     class="form-control"
                                                     type="password"
                                                     placeholder="Confirmation"
+                                                    v-model="
+                                                        formPassword.confirmation
+                                                    "
                                                 />
                                             </div>
                                             <button
                                                 class="btn btn-primary"
-                                                type="button"
+                                                type="submit"
                                             >
                                                 Mettre à jour
                                             </button>
@@ -96,74 +177,6 @@ export default {
                                 </div>
                             </div>
                             <div class="col-lg-8">
-                                <div class="row mb-3 d-none">
-                                    <div class="col">
-                                        <div
-                                            class="card text-white bg-primary shadow"
-                                        >
-                                            <div class="card-body">
-                                                <div class="row mb-2">
-                                                    <div class="col">
-                                                        <p class="m-0">
-                                                            Peformance
-                                                        </p>
-                                                        <p class="m-0">
-                                                            <strong
-                                                                >65.2%</strong
-                                                            >
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <i
-                                                            class="fas fa-rocket fa-2x"
-                                                        ></i>
-                                                    </div>
-                                                </div>
-                                                <p
-                                                    class="text-white-50 small m-0"
-                                                >
-                                                    <i
-                                                        class="fas fa-arrow-up"
-                                                    ></i
-                                                    > 5% since last month
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div
-                                            class="card text-white bg-success shadow"
-                                        >
-                                            <div class="card-body">
-                                                <div class="row mb-2">
-                                                    <div class="col">
-                                                        <p class="m-0">
-                                                            Peformance
-                                                        </p>
-                                                        <p class="m-0">
-                                                            <strong
-                                                                >65.2%</strong
-                                                            >
-                                                        </p>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <i
-                                                            class="fas fa-rocket fa-2x"
-                                                        ></i>
-                                                    </div>
-                                                </div>
-                                                <p
-                                                    class="text-white-50 small m-0"
-                                                >
-                                                    <i
-                                                        class="fas fa-arrow-up"
-                                                    ></i
-                                                    > 5% since last month
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col">
                                         <div class="card shadow mb-3">
@@ -175,7 +188,10 @@ export default {
                                                 </p>
                                             </div>
                                             <div class="card-body">
-                                                <form>
+                                                <form
+                                                    method="post"
+                                                    @submit.prevent="submit()"
+                                                >
                                                     <div class="row">
                                                         <div class="col">
                                                             <div
@@ -188,6 +204,12 @@ export default {
                                                                     class="form-control"
                                                                     type="text"
                                                                     placeholder="Nom"
+                                                                    name="name"
+                                                                    v-model="
+                                                                        this
+                                                                            .form
+                                                                            .name
+                                                                    "
                                                                 />
                                                             </div>
                                                             <div
@@ -200,6 +222,11 @@ export default {
                                                                     class="form-control"
                                                                     type="text"
                                                                     placeholder="Postnom"
+                                                                    v-model="
+                                                                        this
+                                                                            .form
+                                                                            .postname
+                                                                    "
                                                                 />
                                                             </div>
                                                             <div
@@ -210,18 +237,22 @@ export default {
                                                                     >Sexe</label
                                                                 ><select
                                                                     class="form-select"
+                                                                    v-model="
+                                                                        this
+                                                                            .form
+                                                                            .sexe
+                                                                    "
                                                                 >
                                                                     <optgroup
                                                                         label="Selectionnez"
                                                                     >
                                                                         <option
                                                                             value="homme"
-                                                                            selected
                                                                         >
                                                                             Homme
                                                                         </option>
                                                                         <option
-                                                                            value="Femme"
+                                                                            value="femme"
                                                                         >
                                                                             Femme
                                                                         </option>
@@ -238,6 +269,11 @@ export default {
                                                                     class="form-control"
                                                                     type="text"
                                                                     placeholder="Matricule"
+                                                                    v-model="
+                                                                        this
+                                                                            .form
+                                                                            .matricule
+                                                                    "
                                                                 />
                                                             </div>
                                                             <div
@@ -249,34 +285,25 @@ export default {
                                                                     occupé</label
                                                                 ><select
                                                                     class="form-select"
+                                                                    v-model="
+                                                                        this
+                                                                            .form
+                                                                            .poste
+                                                                    "
                                                                 >
                                                                     <optgroup
                                                                         label="This is a group"
                                                                     >
                                                                         <option
-                                                                            value="12"
+                                                                            value="caissier"
                                                                             selected
                                                                         >
-                                                                            This
-                                                                            is
-                                                                            item
-                                                                            1
+                                                                            Caissier
                                                                         </option>
                                                                         <option
-                                                                            value="13"
+                                                                            value="agent"
                                                                         >
-                                                                            This
-                                                                            is
-                                                                            item
-                                                                            2
-                                                                        </option>
-                                                                        <option
-                                                                            value="14"
-                                                                        >
-                                                                            This
-                                                                            is
-                                                                            item
-                                                                            3
+                                                                            Agent
                                                                         </option>
                                                                     </optgroup>
                                                                 </select>
@@ -291,14 +318,27 @@ export default {
                                                                     class="form-control"
                                                                     type="email"
                                                                     placeholder="Addresse mail"
+                                                                    v-model="
+                                                                        this
+                                                                            .form
+                                                                            .email
+                                                                    "
                                                                 />
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <div
+                                                        v-if="err"
+                                                        class="bg-danger-subtle rounded mb-2"
+                                                        style="padding: 5px"
+                                                    >
+                                                        Formulaire invalide
                                                     </div>
                                                     <div>
                                                         <button
                                                             class="btn btn-primary"
                                                             type="submit"
+                                                            :disabled="disable"
                                                         >
                                                             Personnalisez
                                                         </button>

@@ -14,16 +14,17 @@ export default {
         MyButtons,
         TopPage,
     },
+    props: ['user'],
 };
 </script>
 
 <template>
     <body id="page-top">
         <div id="wrapper">
-            <NavBar />
+            <NavBar :role="user.role" />
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <NavBarTop />
+                    <NavBarTop :user="user" />
                     <div class="container-fluid">
                         <div class="row gy-4 flex-column align-items-center">
                             <div class="col-8 d-flex justify-content-center">

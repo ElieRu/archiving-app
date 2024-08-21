@@ -25,7 +25,7 @@ export default {
         PaginationAgents,
         Link
     },
-    props: ['users'],
+    props: ['user', 'users'],
     datas() {
         return {
             // search: ""
@@ -38,10 +38,10 @@ export default {
 <template>
     <body id="page-top">
         <div id="wrapper">
-            <NavBar />
+            <NavBar :role="user.role" />
             <div id="content-wrapper" class="d-flex flex-column">
                 <div id="content">
-                    <NavBarTop />
+                    <NavBarTop :user="user" />
                     <div id="content">
                         <div class="container-fluid">
                             <div
@@ -123,7 +123,7 @@ export default {
                                                                 class="rounded-circle me-2"
                                                                 width="30"
                                                                 height="30"
-                                                                :src="user.image"
+                                                                :src="'/storage'+user.image"
                                                             />{{ user.name }} {{ user.postname }}
                                                         </div>
                                                     </td>

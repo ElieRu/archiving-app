@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class Apropos extends Controller
+class Archivage extends Controller
 {
     public function show()
     {
-        return Inertia::render('Apropos', [
+        return Inertia::render('Archivage', [
             'user' => Auth::user()
         ]);
     }

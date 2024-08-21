@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 import axios from "axios";
 import { router } from "@inertiajs/vue3";
 
@@ -6,14 +6,16 @@ export default {
     data() {
         return {
             form: {
-                email: "ruhamyaelie3@gmail.com",
-                password: "oooo",
-                password_confirmation: "oooo",
-                token: "ruhamyaelie3@gmail.com"
+                email: email,
+                password: null,
+                password_confirmation: null,
+                token: token
             },
             disable: false,
         };
     },
+
+    props: ['email', 'token'],
 
     methods: {
         submit() {
@@ -33,6 +35,22 @@ export default {
         },
     },
 };
+</script> -->
+
+<script setup>
+import { useForm } from "@inertiajs/vue3";
+
+const props = defineProps(['email', 'token'])
+
+console.log(props);
+
+const resetPassword = useForm({
+    email: props.email,
+    password: null,
+    password_confirmation: null,
+    token: props.token
+})
+
 </script>
 
 <template>
@@ -52,7 +70,7 @@ export default {
                                         </div>
                                         <form
                                             class="user"
-                                            @submit.prevent="submit()"
+                                            @submit.prevent="resetPassword.post('/reset-password')"
                                         >
                                             <div class="mb-3">
                                                 <input
