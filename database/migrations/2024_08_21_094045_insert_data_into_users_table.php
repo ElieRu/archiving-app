@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         // The Default password...
-        $defaultPassword = Hash::make('$Regi094');
+        $defaultPassword = Hash::make('@Pass123');
         DB::table('users')->insert([
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',

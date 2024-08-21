@@ -31,13 +31,14 @@ export default {
             },
             formPassword: {
                 id: this.user.id,
-                current_password: "$Regi094",
-                password: "#Elie000",
-                confirmation: "#Elie000",
+                current_password: "",
+                password: "",
+                confirmation: "",
             },
             image: "",
             disable: false,
             err: false,
+            disPass: false
         };
     },
     methods: {
@@ -55,9 +56,11 @@ export default {
                 });
         },
         updatePassword() {
+            this.disPass = true
             this.$inertia.put("/user/password", this.formPassword, {
                 onSuccess: () => {
-                    // 
+                    this.disPass = false
+                    this.$inertia.replace('/profile', {preserveScroll: true, preserveState: true})
                 }, preserveScroll: true, preserveState: true,
             })
         },
@@ -182,8 +185,9 @@ export default {
                                             <button
                                                 class="btn btn-primary"
                                                 type="submit"
+                                                :disabled="disPass"
                                             >
-                                                Mettre à jour
+                                            <span v-if="disPass" style="margin-right: 5px;" class="spinner-border spinner-border-sm" role="status"></span><span>Mettre à jour</span>
                                             </button>
                                         </form>
                                     </div>
@@ -353,7 +357,7 @@ export default {
                                                             type="submit"
                                                             :disabled="disable"
                                                         >
-                                                            Personnalisez
+                                                        <span v-if="disable" style="margin-right: 5px;" class="spinner-border spinner-border-sm" role="status"></span><span>Personnalisez</span>
                                                         </button>
                                                     </div>
                                                 </form>

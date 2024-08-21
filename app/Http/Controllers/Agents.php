@@ -21,6 +21,7 @@ class Agents extends Controller
             ->when($request->sort, function ($query, $sort) {
                 $query->where('users.poste', 'like', "%{$sort}%");
             })
+            ->where('role', null)
             ->paginate(10)
             ->withQueryString();
 
@@ -39,7 +40,7 @@ class Agents extends Controller
             'matricule' => $request->matricule,
             'poste' => $request->poste,
             'email' => $request->email,
-            'password' => '#Pass081'
+            'password' => '$Pass123'
         ]);
 
         return Inertia::render('Agents', [
@@ -77,7 +78,7 @@ class Agents extends Controller
 
     public function resetPassword(Request $request)
     {
-        $defaultPassword = Hash::make('$Regi094');
+        $defaultPassword = Hash::make('@Pass123');
         DB::table('users')
             ->where('id', $request->id)
             ->update([
