@@ -5,6 +5,8 @@ import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import UpdateModal from "./Components/update-documents.vue";
+import { Link, router } from "@inertiajs/vue3";
 export default {
     components: {
         NavBar,
@@ -13,8 +15,15 @@ export default {
         Footer,
         MyButtons,
         TopPage,
+        Link,
+        UpdateModal,
     },
-    props: ["user"],
+    props: ["user", "documents"],
+    methods: {
+        myLoad() {
+            router.replace("/documents");
+        },
+    },
 };
 </script>
 
@@ -42,7 +51,7 @@ export default {
                             </div>
                         </div>
                         <div class="row gy-3">
-                            <div class="col-sm-4 col-lg-3 col-xl-2">
+                            <!-- <div class="col-sm-4 col-lg-3 col-xl-2">
                                 <div class="border rounded p-2">
                                     <div
                                         class="d-flex justify-content-center"
@@ -60,7 +69,6 @@ export default {
                                                 padding-bottom: 7px;
                                             "
                                         >
-                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
                                             <path
                                                 d="M251.7 127.6l0 0c10.5 10.5 24.7 16.4 39.6 16.4H448c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H197.5c4.2 0 8.3 1.7 11.3 4.7l33.9-33.9L208.8 84.7l42.9 42.9zM48 240H464V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V240zM285.7 93.7L242.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H291.3c-2.1 0-4.2-.8-5.7-2.3z"
                                             ></path>
@@ -87,7 +95,6 @@ export default {
                                                     height="1em"
                                                     fill="currentColor"
                                                 >
-                                                    <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
                                                     <path
                                                         d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
                                                     ></path>
@@ -118,9 +125,16 @@ export default {
                                         >Nouveau dossier</span
                                     >
                                 </div>
-                            </div>
-                            <div class="col-sm-4 col-lg-3 col-xl-2">
-                                <div class="border rounded p-2">
+                            </div> -->
+                            <div
+                                v-for="(document, index) in documents"
+                                :key="index"
+                                class="col-sm-4 col-lg-3 col-xl-2"
+                            >
+                                <div
+                                    class="border rounded p-2"
+                                    style="overflow: visible"
+                                >
                                     <div
                                         class="d-flex justify-content-center"
                                         style="position: relative"
@@ -177,12 +191,18 @@ export default {
                                                     >Lecture</a
                                                 ><a
                                                     class="dropdown-item"
-                                                    href="#"
+                                                    style="cursor: pointer;"
+                                                    data-bs-target="#update-modal"
+                                                    data-bs-toggle="modal"
                                                     >Modifier</a
-                                                ><a
+                                                ><Link
                                                     class="dropdown-item"
-                                                    href="#"
-                                                    >Supprimer</a
+                                                    href="/documents"
+                                                    method="delete"
+                                                    as="button"
+                                                    type="button"
+                                                    :data="{ id: document.id }"
+                                                    >Supprimer</Link
                                                 ><a
                                                     class="dropdown-item"
                                                     href="#"
@@ -195,9 +215,12 @@ export default {
                                             </div>
                                         </div>
                                     </div>
-                                    <span style="font-size: 13px"
-                                        >Nouveau fichier.pdf</span
-                                    >
+                                    <span style="font-size: 13px">{{
+                                        document.titre.length < 15
+                                            ? document.titre
+                                            : document.titre.slice(0, 15) +
+                                              "..."
+                                    }}</span>
                                 </div>
                             </div>
                         </div>
@@ -207,5 +230,6 @@ export default {
             </div>
             <TopPage />
         </div>
+        <UpdateModal/>
     </body>
 </template>

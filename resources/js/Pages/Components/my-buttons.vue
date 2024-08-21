@@ -1,3 +1,25 @@
+
+<script>
+export default {
+    methods: {
+        onChange(e) {
+            this.file = e.target.files[0];
+            this.$inertia.post(
+                "/documents",
+                {
+                    file: this.file,
+                }, {
+                    onSuccess: () => {
+                        this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
+                    }
+                }
+            );
+            
+        },
+    }
+}
+</script>
+
 <template>
     <div class="d-flex align-items-center">
         <button
@@ -39,6 +61,10 @@
                     >Fichier</span
                 ></a
             ></label
-        ><input id="file" class="d-none" type="file" />
+        ><input 
+            id="file" 
+            class="d-none" 
+            type="file"
+            @change="onChange" />
     </div>
 </template>

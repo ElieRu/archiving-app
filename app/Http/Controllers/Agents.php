@@ -33,6 +33,8 @@ class Agents extends Controller
 
     public function create(UserRequest $request)
     {
+        $defaultPassword = Hash::make('@Pass123');
+
         User::create([
             'name' => $request->name,
             'postname' => $request->postname,
@@ -40,7 +42,7 @@ class Agents extends Controller
             'matricule' => $request->matricule,
             'poste' => $request->poste,
             'email' => $request->email,
-            'password' => '$Pass123'
+            'password' => $defaultPassword
         ]);
 
         return Inertia::render('Agents', [

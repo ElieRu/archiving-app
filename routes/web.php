@@ -1,16 +1,13 @@
 <?php
 
 use App\Http\Controllers\AddAgents;
-use App\Http\Controllers\Admin;
 use App\Http\Controllers\Agents;
 use App\Http\Controllers\Apropos;
 use App\Http\Controllers\Archivage;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Documents;
-use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\Profile;
-use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\Services;
 use App\Http\Controllers\ServicesMore;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +26,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [Dashboard::class, 'show'])->name('dashboard');
     Route::get('/home', [Dashboard::class, 'show'])->name('dashboard');
-    Route::get('/documents', [Documents::class, 'show'])->name('documents');
+    
+    Route::get('/documents', [Documents::class, 'show'])->name('show');
+    Route::post('/documents', [Documents::class, 'create']);
+    Route::delete('/documents', [Documents::class, 'delete']);
+
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/services', [Services::class, 'show'])->name('services');
     Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');

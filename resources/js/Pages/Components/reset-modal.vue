@@ -6,7 +6,7 @@
                     <h4 class="modal-title">Réinitialisation</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Le mot de passe a été réinitialiser à "$Pass123"</p>
+                    <p>Le mot de passe a été réinitialiser à "@Pass123"</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" data-bs-dismiss="modal">Fermer</button>
