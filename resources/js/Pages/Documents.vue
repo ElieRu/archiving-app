@@ -7,6 +7,7 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import UpdateModal from "./Components/update-documents.vue";
 import { Link, router } from "@inertiajs/vue3";
+import axios from "axios";
 export default {
     components: {
         NavBar,
@@ -33,7 +34,7 @@ export default {
         },
         closeModal() {
             this.$refs.updateDoc.click()
-        }
+        },
     },
 };
 </script>
@@ -212,10 +213,10 @@ export default {
                                                     >Partager</a
                                                 ><Link
                                                     class="dropdown-item"
+                                                    style="cursor: pointer;"
                                                     href="/documents"
                                                     method="delete"
                                                     as="button"
-                                                    type="button"
                                                     :data="{ id: document.id }"
                                                     >Supprimer</Link
                                                 >

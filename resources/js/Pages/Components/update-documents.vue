@@ -3,7 +3,7 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["data"],
+    props: ["data", "updated"],
     data() {
         return {
             form: {
@@ -12,7 +12,8 @@ export default {
                 type: null,
                 description: null,
             },
-            err: false
+            err: false,
+            display: false,
         };
     },
     computed: {
@@ -31,13 +32,21 @@ export default {
     },
     methods: {
         submit() {
-            this.err = true
-            router.put("/documents", this.form, {
-                onSuccess: updated => {
-                    this.err = false
-                    this.$refs.closeModal.click()
-                }
-            })
+            this.err = true;
+            axios
+                .put("/documents", this.form)
+                .then((res) => {
+                    try {
+                        if (res.status === 200) {
+                            this.err = false;
+                            this.$refs.closeModal.click();
+                        }
+                    } catch (error) {}
+                })
+                .catch((err) => {
+                    this.err = false;
+                    this.display = true;
+                });
         },
     },
 };
@@ -182,6 +191,13 @@ export default {
                                         style="resize: none; height: 100px"
                                         v-model="tmpForm.description"
                                     ></textarea>
+                                </div>
+                                <div
+                                    v-if="display"
+                                    class="bg-danger-subtle rounded mb-2"
+                                    style="padding: 5px"
+                                >
+                                    Formulaire invalide
                                 </div>
                                 <button
                                     class="btn btn-primary"

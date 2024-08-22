@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,7 @@ class Documents extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function update(DocumentRequest $request)
     {
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         DB::table('documents')
@@ -61,18 +62,18 @@ class Documents extends Controller
             
         return Inertia::render('Documents', [
             'user' => Auth::user(),
-            'documents' => $documents
+            'documents' => $documents,
+            'updated' => true
         ]);
     }
 
     public function delete(Request $request)
     {
-        $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         Document::findOrFail($request->id)->delete();
-        return redirect('show');
-        // return Inertia::render('Documents', [
-        //     'users' => Auth::user(),
-        //     'documents' => $documents
-        // ]);
+        $documents = Document::where('user_id', '=', Auth::user()->id)->get();
+        return Inertia::render('Documents', [
+            'user' => Auth::user(),
+            'documents' => $documents
+        ]);
     }
 }
