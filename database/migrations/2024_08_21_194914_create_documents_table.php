@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('titre')->max(50)->nullable();
             $table->string('chemin')->max(50)->nullable();
             $table->string('type')->max(50)->nullable();
+            $table->integer('taille')->nullable();
+            $table->string('extension')->max(50)->nullable();
             $table->string('description')->max(255)->nullable();
             $table->foreignId('user_id')->nullable()->constrained();
             $table->foreignId('classeur_id')->nullable()->constrained();

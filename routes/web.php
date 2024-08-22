@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/documents', [Documents::class, 'show'])->name('show');
     Route::post('/documents', [Documents::class, 'create']);
+    Route::put('/documents', [Documents::class, 'update']);
     Route::delete('/documents', [Documents::class, 'delete']);
 
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');

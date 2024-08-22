@@ -19,10 +19,21 @@ export default {
         UpdateModal,
     },
     props: ["user", "documents"],
+    data() {
+        return {
+            myDocument: {},
+        };
+    },
     methods: {
         myLoad() {
             router.replace("/documents");
         },
+        updateModal(document) {
+            this.myDocument = document;
+        },
+        closeModal() {
+            this.$refs.updateDoc.click()
+        }
     },
 };
 </script>
@@ -187,14 +198,18 @@ export default {
                                             <div class="dropdown-menu">
                                                 <a
                                                     class="dropdown-item"
-                                                    href="#"
-                                                    >Lecture</a
-                                                ><a
-                                                    class="dropdown-item"
                                                     style="cursor: pointer;"
                                                     data-bs-target="#update-modal"
                                                     data-bs-toggle="modal"
-                                                    >Modifier</a
+                                                    @click="updateModal(document)"
+                                                    >Personaliser</a
+                                                ><a
+                                                    class="dropdown-item"
+                                                    style="cursor: pointer;"
+                                                    data-bs-target="#share-modal"
+                                                    data-bs-toggle="modal"
+                                                    @click="updateModal(document)"
+                                                    >Partager</a
                                                 ><Link
                                                     class="dropdown-item"
                                                     href="/documents"
@@ -203,14 +218,6 @@ export default {
                                                     type="button"
                                                     :data="{ id: document.id }"
                                                     >Supprimer</Link
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Partager</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Propriètés</a
                                                 >
                                             </div>
                                         </div>
@@ -230,6 +237,6 @@ export default {
             </div>
             <TopPage />
         </div>
-        <UpdateModal/>
+        <UpdateModal :data="this.myDocument" />
     </body>
 </template>
