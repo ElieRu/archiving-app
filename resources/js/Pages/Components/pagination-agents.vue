@@ -10,7 +10,7 @@ export default {
 </script>
 
 <template>
-    <div class="d-flex justify-content-end" v-if="datas.data.length >= 10">
+    <div class="d-flex justify-content-end">
         <template class="flex" v-for="link in datas.links" :key="link.id">
             <Link
                 v-if="link.url === null"

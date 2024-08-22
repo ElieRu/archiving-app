@@ -83,7 +83,7 @@ export default {
                                     >
                                         <table
                                             id="dataTable"
-                                            class="table my-0"
+                                            class="table table-striped table-hover my-0"
                                         >
                                             <thead>
                                                 <tr>

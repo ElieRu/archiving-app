@@ -7,7 +7,8 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import UpdateModal from "./Components/update-documents.vue";
 import { Link, router } from "@inertiajs/vue3";
-import axios from "axios";
+import PropertiesModal from "./Components/properties-modal.vue";
+import ShareModal from "./Components/share-modal.vue";
 export default {
     components: {
         NavBar,
@@ -18,8 +19,10 @@ export default {
         TopPage,
         Link,
         UpdateModal,
+        PropertiesModal,
+        ShareModal
     },
-    props: ["user", "documents"],
+    props: ["user", "users", "documents", "services"],
     data() {
         return {
             myDocument: {},
@@ -203,7 +206,7 @@ export default {
                                                     data-bs-target="#update-modal"
                                                     data-bs-toggle="modal"
                                                     @click="updateModal(document)"
-                                                    >Personaliser</a
+                                                    >Modifier</a
                                                 ><a
                                                     class="dropdown-item"
                                                     style="cursor: pointer;"
@@ -219,6 +222,13 @@ export default {
                                                     as="button"
                                                     :data="{ id: document.id }"
                                                     >Supprimer</Link
+                                                ><a
+                                                    class="dropdown-item"
+                                                    style="cursor: pointer;"
+                                                    data-bs-target="#properties-modal"
+                                                    data-bs-toggle="modal"
+                                                    @click="updateModal(document)"
+                                                    >Proprietés</a
                                                 >
                                             </div>
                                         </div>
@@ -239,5 +249,7 @@ export default {
             <TopPage />
         </div>
         <UpdateModal :data="this.myDocument" />
+        <PropertiesModal :data="this.myDocument" />
+        <ShareModal :users="users" :services="services" />
     </body>
 </template>

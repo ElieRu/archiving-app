@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +20,9 @@ class Documents extends Controller
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         return Inertia::render('Documents', [
             'user' => Auth::user(),
-            'documents' => $documents
+            'documents' => $documents,
+            'users' => User::all()->where('role', '=', null),
+            'services' => Service::all()
         ]);
     }
 
