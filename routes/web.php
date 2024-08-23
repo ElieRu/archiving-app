@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/documents', [Documents::class, 'create']);
     Route::put('/documents', [Documents::class, 'update']);
     Route::delete('/documents', [Documents::class, 'delete']);
+    Route::post('/share', [Documents::class, 'share']);
 
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/services', [Services::class, 'show'])->name('services');

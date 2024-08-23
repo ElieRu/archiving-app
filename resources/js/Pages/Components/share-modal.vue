@@ -1,14 +1,37 @@
 <script>
+import { useForm } from "@inertiajs/vue3";
+import axios from "axios";
+
 export default {
-    props: ["users", "services"],
+    props: ["users", "services", "docId"],
     data() {
         return {
-            category: true,
+            category: 'services',
+            checkedUsers: [],
+            formShare: useForm({
+                checkedUsers: '',
+                docId: '',
+            })
         };
     },
     methods: {
         selectCategory(category) {
-            this.category = category ? true : false;
+            if (category === 'services') {
+                this.category = true
+            } else {
+                this.category = false
+            }
+        },
+        selectedUsers() {
+            this.formShare.checkedUsers = this.checkedUsers 
+            this.formShare.docId = this.docId 
+            this.formShare.post("/share", {
+                onSuccess: () => {
+                    this.checkedUsers = []
+                    this.$refs.closeModal.click()
+                    this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
+                }
+            }, {preserveScroll: true, preserveState: true});
         },
     },
 };
@@ -25,6 +48,7 @@ export default {
                         type="button"
                         aria-label="Close"
                         data-bs-dismiss="modal"
+                        ref="closeModal"
                     ></button>
                 </div>
                 <div class="modal-body">
@@ -64,12 +88,12 @@ export default {
                                     <a
                                         class="dropdown-item"
                                         style="cursor: pointer"
-                                        @click.prevent="selectCategory(true)"
+                                        @click.prevent="selectCategory('services')"
                                         >Agents</a
                                     ><a
                                         class="dropdown-item"
                                         style="cursor: pointer"
-                                        @click.prevent="selectCategory(false)"
+                                        @click.prevent="selectCategory('agents')"
                                         >Services</a
                                     >
                                 </div>
@@ -94,6 +118,8 @@ export default {
                                             <input
                                                 :id="`checked-${user.id}`"
                                                 type="checkbox"
+                                                :value="user.id"
+                                                v-model="checkedUsers"
                                             />
                                         </td>
                                         <td class="text-capitalize">
@@ -109,7 +135,7 @@ export default {
                                 <tfoot>
                                     <tr>
                                         <td>#</td>
-                                        <td>Summary 2</td>
+                                        <td>Tous les agents</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -124,7 +150,8 @@ export default {
                                 </thead>
                                 <tbody>
                                     <tr
-                                        v-for="(service, index) in this.services"
+                                        v-for="(service, index) in this
+                                            .services"
                                         :key="index"
                                     >
                                         <td>
@@ -145,7 +172,7 @@ export default {
                                 <tfoot>
                                     <tr>
                                         <td>#</td>
-                                        <td>Summary 2</td>
+                                        <td>Tous les services</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -157,6 +184,8 @@ export default {
                         style="width: 100%"
                         class="btn btn-primary"
                         type="button"
+                        @click="selectedUsers()"
+                        :disabled="!checkedUsers.length"
                     >
                         Partager
                     </button>

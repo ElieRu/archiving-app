@@ -26,6 +26,7 @@ export default {
     data() {
         return {
             myDocument: {},
+            docId: ''
         };
     },
     methods: {
@@ -34,6 +35,9 @@ export default {
         },
         updateModal(document) {
             this.myDocument = document;
+        },
+        shareModal(docId) {
+            this.docId = docId
         },
         closeModal() {
             this.$refs.updateDoc.click()
@@ -212,7 +216,7 @@ export default {
                                                     style="cursor: pointer;"
                                                     data-bs-target="#share-modal"
                                                     data-bs-toggle="modal"
-                                                    @click="updateModal(document)"
+                                                    @click="shareModal(document.id)"
                                                     >Partager</a
                                                 ><Link
                                                     class="dropdown-item"
@@ -250,6 +254,6 @@ export default {
         </div>
         <UpdateModal :data="this.myDocument" />
         <PropertiesModal :data="this.myDocument" />
-        <ShareModal :users="users" :services="services" />
+        <ShareModal :users="users" :services="services" :docId="docId" />
     </body>
 </template>
