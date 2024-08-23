@@ -22,7 +22,7 @@ export default {
         PropertiesModal,
         ShareModal
     },
-    props: ["user", "users", "documents", "services"],
+    props: ["user", "users", "documents", "services", "classeurs"],
     data() {
         return {
             myDocument: {},
@@ -254,6 +254,6 @@ export default {
         </div>
         <UpdateModal :data="this.myDocument" />
         <PropertiesModal :data="this.myDocument" />
-        <ShareModal :users="users" :services="services" :docId="docId" />
+        <ShareModal :users="users" :services="services" :classeurs="classeurs" :docId="docId" />
     </body>
 </template>

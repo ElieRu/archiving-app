@@ -3,35 +3,78 @@ import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["users", "services", "docId"],
+    props: ["users", "services", "classeurs", "docId"],
     data() {
         return {
-            category: 'services',
+            category: "agents",
             checkedUsers: [],
+            checkedServices: [],
+            checkedClasseurs: [],
+            searchQuery: "",
             formShare: useForm({
-                checkedUsers: '',
-                docId: '',
-            })
+                usersCategory: "",
+                checkedUsers: "",
+                checkedServices: "",
+                checkedClasseurs: "",
+                docId: "",
+            }),
         };
+    },
+    computed: {
+        filteredDatas() {
+            if (this.category == "agents") {
+                return Object.values(this.users).filter((user) =>
+                    user.name
+                        .toLowerCase()
+                        .includes(this.searchQuery.toLowerCase())
+                );
+            }
+            if (this.category == "services") {
+                return Object.values(this.services).filter((service) =>
+                    service.nom
+                        .toLowerCase()
+                        .includes(this.searchQuery.toLowerCase())
+                );
+            }
+            if (this.category == "classeurs") {
+                return Object.values(this.classeurs).filter((classeur) =>
+                    classeur.nom
+                        .toLowerCase()
+                        .includes(this.searchQuery.toLowerCase())
+                );
+            }
+        },
     },
     methods: {
         selectCategory(category) {
-            if (category === 'services') {
-                this.category = true
-            } else {
-                this.category = false
-            }
+            this.formShare.usersCategory = category;
+            this.checkedServices = [];
+            this.checkedClasseurs = [];
+            this.checkedUsers = [];
+            this.category = category;
         },
         selectedUsers() {
-            this.formShare.checkedUsers = this.checkedUsers 
-            this.formShare.docId = this.docId 
-            this.formShare.post("/share", {
-                onSuccess: () => {
-                    this.checkedUsers = []
-                    this.$refs.closeModal.click()
-                    this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
-                }
-            }, {preserveScroll: true, preserveState: true});
+            this.formShare.checkedUsers = this.checkedUsers;
+            this.formShare.checkedServices = this.checkedServices;
+            this.formShare.checkedClasseurs = this.checkedClasseurs;
+            this.formShare.docId = this.docId;
+            this.formShare.post(
+                "/share",
+                {
+                    onSuccess: () => {
+                        this.checkedUsers = [];
+                        this.checkedServices = [];
+                        this.checkedClasseurs = [];
+                        this.category = "agents";
+                        this.$refs.closeModal.click();
+                        this.$inertia.replace("/documents", {
+                            preserveScroll: true,
+                            preserveState: true,
+                        });
+                    },
+                },
+                { preserveScroll: true, preserveState: true }
+            );
         },
     },
 };
@@ -61,6 +104,7 @@ export default {
                                 type="search"
                                 aria-controls="dataTable"
                                 placeholder="Recherche"
+                                v-model="searchQuery"
                             />
                             <div class="dropdown">
                                 <button
@@ -88,20 +132,34 @@ export default {
                                     <a
                                         class="dropdown-item"
                                         style="cursor: pointer"
-                                        @click.prevent="selectCategory('services')"
+                                        @click.prevent="
+                                            selectCategory('agents')
+                                        "
                                         >Agents</a
                                     ><a
                                         class="dropdown-item"
                                         style="cursor: pointer"
-                                        @click.prevent="selectCategory('agents')"
+                                        @click.prevent="
+                                            selectCategory('services')
+                                        "
                                         >Services</a
+                                    ><a
+                                        class="dropdown-item"
+                                        style="cursor: pointer"
+                                        @click.prevent="
+                                            selectCategory('classeurs')
+                                        "
+                                        >Classeurs</a
                                     >
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="mt-3">
-                        <div class="table-responsive" v-if="this.category">
+                        <div
+                            class="table-responsive"
+                            v-if="this.category === 'agents'"
+                        >
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -111,7 +169,7 @@ export default {
                                 </thead>
                                 <tbody>
                                     <tr
-                                        v-for="(user, index) in users"
+                                        v-for="(user, index) in filteredDatas"
                                         :key="index"
                                     >
                                         <td>
@@ -140,7 +198,10 @@ export default {
                                 </tfoot>
                             </table>
                         </div>
-                        <div class="table-responsive" v-if="!this.category">
+                        <div
+                            class="table-responsive"
+                            v-if="this.category === 'services'"
+                        >
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -150,14 +211,17 @@ export default {
                                 </thead>
                                 <tbody>
                                     <tr
-                                        v-for="(service, index) in this
-                                            .services"
+                                        v-for="(
+                                            service, index
+                                        ) in filteredDatas"
                                         :key="index"
                                     >
                                         <td>
                                             <input
                                                 :id="`checked-${service.id}`"
                                                 type="checkbox"
+                                                :value="service.id"
+                                                v-model="checkedServices"
                                             />
                                         </td>
                                         <td class="text-capitalize">
@@ -177,6 +241,49 @@ export default {
                                 </tfoot>
                             </table>
                         </div>
+                        <div
+                            class="table-responsive"
+                            v-if="this.category === 'classeurs'"
+                        >
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tous les classeurs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="(
+                                            classeur, index
+                                        ) in filteredDatas"
+                                        :key="index"
+                                    >
+                                        <td>
+                                            <input
+                                                :id="`checked-${classeur.id}`"
+                                                type="checkbox"
+                                                :value="classeur.id"
+                                                v-model="checkedClasseurs"
+                                            />
+                                        </td>
+                                        <td class="text-capitalize">
+                                            <label
+                                                :for="`checked-${classeur.id}`"
+                                                style="cursor: pointer"
+                                                >{{ classeur.nom }}</label
+                                            >
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>#</td>
+                                        <td>Tous les classeurs</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0">
@@ -185,7 +292,11 @@ export default {
                         class="btn btn-primary"
                         type="button"
                         @click="selectedUsers()"
-                        :disabled="!checkedUsers.length"
+                        :disabled="
+                            !checkedUsers.length &&
+                            !checkedServices.length &&
+                            !checkedClasseurs.length
+                        "
                     >
                         Partager
                     </button>

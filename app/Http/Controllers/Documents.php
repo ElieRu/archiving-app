@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DocumentRequest;
+use App\Models\Classeur;
 use App\Models\Document;
 use App\Models\Service;
 use App\Models\User;
@@ -19,13 +20,16 @@ class Documents extends Controller
     public function show()
     {
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
+        // The user may send documents in the Services which he appears
+        // 
         return Inertia::render('Documents', [
             'user' => Auth::user(),
             'documents' => $documents,
             'users' => User::all()
                 ->where('role', '=', null)
                 ->where('id', '!=', Auth::user()->id),
-            'services' => Service::all()
+            'services' => Service::all(),
+            'classeurs' => Classeur::where('user_id', '=', Auth::user()->id)->get()
         ]);
     }
 
@@ -68,6 +72,10 @@ class Documents extends Controller
 
         return Inertia::render('Documents', [
             'user' => Auth::user(),
+            'users' => User::all()
+                ->where('role', '=', null)
+                ->where('id', '!=', Auth::user()->id),
+            'services' => Service::all(),
             'documents' => $documents,
             'updated' => true
         ]);
@@ -79,27 +87,60 @@ class Documents extends Controller
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         return Inertia::render('Documents', [
             'user' => Auth::user(),
-            'documents' => $documents
+            'documents' => $documents,
+            'users' => User::all()
+                ->where('role', '=', null)
+                ->where('id', '!=', Auth::user()->id),
+            'services' => Service::all()
         ]);
     }
 
     public function share(Request $request)
     {
-        $content = json_decode($request->getContent());        
+        $content = json_decode($request->getContent());
         $sharedDoc = Document::findOrFail($content->docId);
 
-        for ($i=0; $i < count($content->checkedUsers); $i++) { 
-            Document::create([
-                'titre' => $sharedDoc->titre,
-                'chemin' => $sharedDoc->chemin,
-                'taille' => $sharedDoc->taille,
-                'extension' => $sharedDoc->extension,
-                'user_id' => $content->checkedUsers[$i]
-            ]);
+        if ($content->checkedUsers) {
+            for ($i = 0; $i < count($content->checkedUsers); $i++) {
+                Document::create([
+                    'titre' => $sharedDoc->titre,
+                    'chemin' => $sharedDoc->chemin,
+                    'taille' => $sharedDoc->taille,
+                    'extension' => $sharedDoc->extension,
+                    'user_id' => $content->checkedUsers[$i]
+                ]);
+            }
         }
+        if ($content->checkedServices) {
+            for ($i = 0; $i < count($content->checkedServices); $i++) {
+                Document::create([
+                    'titre' => $sharedDoc->titre,
+                    'chemin' => $sharedDoc->chemin,
+                    'taille' => $sharedDoc->taille,
+                    'extension' => $sharedDoc->extension,
+                    'service_id' => $content->checkedServices[$i]
+                ]);
+            }
+        }
+        if ($content->checkedClasseurs) {
+            for ($i = 0; $i < count($content->checkedClasseurs); $i++) {
+                Document::create([
+                    'titre' => $sharedDoc->titre,
+                    'chemin' => $sharedDoc->chemin,
+                    'taille' => $sharedDoc->taille,
+                    'extension' => $sharedDoc->extension,
+                    'classeur_id' => $content->checkedClasseurs[$i]
+                ]);
+            }
+        }
+
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         return Inertia::render('Documents', [
             'user' => Auth::user(),
+            'users' => User::all()
+                ->where('role', '=', null)
+                ->where('id', '!=', Auth::user()->id),
+            'services' => Service::all(),
             'documents' => $documents
         ]);
     }

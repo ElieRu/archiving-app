@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom')->nullable()->max(50);
             $table->string('description')->nullable()->max(250);
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
