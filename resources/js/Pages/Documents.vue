@@ -42,6 +42,9 @@ export default {
         closeModal() {
             this.$refs.updateDoc.click()
         },
+        download(docId) {
+            alert(docId)
+        }
     },
 };
 </script>
@@ -70,7 +73,7 @@ export default {
                             </div>
                         </div>
                         <div class="row gy-3">
-                            <!-- <div class="col-sm-4 col-lg-3 col-xl-2">
+                            <div v-for="(classeur, index) in this.classeurs" class="col-sm-4 col-lg-3 col-xl-2">
                                 <div class="border rounded p-2">
                                     <div
                                         class="d-flex justify-content-center"
@@ -141,10 +144,13 @@ export default {
                                         </div>
                                     </div>
                                     <span style="font-size: 13px"
-                                        >Nouveau dossier</span
+                                        >{{ classeur.nom.length < 15
+                                            ? classeur.nom
+                                            : classeur.nom.slice(0, 15) +
+                                              "..." }}</span
                                     >
                                 </div>
-                            </div> -->
+                            </div>
                             <div
                                 v-for="(document, index) in documents"
                                 :key="index"
@@ -218,6 +224,11 @@ export default {
                                                     data-bs-toggle="modal"
                                                     @click="shareModal(document.id)"
                                                     >Partager</a
+                                                ><a
+                                                    class="dropdown-item"
+                                                    style="cursor: pointer;"
+                                                    @click="download(document.id)"
+                                                    >Télécharger</a
                                                 ><Link
                                                     class="dropdown-item"
                                                     style="cursor: pointer;"

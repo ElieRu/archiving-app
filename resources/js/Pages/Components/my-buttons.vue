@@ -2,6 +2,9 @@
 <script>
 export default {
     methods: {
+        addClasseur() {
+            alert('add me')
+        },
         onChange(e) {
             this.file = e.target.files[0];
             this.$inertia.post(
@@ -26,6 +29,7 @@ export default {
             class="btn btn-primary btn-sm d-flex align-items-center"
             type="button"
             style="margin-right: 10px; height: 30.33px"
+            @click="addClasseur()"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

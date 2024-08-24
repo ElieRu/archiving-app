@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 use function PHPSTORM_META\type;
@@ -21,7 +20,16 @@ class Documents extends Controller
     {
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         // The user may send documents in the Services which he appears
-        // 
+        $datas = DB::table('classeurs')
+            ->join('documents', 'classeurs.id', '=', 'documents.classeur_id')
+            ->where('classeurs.user_id', '=', Auth::user()->id)
+            // ->where('classeurs.user_id', '=', Auth::user()->id)
+            // ->select('documents.user_id as documentId', 'classeurs.user_id as classeurId')
+            // ->where('documents.user_id', '=', 'documentId')
+            ->get();
+
+        // dd($datas);
+
         return Inertia::render('Documents', [
             'user' => Auth::user(),
             'documents' => $documents,
