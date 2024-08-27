@@ -1,3 +1,30 @@
+<script>
+export default {
+    props: ["lenClas", "lenDocs"],
+    emits: ["switch-list"],
+    data() {
+        return {
+            search: "",
+        };
+    },
+    watch: {
+        search() {
+            this.$inertia.get(
+                "/documents",
+                {
+                    search: this.search,
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        },
+    },
+    
+};
+</script>
+
 <template>
     <div
         id="dataTable_filter"
@@ -9,6 +36,7 @@
                 type="search"
                 aria-controls="dataTable"
                 placeholder="Recherche"
+                v-model="search"
             />
             <div class="dropdown">
                 <button
@@ -16,7 +44,7 @@
                     aria-expanded="false"
                     data-bs-toggle="dropdown"
                     type="button"
-                    style="height: 29px;"
+                    style="height: 29px"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -32,10 +60,34 @@
                     </svg>
                 </button>
                 <div class="dropdown-menu">
+                    <h6 class="dropdown-header">Selection</h6>
+                    <a
+                        class="dropdown-item"
+                        style="cursor: pointer"
+                        @click="$emit('switch-list', true)"
+                        >Classeurs ({{ this.lenClas }})</a
+                    ><a
+                        class="dropdown-item"
+                        style="cursor: pointer"
+                        @click="$emit('switch-list', false)"
+                        >Documents ({{ this.lenDocs }})</a
+                    >
                     <h6 class="dropdown-header">Type</h6>
-                    <a class="dropdown-item" href="#">First Item</a
-                    ><a class="dropdown-item" href="#">Second Item</a
-                    ><a class="dropdown-item" href="#">Third Item</a>
+                    <a
+                        class="dropdown-item"
+                        style="cursor: pointer"
+                        >Tous</a
+                    >
+                    <a
+                        class="dropdown-item"
+                        style="cursor: pointer"
+                        >Administratif</a
+                    >
+                    <a
+                        class="dropdown-item"
+                        style="cursor: pointer"
+                        >Controle</a
+                    >
                 </div>
             </div>
         </div>

@@ -7,37 +7,37 @@ use App\Models\Classeur;
 use App\Models\Document;
 use App\Models\Service;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
+
 use function PHPSTORM_META\type;
 
 class Documents extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        $documents = Document::where('user_id', '=', Auth::user()->id)->get();
-        // The user may send documents in the Services which he appears
-        $datas = DB::table('classeurs')
-            ->join('documents', 'classeurs.id', '=', 'documents.classeur_id')
-            ->where('classeurs.user_id', '=', Auth::user()->id)
-            // ->where('classeurs.user_id', '=', Auth::user()->id)
-            // ->select('documents.user_id as documentId', 'classeurs.user_id as classeurId')
-            // ->where('documents.user_id', '=', 'documentId')
-            ->get();
-
-        // dd($datas);
-
+        // dd($request->sort);
         return Inertia::render('Documents', [
             'user' => Auth::user(),
-            'documents' => $documents,
+            'documents' => Document::where(
+                'user_id', '=', Auth::user()->id)
+                ->where('classeur_id', '=', null)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('documents.titre', 'like', "%{$search}%");
+                })
+                ->when($request->sort, function ($query, $sort) {
+                    $query->where('documents.type', 'like', "%{$sort}%");
+                })->get(),
             'users' => User::all()
                 ->where('role', '=', null)
                 ->where('id', '!=', Auth::user()->id),
             'services' => Service::all(),
-            'classeurs' => Classeur::where('user_id', '=', Auth::user()->id)->get()
+            'classeurs' => Classeur::where(
+                'user_id', '=', Auth::user()->id)->get()
         ]);
     }
 
