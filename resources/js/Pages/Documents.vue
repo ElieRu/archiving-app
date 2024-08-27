@@ -6,9 +6,13 @@ import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import UpdateModal from "./Components/update-documents.vue";
+import UpdateModalClasseur from "./Components/update-documents-classeur.vue";
 import { Link, router } from "@inertiajs/vue3";
 import PropertiesModal from "./Components/properties-modal.vue";
+import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
 import ShareModal from "./Components/share-modal.vue";
+import PaginationAgents from "./Components/pagination-agents.vue";
+
 export default {
     components: {
         NavBar,
@@ -19,21 +23,25 @@ export default {
         TopPage,
         Link,
         UpdateModal,
+        UpdateModalClasseur,
         PropertiesModal,
+        propertiesModalClasseur,
         ShareModal,
+        PaginationAgents
     },
     props: ["user", "users", "documents", "services", "classeurs"],
     data() {
         return {
             myDocument: {},
+            myClasseur: {},
             docId: "",
             switchList: true,
-            switchSearch: true
+            switchSearch: true,
         };
     },
     methods: {
         switchDocs(value) {
-            this.switchSearch = value
+            this.switchSearch = value;
             this.switchList = value;
         },
         sortList(value) {
@@ -54,7 +62,13 @@ export default {
         download(docId) {
             alert(docId);
         },
+        getClasseur(classeur) {
+            this.myClasseur = classeur;
+        },
     },
+    mounted() {
+        // console.log(this.classeurs.total);
+    }
 };
 </script>
 
@@ -79,18 +93,17 @@ export default {
                                     @switch-list="switchDocs"
                                     @sort-list="sortList"
                                     :switchSearch="switchSearch"
-                                    :lenClas="this.classeurs.length"
-                                    :lenDocs="this.documents.length"
+                                    :lenClas="this.classeurs.total"
+                                    :lenDocs="this.documents.total"
                                 />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons @switch-list="switchDocs" />
                             </div>
                         </div>
-                        <div class="row gy-3">
+                        <div class="row gy-3" v-if="switchList">
                             <div
-                                v-if="switchList"
-                                v-for="(classeur, index) in this.classeurs"
+                                v-for="(classeur, index) in this.classeurs.data"
                                 class="col-sm-4 col-lg-3 col-xl-2"
                             >
                                 <div class="border rounded p-2">
@@ -144,15 +157,20 @@ export default {
                                             <div class="dropdown-menu">
                                                 <a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
                                                     >Ouvrir</a
                                                 ><a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
+                                                    data-bs-target="#update-modal-classeur"
+                                                    data-bs-toggle="modal"
+                                                    @click="
+                                                        getClasseur(classeur)
+                                                    "
                                                     >Modifier</a
                                                 ><Link
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
                                                     href="/classeurs"
                                                     method="delete"
                                                     as="button"
@@ -160,7 +178,12 @@ export default {
                                                     >Supprimer</Link
                                                 ><a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
+                                                    data-bs-target="#properties-modal-classeur"
+                                                    data-bs-toggle="modal"
+                                                    @click="
+                                                        getClasseur(classeur)
+                                                    "
                                                     >Propriètés</a
                                                 >
                                             </div>
@@ -173,9 +196,11 @@ export default {
                                     }}</span>
                                 </div>
                             </div>
+                            <PaginationAgents :datas="this.classeurs" />
+                        </div>
+                        <div class="row gy-3" v-if="!switchList">
                             <div
-                                v-if="!switchList"
-                                v-for="(document, index) in this.documents"
+                                v-for="(document, index) in this.documents.data"
                                 :key="index"
                                 class="col-sm-4 col-lg-3 col-xl-2"
                             >
@@ -264,7 +289,9 @@ export default {
                                                     href="/documents"
                                                     method="delete"
                                                     as="button"
-                                                    :data="{ id: document.id }"
+                                                    :data="{
+                                                        id: document.id,
+                                                    }"
                                                     >Supprimer</Link
                                                 ><a
                                                     class="dropdown-item"
@@ -287,6 +314,7 @@ export default {
                                     }}</span>
                                 </div>
                             </div>
+                            <PaginationAgents :datas="this.documents" />
                         </div>
                     </div>
                 </div>
@@ -299,8 +327,10 @@ export default {
         <ShareModal
             :users="users"
             :services="services"
-            :classeurs="classeurs"
+            :classeurs="this.classeurs.data"
             :docId="docId"
         />
+        <propertiesModalClasseur :data="this.myClasseur" />
+        <UpdateModalClasseur :data="this.myClasseur" />
     </body>
 </template>
