@@ -4,6 +4,7 @@ use App\Http\Controllers\AddAgents;
 use App\Http\Controllers\Agents;
 use App\Http\Controllers\Apropos;
 use App\Http\Controllers\Archivage;
+use App\Http\Controllers\Classeurs;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Documents;
 use App\Http\Controllers\Login;
@@ -32,6 +33,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/documents', [Documents::class, 'update']);
     Route::delete('/documents', [Documents::class, 'delete']);
     Route::post('/share', [Documents::class, 'share']);
+
+    Route::get('/classeurs', [Classeurs::class, 'show'])->name('show');
+    Route::post('/classeurs', [Classeurs::class, 'create']);
+    Route::put('/classeurs', [Classeurs::class, 'update']);
+    Route::delete('/classeurs', [Classeurs::class, 'delete']);
 
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/services', [Services::class, 'show'])->name('services');

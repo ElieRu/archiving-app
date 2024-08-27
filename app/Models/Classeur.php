@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Classeur extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['nom', 'description', 'user_id'];
+
 }

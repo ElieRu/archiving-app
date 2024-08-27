@@ -20,16 +20,23 @@ export default {
         Link,
         UpdateModal,
         PropertiesModal,
-        ShareModal
+        ShareModal,
     },
     props: ["user", "users", "documents", "services", "classeurs"],
     data() {
         return {
             myDocument: {},
-            docId: ''
+            docId: "",
+            switchList: true,
         };
     },
     methods: {
+        switchDocs(value) {
+            this.switchList = value;
+        },
+        sortList(value) {
+            alert(value);
+        },
         myLoad() {
             router.replace("/documents");
         },
@@ -37,14 +44,14 @@ export default {
             this.myDocument = document;
         },
         shareModal(docId) {
-            this.docId = docId
+            this.docId = docId;
         },
         closeModal() {
-            this.$refs.updateDoc.click()
+            this.$refs.updateDoc.click();
         },
         download(docId) {
-            alert(docId)
-        }
+            alert(docId);
+        },
     },
 };
 </script>
@@ -66,14 +73,23 @@ export default {
                         </div>
                         <div class="row my-3">
                             <div class="col-sm-6 d-flex">
-                                <SearchBar />
+                                <SearchBar
+                                    @switch-list="switchDocs"
+                                    @sort-list="sortList"
+                                    :lenClas="this.classeurs.length"
+                                    :lenDocs="this.documents.length"
+                                />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons />
                             </div>
                         </div>
                         <div class="row gy-3">
-                            <div v-for="(classeur, index) in this.classeurs" class="col-sm-4 col-lg-3 col-xl-2">
+                            <div
+                                v-if="switchList"
+                                v-for="(classeur, index) in this.classeurs"
+                                class="col-sm-4 col-lg-3 col-xl-2"
+                            >
                                 <div class="border rounded p-2">
                                     <div
                                         class="d-flex justify-content-center"
@@ -143,16 +159,16 @@ export default {
                                             </div>
                                         </div>
                                     </div>
-                                    <span style="font-size: 13px"
-                                        >{{ classeur.nom.length < 15
+                                    <span style="font-size: 13px">{{
+                                        classeur.nom.length < 15
                                             ? classeur.nom
-                                            : classeur.nom.slice(0, 15) +
-                                              "..." }}</span
-                                    >
+                                            : classeur.nom.slice(0, 15) + "..."
+                                    }}</span>
                                 </div>
                             </div>
                             <div
-                                v-for="(document, index) in documents"
+                                v-if="!switchList"
+                                v-for="(document, index) in this.documents"
                                 :key="index"
                                 class="col-sm-4 col-lg-3 col-xl-2"
                             >
@@ -212,26 +228,32 @@ export default {
                                             <div class="dropdown-menu">
                                                 <a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
                                                     data-bs-target="#update-modal"
                                                     data-bs-toggle="modal"
-                                                    @click="updateModal(document)"
+                                                    @click="
+                                                        updateModal(document)
+                                                    "
                                                     >Modifier</a
                                                 ><a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
                                                     data-bs-target="#share-modal"
                                                     data-bs-toggle="modal"
-                                                    @click="shareModal(document.id)"
+                                                    @click="
+                                                        shareModal(document.id)
+                                                    "
                                                     >Partager</a
                                                 ><a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
-                                                    @click="download(document.id)"
+                                                    style="cursor: pointer"
+                                                    @click="
+                                                        download(document.id)
+                                                    "
                                                     >Télécharger</a
                                                 ><Link
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
                                                     href="/documents"
                                                     method="delete"
                                                     as="button"
@@ -239,10 +261,12 @@ export default {
                                                     >Supprimer</Link
                                                 ><a
                                                     class="dropdown-item"
-                                                    style="cursor: pointer;"
+                                                    style="cursor: pointer"
                                                     data-bs-target="#properties-modal"
                                                     data-bs-toggle="modal"
-                                                    @click="updateModal(document)"
+                                                    @click="
+                                                        updateModal(document)
+                                                    "
                                                     >Proprietés</a
                                                 >
                                             </div>
@@ -265,6 +289,11 @@ export default {
         </div>
         <UpdateModal :data="this.myDocument" />
         <PropertiesModal :data="this.myDocument" />
-        <ShareModal :users="users" :services="services" :classeurs="classeurs" :docId="docId" />
+        <ShareModal
+            :users="users"
+            :services="services"
+            :classeurs="classeurs"
+            :docId="docId"
+        />
     </body>
 </template>

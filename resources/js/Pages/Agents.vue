@@ -27,9 +27,7 @@ export default {
     },
     props: ['user', 'users'],
     datas() {
-        return {
-            // search: ""
-        }
+        return {}
     },
     
 };
@@ -147,7 +145,7 @@ export default {
                                                     >
                                                         <div class="dropstart">
                                                             <button
-                                                                class="btn btn-primary link-body-emphasis bg-transparent border-white"
+                                                                class="btn btn-primary link-body-emphasis bg-transparent border-0"
                                                                 aria-expanded="false"
                                                                 data-bs-toggle="dropdown"
                                                                 type="button"

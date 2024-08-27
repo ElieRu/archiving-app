@@ -3,7 +3,7 @@
 export default {
     methods: {
         addClasseur() {
-            alert('add me')
+            this.$inertia.post('/classeurs', null)
         },
         onChange(e) {
             this.file = e.target.files[0];
