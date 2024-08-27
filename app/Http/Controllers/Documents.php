@@ -20,11 +20,21 @@ class Documents extends Controller
 {
     public function show(Request $request)
     {
-        // dd($request->sort);
+        $classeurs = Classeur::where(
+            'user_id',
+            '=',
+            Auth::user()->id
+        )->when($request->searchClasseur, function ($query, $searchClasseur) {
+            $query->where('classeurs.nom', 'like', "%{$searchClasseur}%");
+        });
+
         return Inertia::render('Documents', [
             'user' => Auth::user(),
             'documents' => Document::where(
-                'user_id', '=', Auth::user()->id)
+                'user_id',
+                '=',
+                Auth::user()->id
+            )
                 ->where('classeur_id', '=', null)
                 ->when($request->search, function ($query, $search) {
                     $query->where('documents.titre', 'like', "%{$search}%");
@@ -36,8 +46,7 @@ class Documents extends Controller
                 ->where('role', '=', null)
                 ->where('id', '!=', Auth::user()->id),
             'services' => Service::all(),
-            'classeurs' => Classeur::where(
-                'user_id', '=', Auth::user()->id)->get()
+            'classeurs' => $classeurs->get()
         ]);
     }
 
@@ -95,11 +104,12 @@ class Documents extends Controller
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         return Inertia::render('Documents', [
             'user' => Auth::user(),
-            'documents' => $documents,
             'users' => User::all()
                 ->where('role', '=', null)
                 ->where('id', '!=', Auth::user()->id),
-            'services' => Service::all()
+            'services' => Service::all(),
+            'documents' => $documents,
+            'updated' => true
         ]);
     }
 

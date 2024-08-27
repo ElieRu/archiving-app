@@ -28,10 +28,12 @@ export default {
             myDocument: {},
             docId: "",
             switchList: true,
+            switchSearch: true
         };
     },
     methods: {
         switchDocs(value) {
+            this.switchSearch = value
             this.switchList = value;
         },
         sortList(value) {
@@ -76,12 +78,13 @@ export default {
                                 <SearchBar
                                     @switch-list="switchDocs"
                                     @sort-list="sortList"
+                                    :switchSearch="switchSearch"
                                     :lenClas="this.classeurs.length"
                                     :lenDocs="this.documents.length"
                                 />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
-                                <MyButtons />
+                                <MyButtons @switch-list="switchDocs" />
                             </div>
                         </div>
                         <div class="row gy-3">
@@ -141,19 +144,23 @@ export default {
                                             <div class="dropdown-menu">
                                                 <a
                                                     class="dropdown-item"
-                                                    href="#"
+                                                    style="cursor: pointer;"
                                                     >Ouvrir</a
                                                 ><a
                                                     class="dropdown-item"
-                                                    href="#"
+                                                    style="cursor: pointer;"
                                                     >Modifier</a
+                                                ><Link
+                                                    class="dropdown-item"
+                                                    style="cursor: pointer;"
+                                                    href="/classeurs"
+                                                    method="delete"
+                                                    as="button"
+                                                    :data="{ id: classeur.id }"
+                                                    >Supprimer</Link
                                                 ><a
                                                     class="dropdown-item"
-                                                    href="#"
-                                                    >Supprimer</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
+                                                    style="cursor: pointer;"
                                                     >Propriètés</a
                                                 >
                                             </div>

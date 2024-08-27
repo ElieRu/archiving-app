@@ -12,6 +12,17 @@ use Inertia\Inertia;
 
 class Classeurs extends Controller
 {
+    public function show (Request $request)
+    {
+        return Inertia::render('Documents', [
+            'classeurs' => Classeur::where(
+                'user_id',
+                '=',
+                Auth::user()->id
+            )]
+        );
+    }
+
     public function create (Request $request)
     {
         $classeurs = Classeur::where('user_id', Auth::user()->id)->get();
@@ -34,6 +45,25 @@ class Classeurs extends Controller
             'services' => Service::all(),
             'classeurs' => Classeur::where(
                 'user_id', '=', Auth::user()->id)
+                ->get()
+        ]);
+    }
+
+    public function delete (Request $request)
+    {
+        Classeur::findOrFail($request->id)->delete();
+        $classeurs = Classeur::where('user_id', '=', Auth::user()->id);
+        return Inertia::render('Documents', [
+            'user' => Auth::user(),
+            'documents' => Document::where(
+                'user_id', '=', Auth::user()->id)
+                ->where('classeur_id', '=', null)
+                ->get(),
+            'users' => User::all()
+                ->where('role', '=', null)
+                ->where('id', '!=', Auth::user()->id),
+            'services' => Service::all(),
+            'classeurs' => $classeurs
                 ->get()
         ]);
     }
