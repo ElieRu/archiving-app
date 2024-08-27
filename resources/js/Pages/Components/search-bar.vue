@@ -1,6 +1,6 @@
 <script>
 export default {
-    props: ["lenClas", "lenDocs"],
+    props: ["switchSearch", "lenClas", "lenDocs"],
     emits: ["switch-list"],
     data() {
         return {
@@ -9,19 +9,31 @@ export default {
     },
     watch: {
         search() {
-            this.$inertia.get(
-                "/documents",
-                {
-                    search: this.search,
-                },
-                {
-                    preserveState: true,
-                    replace: true,
-                }
-            );
+            if (!this.switchSearch) {
+                this.$inertia.get(
+                    "/documents",
+                    {
+                        search: this.search,
+                    },
+                    {
+                        preserveState: true,
+                        replace: true,
+                    }
+                );
+            } else {
+                this.$inertia.get(
+                    "/documents",
+                    {
+                        searchClasseur: this.search,
+                    },
+                    {
+                        preserveState: true,
+                        replace: true,
+                    }
+                );
+            }
         },
     },
-    
 };
 </script>
 
@@ -72,22 +84,14 @@ export default {
                         @click="$emit('switch-list', false)"
                         >Documents ({{ this.lenDocs }})</a
                     >
-                    <h6 class="dropdown-header">Type</h6>
-                    <a
-                        class="dropdown-item"
-                        style="cursor: pointer"
-                        >Tous</a
-                    >
-                    <a
-                        class="dropdown-item"
-                        style="cursor: pointer"
+                    <!-- <h6 class="dropdown-header">Type</h6>
+                    <a class="dropdown-item" style="cursor: pointer">Tous</a>
+                    <a class="dropdown-item" style="cursor: pointer"
                         >Administratif</a
                     >
-                    <a
-                        class="dropdown-item"
-                        style="cursor: pointer"
+                    <a class="dropdown-item" style="cursor: pointer"
                         >Controle</a
-                    >
+                    > -->
                 </div>
             </div>
         </div>

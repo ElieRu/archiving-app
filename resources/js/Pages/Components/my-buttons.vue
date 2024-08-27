@@ -1,9 +1,15 @@
 
 <script>
 export default {
+    emits: ['switch-list'],
     methods: {
         addClasseur() {
-            this.$inertia.post('/classeurs', null)
+            this.$emit('switch-list', true)
+            this.$inertia.post('/classeurs', null, {
+                onSuccess: () => {
+                    this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
+                }
+            })
         },
         onChange(e) {
             this.file = e.target.files[0];
@@ -13,6 +19,7 @@ export default {
                     file: this.file,
                 }, {
                     onSuccess: () => {
+                        this.$emit('switch-list', false)
                         this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
                     }
                 }
