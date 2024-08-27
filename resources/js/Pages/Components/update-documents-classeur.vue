@@ -3,7 +3,7 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["data", "updated"],
+    props: ["data"],
     data() {
         return {
             form: {
@@ -25,31 +25,30 @@ export default {
     methods: {
         submit() {
             this.err = true;
-            axios
-                .put("/documents", this.form)
-                .then((res) => {
-                    try {
-                        if (res.status === 200) {
-                            this.err = false;
-                            this.$refs.closeModal.click();
-                        }
-                    } catch (error) {}
-                })
-                .catch((err) => {
+            this.$inertia.put("/classeurs", this.form, {
+                onSuccess: () => {
+                    this.err = false;
+                    this.$refs.closeModal.click();
+                    this.$inertia.replace('/documents', { preserveScroll: true, preserveState: true })
+                },
+                onError: () => {
                     this.err = false;
                     this.display = true;
-                });
+                },
+            });
         },
     },
 };
 </script>
 
 <template>
-    <div id="update-modal" class="modal fade" role="dialog" tabindex="-1">
-        <div
-            class="modal-dialog"
-            role="document"
-        >
+    <div
+        id="update-modal-classeur"
+        class="modal fade"
+        role="dialog"
+        tabindex="-1"
+    >
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header border-0">
                     <h4 class="modal-title">Modification</h4>
@@ -72,38 +71,13 @@ export default {
                                             font-size: 13px;
                                             margin-bottom: 5px;
                                         "
-                                        >Titre</label
+                                        >Nom</label
                                     ><input
                                         class="form-control"
                                         type="text"
-                                        placeholder="Titre"
-                                        v-model="tmpForm.titre"
+                                        placeholder="Nom"
+                                        v-model="tmpForm.nom"
                                     />
-                                </div>
-                                <div class="mb-1">
-                                    <label
-                                        class="form-label"
-                                        style="
-                                            font-size: 13px;
-                                            margin-bottom: 5px;
-                                        "
-                                        >Type</label
-                                    ><select
-                                        class="form-select"
-                                        v-model="tmpForm.type"
-                                    >
-                                        <optgroup label="Selection">
-                                            <option
-                                                value="administratif"
-                                                selected
-                                            >
-                                                Administratif
-                                            </option>
-                                            <option value="control">
-                                                Control
-                                            </option>
-                                        </optgroup>
-                                    </select>
                                 </div>
                                 <div class="mb-2">
                                     <label

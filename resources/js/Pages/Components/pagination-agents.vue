@@ -10,7 +10,7 @@ export default {
 </script>
 
 <template>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-center my-4">
         <template class="flex" v-for="link in datas.links" :key="link.id">
             <Link
                 v-if="link.url === null"

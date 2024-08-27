@@ -20,33 +20,36 @@ class Documents extends Controller
 {
     public function show(Request $request)
     {
-        $classeurs = Classeur::where(
-            'user_id',
-            '=',
-            Auth::user()->id
-        )->when($request->searchClasseur, function ($query, $searchClasseur) {
-            $query->where('classeurs.nom', 'like', "%{$searchClasseur}%");
-        });
-
-        return Inertia::render('Documents', [
-            'user' => Auth::user(),
-            'documents' => Document::where(
+        $classeurs = Classeur::query()
+            ->where(
                 'user_id',
                 '=',
                 Auth::user()->id
-            )
-                ->where('classeur_id', '=', null)
-                ->when($request->search, function ($query, $search) {
-                    $query->where('documents.titre', 'like', "%{$search}%");
-                })
-                ->when($request->sort, function ($query, $sort) {
-                    $query->where('documents.type', 'like', "%{$sort}%");
-                })->get(),
+            )->when($request->searchClasseur, function ($query, $searchClasseur) {
+                $query->where('classeurs.nom', 'like', "%{$searchClasseur}%");
+            })
+            ->paginate(24)
+            ->withQueryString();
+
+        $documents = Document::where(
+            'user_id',
+            '=',
+            Auth::user()->id
+        )
+            ->where('classeur_id', '=', null)
+            ->when($request->search, function ($query, $search) {
+                $query->where('documents.titre', 'like', "%{$search}%");
+            })->paginate(24)
+            ->withQueryString();
+
+        return Inertia::render('Documents', [
+            'user' => Auth::user(),
+            'documents' => $documents,
             'users' => User::all()
                 ->where('role', '=', null)
                 ->where('id', '!=', Auth::user()->id),
             'services' => Service::all(),
-            'classeurs' => $classeurs->get()
+            'classeurs' => $classeurs
         ]);
     }
 
