@@ -94,4 +94,29 @@ class Classeurs extends Controller
                 ->get()
         ]);
     }
+
+    public function deleteMore (Request $request)
+    {
+        for ($i=0; $i<count($request->datas); $i++) {
+            Classeur::findOrFail($request->datas[$i])->delete();
+        }
+        $classeurs = Classeur::where('user_id', '=', Auth::user()->id);
+        
+        return Inertia::render('Documents', [
+            'user' => Auth::user(),
+            'documents' => Document::where(
+                'user_id',
+                '=',
+                Auth::user()->id
+            )
+                ->where('classeur_id', '=', null)
+                ->get(),
+            'users' => User::all()
+                ->where('role', '=', null)
+                ->where('id', '!=', Auth::user()->id),
+            'services' => Service::all(),
+            'classeurs' => $classeurs
+                ->get()
+        ]);
+    }
 }

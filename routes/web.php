@@ -38,19 +38,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/classeurs', [Classeurs::class, 'create']);
     Route::put('/classeurs', [Classeurs::class, 'update']);
     Route::delete('/classeurs', [Classeurs::class, 'delete']);
+    Route::post('/delete-more', [Classeurs::class, 'deleteMore']);
 
-    Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/services', [Services::class, 'show'])->name('services');
-    Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');
+    Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('servicesMore');
+    
+    Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
     Route::put('/user/password', [Agents::class, 'updatePassword']);
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/services', [Services::class, 'show'])->name('services');
-    Route::get('/services-more', [ServicesMore::class, 'show'])->name('servicesMore');
-    
     Route::get('/agents', [Agents::class, 'show'])->name('agents');
     Route::post('/agents', [Agents::class, 'create'])->name('agents');
     Route::put('/agents', [Agents::class, 'resetPassword'])->name('agents');

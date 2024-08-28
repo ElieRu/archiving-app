@@ -31,7 +31,7 @@ export default {
 </script>
 
 <template>
-    <div class="d-flex align-items-center">
+    <div class="d-flex">
         <button
             class="btn btn-primary btn-sm d-flex align-items-center"
             type="button"
