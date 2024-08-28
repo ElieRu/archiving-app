@@ -7,6 +7,8 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import ServiceModal from "./Components/service-modal.vue";
 import DeleteServiceModal from "./Components/delete-service-modal.vue";
+import { Link } from "@inertiajs/vue3";
+
 export default {
     components: {
         NavBar,
@@ -17,8 +19,9 @@ export default {
         TopPage,
         ServiceModal,
         DeleteServiceModal,
+        Link
     },
-    props: ["user"],
+    props: ["user", "services"],
 };
 </script>
 
@@ -34,23 +37,11 @@ export default {
                             class="d-flex justify-content-between align-items-center"
                         >
                             <div class="d-flex">
-                                <h3 style="margin: 0px">
-                                    <a href="#">Services</a>
-                                </h3>
-                                <h3
-                                    style="
-                                        margin-bottom: 0px;
-                                        margin-right: 10px;
-                                        margin-left: 10px;
-                                    "
-                                >
-                                    •
-                                </h3>
                                 <h3
                                     class="text-body-secondary"
                                     style="margin: 0px; margin-bottom: 0px"
                                 >
-                                    Name
+                                    Services
                                 </h3>
                             </div>
                         </div>
@@ -78,7 +69,10 @@ export default {
                             </div>
                         </div>
                         <div class="row gy-2">
-                            <div class="col-12 col-md-6 col-xl-4">
+                            <div
+                                class="col-12 col-md-6 col-xl-4"
+                                v-for="(service, index) in services"
+                            >
                                 <div class="card">
                                     <div class="card-body">
                                         <div
@@ -88,8 +82,16 @@ export default {
                                                 style="
                                                     text-decoration: underline;
                                                 "
+                                                class="text-capitalize"
                                             >
-                                                <a href="services-more">Link</a>
+                                                <Link :href="`/services/${service.id}`">{{
+                                                    service.nom.length < 20
+                                                        ? service.nom
+                                                        : service.nom.slice(
+                                                              0,
+                                                              20
+                                                          ) + "..."
+                                                }}</Link>
                                             </h4>
                                             <div>
                                                 <div class="dropdown">
@@ -136,11 +138,17 @@ export default {
                                             </div>
                                         </div>
                                         <p class="card-text">
-                                            Nullam id dolor id nibh ultricies
-                                            vehicula ut id elit. Cras justo
-                                            odio, dapibus ac facilisis in,
-                                            egestas eget quam. Donec id elit non
-                                            mi porta gravida at eget metus.
+                                            {{
+                                                service.description
+                                                    ? service.description
+                                                          .length < 60
+                                                        ? service.description
+                                                        : service.description.slice(
+                                                              0,
+                                                              60
+                                                          ) + "..."
+                                                    : "Description**"
+                                            }}
                                         </p>
                                     </div>
                                 </div>

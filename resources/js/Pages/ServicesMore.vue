@@ -5,6 +5,8 @@ import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import { Link } from "@inertiajs/vue3"
+
 export default {
     components: {
         NavBar,
@@ -13,8 +15,9 @@ export default {
         Footer,
         MyButtons,
         TopPage,
+        Link
     },
-    props: ['user'],
+    props: ["user", "service"],
 };
 </script>
 
@@ -31,7 +34,7 @@ export default {
                         >
                             <div class="d-flex">
                                 <h3 style="margin: 0px">
-                                    <a href="/services">Services</a>
+                                    <Link href="/services">Services</Link>
                                 </h3>
                                 <h3
                                     style="
@@ -43,10 +46,14 @@ export default {
                                     •
                                 </h3>
                                 <h3
-                                    class="text-body-secondary"
+                                    class="text-body-secondary text-capitalize"
                                     style="margin: 0px; margin-bottom: 0px"
                                 >
-                                    Name
+                                    {{
+                                        service.nom.length < 15
+                                            ? service.nom
+                                            : service.nom.slice(0, 15) + "..."
+                                    }}
                                 </h3>
                             </div>
                         </div>
