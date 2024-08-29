@@ -8,6 +8,7 @@ import TopPage from "./Components/top-page.vue";
 import ServiceModal from "./Components/service-modal.vue";
 import DeleteServiceModal from "./Components/delete-service-modal.vue";
 import AddServiceModal from "./Components/add-service-modal.vue";
+import UpdateServiceModal from "./Components/update-service-modal.vue";
 import { Link } from "@inertiajs/vue3";
 
 export default {
@@ -21,12 +22,14 @@ export default {
         ServiceModal,
         DeleteServiceModal,
         AddServiceModal,
+        UpdateServiceModal,
         Link,
     },
     props: ["user", "services"],
     data() {
         return {
             search: "",
+            service: {}
         };
     },
     computed: {
@@ -36,6 +39,11 @@ export default {
             );
         },
     },
+    methods: {
+        getService (service) {
+            this.service = service
+        }
+    }
 };
 </script>
 
@@ -82,7 +90,7 @@ export default {
                                     /></label>
                                     <button
                                         class="btn btn-primary btn-sm"
-                                        style="height: 29px;"
+                                        style="height: 29px"
                                         data-bs-target="#add-service-modal"
                                         data-bs-toggle="modal"
                                         v-if="this.user.role == 'admin'"
@@ -131,7 +139,13 @@ export default {
                                                 >
                                             </h4>
                                             <div>
-                                                <div class="dropdown">
+                                                <div
+                                                    class="dropdown"
+                                                    v-if="
+                                                        this.user.role ==
+                                                        'admin'
+                                                    "
+                                                >
                                                     <button
                                                         class="btn btn-primary bg-transparent border-0"
                                                         aria-expanded="false"
@@ -155,19 +169,17 @@ export default {
                                                     <div class="dropdown-menu">
                                                         <a
                                                             class="dropdown-item"
-                                                            href="#"
-                                                            >Ajouter</a
-                                                        ><a
-                                                            class="dropdown-item"
-                                                            href="#"
-                                                            data-bs-target="#service-modal"
+                                                            style="cursor: pointer"
+                                                            data-bs-target="#update-service-modal"
                                                             data-bs-toggle="modal"
+                                                            @click.prevent="getService(service)"
                                                             >Modifier</a
                                                         ><a
                                                             class="dropdown-item"
-                                                            href="#"
+                                                            style="cursor: pointer"
                                                             data-bs-target="#delete-service-modal"
                                                             data-bs-toggle="modal"
+                                                            @click.prevent="getService(service)"
                                                             >Supprimer</a
                                                         >
                                                     </div>
@@ -198,7 +210,8 @@ export default {
             <TopPage />
         </div>
         <ServiceModal />
-        <DeleteServiceModal />
-        <AddServiceModal :role="user.role" />
+        <DeleteServiceModal :id="this.service.id" />
+        <AddServiceModal />
+        <UpdateServiceModal :service="this.service" />
     </body>
 </template>
