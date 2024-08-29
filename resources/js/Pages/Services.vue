@@ -7,6 +7,7 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import ServiceModal from "./Components/service-modal.vue";
 import DeleteServiceModal from "./Components/delete-service-modal.vue";
+import AddServiceModal from "./Components/add-service-modal.vue";
 import { Link } from "@inertiajs/vue3";
 
 export default {
@@ -19,9 +20,22 @@ export default {
         TopPage,
         ServiceModal,
         DeleteServiceModal,
-        Link
+        AddServiceModal,
+        Link,
     },
     props: ["user", "services"],
+    data() {
+        return {
+            search: "",
+        };
+    },
+    computed: {
+        filteredDatas() {
+            return Object.values(this.services).filter((service) =>
+                service.nom.toLowerCase().includes(this.search.toLowerCase())
+            );
+        },
+    },
 };
 </script>
 
@@ -64,14 +78,34 @@ export default {
                                             type="search"
                                             aria-controls="dataTable"
                                             placeholder="Recherche"
+                                            v-model="search"
                                     /></label>
+                                    <button
+                                        class="btn btn-primary btn-sm"
+                                        style="height: 29px;"
+                                        data-bs-target="#add-service-modal"
+                                        data-bs-toggle="modal"
+                                        v-if="this.user.role == 'admin'"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="-32 0 512 512"
+                                            width="1em"
+                                            height="1em"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                                            ></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div class="row gy-2">
                             <div
                                 class="col-12 col-md-6 col-xl-4"
-                                v-for="(service, index) in services"
+                                v-for="(service, index) in filteredDatas"
                             >
                                 <div class="card">
                                     <div class="card-body">
@@ -84,14 +118,17 @@ export default {
                                                 "
                                                 class="text-capitalize"
                                             >
-                                                <Link :href="`/services/${service.id}`">{{
-                                                    service.nom.length < 20
-                                                        ? service.nom
-                                                        : service.nom.slice(
-                                                              0,
-                                                              20
-                                                          ) + "..."
-                                                }}</Link>
+                                                <Link
+                                                    :href="`/services/${service.id}`"
+                                                    >{{
+                                                        service.nom.length < 20
+                                                            ? service.nom
+                                                            : service.nom.slice(
+                                                                  0,
+                                                                  20
+                                                              ) + "..."
+                                                    }}</Link
+                                                >
                                             </h4>
                                             <div>
                                                 <div class="dropdown">
@@ -162,5 +199,6 @@ export default {
         </div>
         <ServiceModal />
         <DeleteServiceModal />
+        <AddServiceModal :role="user.role" />
     </body>
 </template>

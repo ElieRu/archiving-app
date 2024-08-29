@@ -16,4 +16,17 @@ class Services extends Controller
             'services' => Service::all()
         ]);
     }
+
+    public function create(Request $request)
+    {
+        Service::create([
+            'nom' => $request->nom,
+            'description' => $request->description,
+        ]);
+
+        return Inertia::render('Services', [
+            'user' => Auth::user(),
+            'services' => Service::all()
+        ]);
+    }
 }
