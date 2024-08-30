@@ -84,14 +84,6 @@ export default {
                         @click="$emit('switch-list', false)"
                         >Documents ({{ this.lenDocs }})</a
                     >
-                    <!-- <h6 class="dropdown-header">Type</h6>
-                    <a class="dropdown-item" style="cursor: pointer">Tous</a>
-                    <a class="dropdown-item" style="cursor: pointer"
-                        >Administratif</a
-                    >
-                    <a class="dropdown-item" style="cursor: pointer"
-                        >Controle</a
-                    > -->
                 </div>
             </div>
         </div>

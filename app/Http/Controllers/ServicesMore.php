@@ -13,6 +13,7 @@ class ServicesMore extends Controller
 {
     public function show(Request $request)
     {
+        // dd($request);
         $service = Service::findOrFail($request->id);
         // dd($request->searchClasseur);
         if ($request->role) {

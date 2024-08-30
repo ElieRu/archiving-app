@@ -3,7 +3,7 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["data"],
+    props: ["data", "table"],
     data() {
         return {
             form: {
@@ -29,7 +29,9 @@ export default {
                 onSuccess: () => {
                     this.err = false;
                     this.$refs.closeModal.click();
-                    this.$inertia.replace('/documents', { preserveScroll: true, preserveState: true })
+                    if (this.table) {
+                        this.$inertia.replace(`/${this.table}`, { preserveScroll: true, preserveState: true })                    
+                    }                    
                 },
                 onError: () => {
                     this.err = false;

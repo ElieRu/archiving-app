@@ -13,6 +13,11 @@ use Inertia\Inertia;
 
 class Classeurs extends Controller
 {
+    public function index()
+    {
+        dd('getting');
+    }
+
     public function create(Request $request)
     {
         $classeurs = Classeur::where('user_id', Auth::user()->id)->get();
@@ -63,23 +68,14 @@ class Classeurs extends Controller
 
     public function delete(Request $request)
     {
+        // dd($request);
         Classeur::findOrFail($request->id)->delete();
-        $classeurs = Classeur::where('user_id', '=', Auth::user()->id);
-        return Inertia::render('Documents', [
-            'user' => Auth::user(),
-            'documents' => Document::where(
-                'user_id',
-                '=',
-                Auth::user()->id
-            )
-                ->where('classeur_id', '=', null)
-                ->get(),
-            'users' => User::all()
-                ->where('role', '=', null)
-                ->where('id', '!=', Auth::user()->id),
-            'services' => Service::all(),
-            'classeurs' => $classeurs
-                ->get()
+        if ($request->table === 'documents') {
+            return Inertia::render('Documents');
+        }
+
+        return Inertia::render('ServicesMore', [
+            'id' => $request->service_id
         ]);
     }
 
