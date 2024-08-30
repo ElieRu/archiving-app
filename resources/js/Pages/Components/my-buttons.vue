@@ -2,25 +2,27 @@
 <script>
 export default {
     emits: ['switch-list'],
+    props: ['service_id'],
     methods: {
         addClasseur() {
-            this.$emit('switch-list', true)
-            this.$inertia.post('/classeurs', null, {
+            this.$inertia.post(`/classeurs`, {
+                service_id: this.service_id,
+            }, {
                 onSuccess: () => {
-                    this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
+                    this.$emit('switch-list', true)
                 }
             })
         },
         onChange(e) {
             this.file = e.target.files[0];
             this.$inertia.post(
-                "/documents",
+                `/documents`,
                 {
+                    service_id: this.service_id,
                     file: this.file,
                 }, {
                     onSuccess: () => {
                         this.$emit('switch-list', false)
-                        this.$inertia.replace('/documents', {preserveScroll: true, preserveState: true})
                     }
                 }
             );

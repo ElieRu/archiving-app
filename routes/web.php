@@ -28,20 +28,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [Dashboard::class, 'show'])->name('dashboard');
     Route::get('/home', [Dashboard::class, 'show'])->name('dashboard');
     
-    Route::get('/documents', [Documents::class, 'show'])->name('show');
+    Route::get('/documents', [Documents::class, 'show'])->name('document.show');
     Route::post('/documents', [Documents::class, 'create']);
     Route::put('/documents', [Documents::class, 'update']);
     Route::delete('/documents', [Documents::class, 'delete']);
     Route::post('/share', [Documents::class, 'share']);
 
-    Route::get('/classeurs', [Classeurs::class, 'show'])->name('show');
     Route::post('/classeurs', [Classeurs::class, 'create']);
     Route::put('/classeurs', [Classeurs::class, 'update']);
     Route::delete('/classeurs', [Classeurs::class, 'delete']);
     Route::post('/delete-more', [Classeurs::class, 'deleteMore']);
 
     Route::get('/services', [Services::class, 'show'])->name('services');
-    Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('servicesMore');
+    Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('service.more');
     
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
