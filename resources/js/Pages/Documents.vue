@@ -113,6 +113,7 @@ export default {
                                     :switchSearch="switchSearch"
                                     :lenClas="this.classeurs.total"
                                     :lenDocs="this.documents.total"
+                                    table="documents"
                                 />
                             </div>
                             <div

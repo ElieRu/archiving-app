@@ -11,7 +11,7 @@ export default {
         search() {
             if (!this.switchSearch) {
                 this.$inertia.get(
-                    `/${this.table}/${this.service_id}`,
+                    `/${this.table}/${this.service_id ? this.service_id : ''}`,
                     {
                         search: this.search,
                     },
@@ -22,7 +22,7 @@ export default {
                 );
             } else {
                 this.$inertia.get(
-                    `/${this.table}/${this.service_id}`,
+                    `/${this.table}/${this.service_id ? this.service_id : ''}`,
                     {
                         searchClasseur: this.search,
                     },

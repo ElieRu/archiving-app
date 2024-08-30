@@ -27,13 +27,18 @@ class ServicesMore extends Controller
                 })
                 ->paginate(24)
                 ->withQueryString();
+
+            $documents = Document::query()
+                ->where('service_id', '=', $service->id)
+                ->paginate(24)
+                ->withQueryString();
         }
 
         return Inertia::render('ServicesMore', [
             'user' => Auth::user(),
             'service' => $service,
             'classeurs' => $classeurs,
-            'documents' => Document::all()
+            'documents' => $documents
         ]);
     }
 }
