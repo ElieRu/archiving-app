@@ -3,11 +3,12 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["role"],
+    props: ["service"],
     data() {
         return {
             form: {
                 nom: null,
+                description: null,
             },
             err: false,
             display: false,
@@ -16,18 +17,29 @@ export default {
     methods: {
         submit() {
             this.err = true;
-            axios
-                .post("/services", this.form)
-                .then((res) => {
-                    this.err = false;
-                    this.$refs.closeModal.click();
-                    this.form.nom = "";
-                    this.$inertia.replace('/services', {preserveScroll: true, preserveState: true})
-                })
-                .catch((err) => {
-                    this.err = false;
-                    this.display = true;
-                });
+            this.$inertia.put("/services", this.form, {
+                onSuccess: (res) => {
+                    if (res.props.updated) {
+                        this.err = false;
+                        this.$refs.closeModal.click();
+                        this.form.nom = "";
+                        this.form.description = "";
+                        this.$inertia.replace("/services", {
+                            preserveScroll: true,
+                            preserveState: true,
+                        });
+                    } else {
+                        this.err = false;
+                        this.display = true;
+                    }
+                },
+            });
+        },
+    },
+    computed: {
+        tmpForm() {
+            this.form = this.service;
+            return this.form;
         },
     },
 };
@@ -35,7 +47,7 @@ export default {
 
 <template>
     <div
-        id="add-service-modal"
+        id="update-service-modal"
         class="modal fade"
         role="dialog"
         tabindex="-1"
@@ -43,7 +55,7 @@ export default {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header border-0">
-                    <h4 class="modal-title">Création</h4>
+                    <h4 class="modal-title">Modification</h4>
                     <button
                         class="btn-close"
                         type="button"
@@ -68,8 +80,23 @@ export default {
                                         class="form-control"
                                         type="text"
                                         placeholder="Nom"
-                                        v-model="this.form.nom"
+                                        v-model="tmpForm.nom"
                                     />
+                                </div>
+                                <div class="mb-2">
+                                    <label
+                                        class="form-label"
+                                        style="
+                                            font-size: 13px;
+                                            margin-bottom: 5px;
+                                        "
+                                        >Description</label
+                                    ><textarea
+                                        class="form-control"
+                                        placeholder="Description*"
+                                        style="resize: none; height: 100px"
+                                        v-model="tmpForm.description"
+                                    ></textarea>
                                 </div>
                                 <div
                                     v-if="display"
@@ -84,7 +111,7 @@ export default {
                                     type="submit"
                                     :disabled="err"
                                 >
-                                    Créer
+                                    Modifier
                                 </button>
                             </form>
                         </div>

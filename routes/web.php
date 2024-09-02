@@ -41,7 +41,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/delete-more', [Classeurs::class, 'deleteMore']);
 
     Route::get('/services', [Services::class, 'show'])->name('services');
-    Route::post('/services', [Services::class, 'create'])->name('services');
     Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('servicesMore');
     
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
@@ -59,6 +58,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/agents-add', [AddAgents::class, 'show']);
     Route::put('/agents-add', [Agents::class, 'update']);
     Route::put('/upload-image', [Agents::class, 'uploadImage']);
+    // Services
+    Route::post('/services', [Services::class, 'create'])->name('services');
+    Route::put('/services', [Services::class, 'update'])->name('services');
+    Route::delete('/services', [Services::class, 'delete'])->name('services');
 });
 
 Route::middleware(['guest'])->group(function () {
