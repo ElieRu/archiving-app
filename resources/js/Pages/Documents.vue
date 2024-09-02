@@ -11,7 +11,7 @@ import { Link, router } from "@inertiajs/vue3";
 import PropertiesModal from "./Components/properties-modal.vue";
 import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
 import ShareModal from "./Components/share-modal.vue";
-import PaginationAgents from "./Components/pagination-agents.vue";
+import Pagination from "./Components/pagination.vue";
 import deleteMultipleModal from "./Components/delete-multiple-modal.vue";
 
 export default {
@@ -28,7 +28,7 @@ export default {
         PropertiesModal,
         propertiesModalClasseur,
         ShareModal,
-        PaginationAgents,
+        Pagination,
         deleteMultipleModal,
     },
     props: ["user", "users", "documents", "services", "classeurs"],
@@ -118,31 +118,6 @@ export default {
                             <div
                                 class="col-sm-6 d-flex justify-content-end align-items-center"
                             >
-                                <!-- <button
-                                    @click="multiDelete()"
-                                    class="btn btn-danger btn-sm d-flex justify-content-center align-items-center"
-                                    style="
-                                        margin-right: 10px;
-                                        height: 30.33px;
-                                        width: 30.33px;
-                                        padding: 0px;
-                                    "
-                                    data-bs-target="#delete-multiple-modal"
-                                    data-bs-toggle="modal"
-                                    :disabled="!this.checkedClasseurs.length && disable"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="-32 0 512 512"
-                                        width="1em"
-                                        height="1em"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"
-                                        ></path>
-                                    </svg></button
-                                > -->
                                 <MyButtons @switch-list="switchDocs" />
                             </div>
                         </div>
@@ -156,16 +131,6 @@ export default {
                                         class="d-flex justify-content-center"
                                         style="position: relative"
                                     >
-                                        <!-- <input
-                                            type="checkbox"
-                                            style="
-                                                position: absolute;
-                                                top: 5px;
-                                                left: 5px;
-                                            "
-                                            :value="classeur.id"
-                                            v-model="checkedClasseurs"
-                                        /> -->
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 512 512"
@@ -251,7 +216,7 @@ export default {
                                     }}</span>
                                 </div>
                             </div>
-                            <PaginationAgents :datas="this.classeurs" />
+                            <Pagination :datas="this.classeurs" v-if="this.classeurs.data.length >= 1" />
                         </div>
                         <div class="row gy-3" v-if="!switchList">
                             <div
@@ -369,7 +334,7 @@ export default {
                                     }}</span>
                                 </div>
                             </div>
-                            <PaginationAgents :datas="this.documents" />
+                            <Pagination :datas="this.documents"  v-if="this.documents.data.length >= 1" />
                         </div>
                     </div>
                 </div>

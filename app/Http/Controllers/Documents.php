@@ -25,6 +25,10 @@ class Documents extends Controller
                 'user_id',
                 '=',
                 Auth::user()->id
+            )->where(
+                'service_id',
+                '=',
+                null
             )->when($request->searchClasseur, function ($query, $searchClasseur) {
                 $query->where('classeurs.nom', 'like', "%{$searchClasseur}%");
             })
@@ -35,6 +39,10 @@ class Documents extends Controller
             'user_id',
             '=',
             Auth::user()->id
+        )->where(
+            'service_id',
+            '=',
+            null
         )
             ->where('classeur_id', '=', null)
             ->when($request->search, function ($query, $search) {
@@ -55,6 +63,7 @@ class Documents extends Controller
 
     public function create(Request $request)
     {
+        // dd($request->foreign_key);
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -69,13 +78,17 @@ class Documents extends Controller
                 'chemin' => $path,
                 'taille' => $fileSize,
                 'extension' => $extension,
-                'user_id' => Auth::id()
+                'user_id' => Auth::user()->id,
+                'service_id' => $request->service_id ? $request->service_id : null
             ]);
 
-            return Inertia::render('Documents', [
-                'user' => Auth::user(),
-                'documents' => $documents
-            ]);
+            if ($request->service_id) {
+                return redirect()->route('service.more', [
+                    'id' => $request->service_id
+                ]);
+            }
+
+            return redirect()->route('document.show');
         }
     }
 

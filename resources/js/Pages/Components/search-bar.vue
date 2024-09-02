@@ -1,6 +1,6 @@
 <script>
 export default {
-    props: ["switchSearch", "lenClas", "lenDocs"],
+    props: ["switchSearch", "lenClas", "lenDocs", "table", "service_id"],
     emits: ["switch-list"],
     data() {
         return {
@@ -11,7 +11,7 @@ export default {
         search() {
             if (!this.switchSearch) {
                 this.$inertia.get(
-                    "/documents",
+                    `/${this.table}/${this.service_id}`,
                     {
                         search: this.search,
                     },
@@ -22,7 +22,7 @@ export default {
                 );
             } else {
                 this.$inertia.get(
-                    "/documents",
+                    `/${this.table}/${this.service_id}`,
                     {
                         searchClasseur: this.search,
                     },

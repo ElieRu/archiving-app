@@ -8,7 +8,7 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import ResetModal from "./Components/reset-modal.vue";
 import DeleteModal from "./Components/delete-modal.vue";
-import PaginationAgents from "./Components/pagination-agents.vue";
+import Pagination from "./Components/pagination.vue";
 import { Link } from '@inertiajs/vue3'
 
 export default {
@@ -22,7 +22,7 @@ export default {
         SearchBarAgents,
         ResetModal,
         DeleteModal,
-        PaginationAgents,
+        Pagination,
         Link
     },
     props: ['user', 'users'],
@@ -241,7 +241,7 @@ export default {
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <PaginationAgents :datas="users" />
+                                    <Pagination :datas="users" v-if="this.users.data.length >= 1" />
                                 </div>
                             </div>
                         </div>
