@@ -27,7 +27,8 @@ class Classeurs extends Controller
         Classeur::create([
             'nom' => $defaultName,
             'user_id' => Auth::user()->id,
-            'service_id' => $request->service_id ? $request->service_id : null
+            'classeur_id' => $request->classeur_id ? $request->classeur_id : null,
+            'service_id' => $request->service_id ? $request->service_id : null,
         ]);
 
         if ($request->service_id) {
@@ -104,6 +105,7 @@ class Classeurs extends Controller
 
         if ($request->service_id) {
             $documents = Document::where('service_id', '=', $request->service_id)
+                ->where('classeur_id', '=', $request->id)
                 ->paginate(24)
                 ->withQueryString();
             $service = Service::where('id', '=', $request->service_id)->get()->last();

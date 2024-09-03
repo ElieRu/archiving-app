@@ -10,6 +10,7 @@ import Pagination from "./Components/pagination.vue";
 import UpdateModalClasseur from "./Components/update-documents-classeur.vue";
 import ClasseurComponent from "./Components/classeur-component.vue";
 import DocumentComponent from "./Components/document-component.vue";
+import AddMembers from "./Components/add-members.vue";
 
 import { Link } from "@inertiajs/vue3";
 
@@ -27,8 +28,9 @@ export default {
         UpdateModalClasseur,
         DocumentComponent,
         Link,
+        AddMembers,
     },
-    props: ["user", "service", "classeurs", "documents"],
+    props: ["user", "users", "service", "classeurs", "documents"],
     data() {
         return {
             switchSearch: true,
@@ -54,8 +56,10 @@ export default {
             this.docId = docId;
         },
     },
-    mounted() {
-        console.log();
+    computed: {
+        get_users () {
+            return this.users
+        }
     },
 };
 </script>
@@ -101,35 +105,35 @@ export default {
                                     </Link></span
                                 >
                             </div>
-                            
+
                             <div class="d-flex align-items-center">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="-96 0 512 512"
-                                        width="1em"
-                                        height="1em"
-                                        fill="currentColor"
-                                        style="
-                                            margin-right: 10px;
-                                            margin-left: 10px;
-                                        "
-                                    >
-                                        <path
-                                            d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
-                                        ></path></svg
-                                    ><span style="font-size: 13px" class="text-capitalize"
-                                        ><Link href="/documents">
-                                            {{
-                                                service.nom.length < 15
-                                                    ? service.nom
-                                                    : service.nom.slice(
-                                                          0,
-                                                          15
-                                                      ) + "..."
-                                            }}
-                                        </Link></span
-                                    >
-                                </div>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="-96 0 512 512"
+                                    width="1em"
+                                    height="1em"
+                                    fill="currentColor"
+                                    style="
+                                        margin-right: 10px;
+                                        margin-left: 10px;
+                                    "
+                                >
+                                    <path
+                                        d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
+                                    ></path></svg
+                                ><span
+                                    style="font-size: 13px"
+                                    class="text-capitalize"
+                                    ><Link href="/documents">
+                                        {{
+                                            service.nom.length < 15
+                                                ? service.nom
+                                                : service.nom.slice(0, 15) +
+                                                  "..."
+                                        }}
+                                    </Link></span
+                                >
+                            </div>
                         </div>
                         <div class="row my-3">
                             <div class="col-sm-6 d-flex">
@@ -144,6 +148,14 @@ export default {
                                 />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
+                                <button
+                                    data-bs-target="#add-members"
+                                    data-bs-toggle="modal"
+                                    class="btn btn-primary btn-sm"
+                                    v-if="user.role == 'admin'"
+                                >
+                                    Membres
+                                </button>
                                 <MyButtons
                                     @switch-list="switchDocs"
                                     :service_id="this.service.id"
@@ -181,5 +193,6 @@ export default {
         </div>
         <propertiesModalClasseur :data="this.myClasseur" />
         <UpdateModalClasseur :data="this.myClasseur" table="services" />
+        <AddMembers :users="get_users" :service_id="service.id" />
     </body>
 </template>

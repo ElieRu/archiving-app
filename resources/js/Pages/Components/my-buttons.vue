@@ -2,7 +2,7 @@
 <script>
 export default {
     emits: ['switch-list'],
-    props: ['service_id', 'create_classeur'],
+    props: ['service_id', 'classeur_id', 'create_classeur'],
     methods: {
         addClasseur() {
             this.$inertia.post(`/classeurs`, {
@@ -19,6 +19,7 @@ export default {
                 `/documents`,
                 {
                     service_id: this.service_id,
+                    classeur_id: this.classeur_id,
                     file: this.file,
                 }, {
                     onSuccess: () => {

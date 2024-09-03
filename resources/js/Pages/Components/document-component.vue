@@ -25,7 +25,7 @@ export default {
     methods: {
         deleteDocument(id) {
             this.datas.id = id;
-            this.datas.render_page = render_page;
+            this.datas.render_page = this.render_page;
             this.datas.delete("/documents");
         },
     },

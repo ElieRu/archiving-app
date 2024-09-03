@@ -41,8 +41,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/classeurs/{id}', [Classeurs::class, 'more']);
     Route::get('/services/classeurs/{id}', [Classeurs::class, 'more']);
 
-    Route::get('/services', [Services::class, 'show'])->name('services');
+    Route::get('/services', [Services::class, 'show'])->name('services.show');
     Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('service.more');
+    Route::delete('/services/{id}', [ServicesMore::class, 'deleteMembers'])->name('service.blockMembers');
     
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');

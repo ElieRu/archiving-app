@@ -79,7 +79,8 @@ class Documents extends Controller
                 'taille' => $fileSize,
                 'extension' => $extension,
                 'user_id' => Auth::user()->id,
-                'service_id' => $request->service_id ? $request->service_id : null
+                'service_id' => $request->service_id ? $request->service_id : null,
+                'classeur_id' => $request->classeur_id ? $request->classeur_id : null
             ]);
 
             if ($request->service_id) {
@@ -119,6 +120,8 @@ class Documents extends Controller
         Document::findOrFail($request->id)->delete();
         if ($request->render_page === 'documents') {
             return $this->show($request);
+        } else if ($request->render_page === 'services') {
+            return redirect()->route('services.show');
         }
         return $this->show($request);
     }
