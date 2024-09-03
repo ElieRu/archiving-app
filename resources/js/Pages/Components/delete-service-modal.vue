@@ -42,7 +42,7 @@ export default {
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <p>Attention! <br> Vous allez supprimer les classeurs et documents que quontien ce service.</p>
+                    <p>Attention! <br> Vous allez supprimer tous les classeurs et les documents que quontien ce service.</p>
                 </div>
                 <div class="modal-footer">
                     <button

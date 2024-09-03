@@ -2,7 +2,7 @@
 <script>
 export default {
     emits: ['switch-list'],
-    props: ['service_id'],
+    props: ['service_id', 'create_classeur'],
     methods: {
         addClasseur() {
             this.$inertia.post(`/classeurs`, {
@@ -39,6 +39,7 @@ export default {
             type="button"
             style="margin-right: 10px; height: 30.33px"
             @click="addClasseur()"
+            v-if="!create_classeur"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         DB::table('services')->insert([
-            ['nom' => "service d'administration", "user_id" => 1],
-            ['nom' => 'service commerciale', "user_id" => 1],
-            ['nom' => 'service technique', "user_id" => 1],
-            ['nom' => 'service de finance', "user_id" => 1],
+            ['nom' => "administration", "user_id" => 1],
+            ['nom' => 'commerciale', "user_id" => 1],
+            ['nom' => 'technique', "user_id" => 1],
+            ['nom' => 'finance', "user_id" => 1],
         ]);
     }
 

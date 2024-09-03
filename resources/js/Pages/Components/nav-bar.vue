@@ -74,7 +74,7 @@ export default {
                 <li class="nav-item">
                     <Link
                         class="nav-link d-flex align-items-center"
-                        href="archivage"
+                        href="/archivage"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 -32 576 576"
@@ -110,7 +110,7 @@ export default {
                 <li v-if="role === 'admin'" class="nav-item">
                     <Link
                         class="nav-link d-flex align-items-center"
-                        href="./agents"
+                        href="/agents"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 512 512"

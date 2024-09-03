@@ -3,7 +3,7 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["data"],
+    props: ["data", "table"],
     data() {
         return {
             form: {
@@ -25,11 +25,15 @@ export default {
     methods: {
         submit() {
             this.err = true;
+            console.log(this.form);
+            
             this.$inertia.put("/classeurs", this.form, {
                 onSuccess: () => {
                     this.err = false;
                     this.$refs.closeModal.click();
-                    this.$inertia.replace('/documents', { preserveScroll: true, preserveState: true })
+                    if (this.table) {
+                        this.$inertia.replace(`/${this.table}/${this.form.service_id ? this.form.service_id : ''}`, { preserveScroll: true, preserveState: true })                    
+                    }                    
                 },
                 onError: () => {
                     this.err = false;

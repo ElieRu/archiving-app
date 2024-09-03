@@ -37,7 +37,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/classeurs', [Classeurs::class, 'create']);
     Route::put('/classeurs', [Classeurs::class, 'update']);
     Route::delete('/classeurs', [Classeurs::class, 'delete']);
-    Route::post('/delete-more', [Classeurs::class, 'deleteMore']);
+    // Route::post('/classeurs-more/{id}', [Classeurs::class, 'deleteMore']);
+    Route::get('/classeurs/{id}', [Classeurs::class, 'more']);
+    Route::get('/services/classeurs/{id}', [Classeurs::class, 'more']);
 
     Route::get('/services', [Services::class, 'show'])->name('services');
     Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('service.more');

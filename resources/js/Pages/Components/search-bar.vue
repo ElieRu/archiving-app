@@ -11,7 +11,7 @@ export default {
         search() {
             if (!this.switchSearch) {
                 this.$inertia.get(
-                    `/${this.table}/${this.service_id}`,
+                    `/${this.table}/${this.service_id ? this.service_id : ''}`,
                     {
                         search: this.search,
                     },
@@ -22,7 +22,7 @@ export default {
                 );
             } else {
                 this.$inertia.get(
-                    `/${this.table}/${this.service_id}`,
+                    `/${this.table}/${this.service_id ? this.service_id : ''}`,
                     {
                         searchClasseur: this.search,
                     },
@@ -84,14 +84,6 @@ export default {
                         @click="$emit('switch-list', false)"
                         >Documents ({{ this.lenDocs }})</a
                     >
-                    <!-- <h6 class="dropdown-header">Type</h6>
-                    <a class="dropdown-item" style="cursor: pointer">Tous</a>
-                    <a class="dropdown-item" style="cursor: pointer"
-                        >Administratif</a
-                    >
-                    <a class="dropdown-item" style="cursor: pointer"
-                        >Controle</a
-                    > -->
                 </div>
             </div>
         </div>

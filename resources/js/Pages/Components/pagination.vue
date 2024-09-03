@@ -14,6 +14,7 @@ export default {
         <template class="flex" v-for="link in datas.links" :key="link.id">
             <Link
                 v-if="link.url === null"
+                href="#"
                 v-html="link.label"
                 :disabled="link.url == null"
                 as="button"
