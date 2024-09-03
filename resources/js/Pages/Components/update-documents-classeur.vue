@@ -25,12 +25,14 @@ export default {
     methods: {
         submit() {
             this.err = true;
+            console.log(this.form);
+            
             this.$inertia.put("/classeurs", this.form, {
                 onSuccess: () => {
                     this.err = false;
                     this.$refs.closeModal.click();
                     if (this.table) {
-                        this.$inertia.replace(`/${this.table}`, { preserveScroll: true, preserveState: true })                    
+                        this.$inertia.replace(`/${this.table}/${this.form.service_id ? this.form.service_id : ''}`, { preserveScroll: true, preserveState: true })                    
                     }                    
                 },
                 onError: () => {

@@ -6,6 +6,7 @@ use App\Models\Classeur;
 use App\Models\Document;
 use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -40,30 +41,48 @@ class Classeurs extends Controller
 
     public function update(Request $request)
     {
-        DB::table('classeurs')
-            ->where('id', $request->id)
-            ->update([
-                'nom' => $request->nom,
-                'description' => $request->description
+        try {
+            $valid = $request->validate([
+                'nom' => 'required',
+                'description' => "required"
             ]);
+            DB::table('classeurs')
+                ->where('id', $request->id)
+                ->update([
+                    'nom' => $request->nom,
+                    'description' => $request->description
+                ]);
+            if ($request->service_id) {
+                return Inertia::render('ServicesMore', [
+                    'id' => $request->service_id
+                ]);
+            }
+        } catch (Exception $e) {
+            // if (!$request->service_id) {
+            return Inertia::render('ServicesMore', [
+                'id' => $request->service_id,
+                'erros' => true
+            ]);
+            // }
+        }
 
-        $classeurs = Classeur::where('user_id', '=', Auth::user()->id);
-        return Inertia::render('Documents', [
-            'user' => Auth::user(),
-            'documents' => Document::where(
-                'user_id',
-                '=',
-                Auth::user()->id
-            )
-                ->where('classeur_id', '=', null)
-                ->get(),
-            'users' => User::all()
-                ->where('role', '=', null)
-                ->where('id', '!=', Auth::user()->id),
-            'services' => Service::all(),
-            'classeurs' => $classeurs
-                ->get()
-        ]);
+        // $classeurs = Classeur::where('user_id', '=', Auth::user()->id);
+        // return Inertia::render('Documents', [
+        //     'user' => Auth::user(),
+        //     'documents' => Document::where(
+        //         'user_id',
+        //         '=',
+        //         Auth::user()->id
+        //     )
+        //         ->where('classeur_id', '=', null)
+        //         ->get(),
+        //     'users' => User::all()
+        //         ->where('role', '=', null)
+        //         ->where('id', '!=', Auth::user()->id),
+        //     'services' => Service::all(),
+        //     'classeurs' => $classeurs
+        //         ->get()
+        // ]);
     }
 
     public function delete(Request $request)
@@ -77,6 +96,36 @@ class Classeurs extends Controller
         return Inertia::render('ServicesMore', [
             'id' => $request->service_id
         ]);
+    }
+
+    public function more(Request $request)
+    {
+        $classeur = Classeur::findOrFail($request->id);
+
+        if ($request->service_id) {
+            $documents = Document::where('service_id', '=', $request->service_id)
+                ->paginate(24)
+                ->withQueryString();
+            $service = Service::where('id', '=', $request->service_id)->get()->last();
+
+            return Inertia::render('Classeur', [
+                'user' => Auth::user(),
+                'classeur' => $classeur,
+                'documents' => $documents,
+                'service' => $service
+            ]);
+        } else {
+            $documents = Document::where('classeur_id', '=', $request->id)
+                ->where('user_id', '=', Auth::user()->id)
+                ->paginate(24)
+                ->withQueryString();
+
+            return Inertia::render('Classeur', [
+                'user' => Auth::user(),
+                'classeur' => $classeur,
+                'documents' => $documents
+            ]);
+        }
     }
 
     public function deleteMore(Request $request)

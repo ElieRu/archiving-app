@@ -46,11 +46,11 @@ export default {
                                 class="d-flex justify-content-between align-items-center"
                             >
                                 <h3 class="text-dark mb-4">Agents</h3>
-                                <a
+                                <Link
                                     class="btn btn-primary btn-sm"
                                     role="button"
                                     href="agents-add"
-                                    >Ajouter</a
+                                    >Ajouter</Link
                                 >
                             </div>
                             <div class="card shadow">

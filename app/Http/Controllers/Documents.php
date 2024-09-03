@@ -117,16 +117,10 @@ class Documents extends Controller
     public function delete(Request $request)
     {
         Document::findOrFail($request->id)->delete();
-        $documents = Document::where('user_id', '=', Auth::user()->id)->get();
-        return Inertia::render('Documents', [
-            'user' => Auth::user(),
-            'users' => User::all()
-                ->where('role', '=', null)
-                ->where('id', '!=', Auth::user()->id),
-            'services' => Service::all(),
-            'documents' => $documents,
-            'updated' => true
-        ]);
+        if ($request->render_page === 'documents') {
+            return $this->show($request);
+        }
+        return $this->show($request);
     }
 
     public function share(Request $request)
@@ -137,6 +131,7 @@ class Documents extends Controller
         if ($content->checkedUsers) {
             for ($i = 0; $i < count($content->checkedUsers); $i++) {
                 Document::create([
+                    'user_id' => Auth::user()->id,
                     'titre' => $sharedDoc->titre,
                     'chemin' => $sharedDoc->chemin,
                     'taille' => $sharedDoc->taille,
@@ -148,6 +143,7 @@ class Documents extends Controller
         if ($content->checkedServices) {
             for ($i = 0; $i < count($content->checkedServices); $i++) {
                 Document::create([
+                    'user_id' => Auth::user()->id,
                     'titre' => $sharedDoc->titre,
                     'chemin' => $sharedDoc->chemin,
                     'taille' => $sharedDoc->taille,
@@ -159,6 +155,7 @@ class Documents extends Controller
         if ($content->checkedClasseurs) {
             for ($i = 0; $i < count($content->checkedClasseurs); $i++) {
                 Document::create([
+                    'user_id' => Auth::user()->id,
                     'titre' => $sharedDoc->titre,
                     'chemin' => $sharedDoc->chemin,
                     'taille' => $sharedDoc->taille,

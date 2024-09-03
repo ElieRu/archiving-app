@@ -20,6 +20,9 @@ export default {
             return this.classeurs;
         },
     },
+    mounted() {
+        // alert(this.service_id)
+    },
     methods: {
         deleteClasseur(id) {
             this.datas.id = id;
@@ -30,10 +33,15 @@ export default {
                 onSuccess: (res) => {
                     // this.$inertia.replace(`/${this.table}`, {
                     // /${this.service_id ? this.service_id : ''
-                    this.$inertia.replace(`/${this.table}/${this.service_id ? this.service_id : ''}`, {
-                        preserveState: true,
-                        preserveScroll: true,
-                    });
+                    this.$inertia.replace(
+                        `/${this.table}/${
+                            this.service_id ? this.service_id : ""
+                        }`,
+                        {
+                            preserveState: true,
+                            preserveScroll: true,
+                        }
+                    );
                 },
             });
         },
@@ -52,7 +60,11 @@ export default {
                 class="d-flex justify-content-center"
                 style="position: relative"
             >
-                <Link href="#">
+                <Link
+                    :href="`classeurs/${classeur.id}`"
+                    method="get"
+                    :data="{ service_id: this.service_id }"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 512 512"

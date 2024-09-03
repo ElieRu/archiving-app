@@ -34,11 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/documents', [Documents::class, 'delete']);
     Route::post('/share', [Documents::class, 'share']);
 
-    // Route::get('/classeurs', [Classeurs::class, 'index'])->name('classeur.index');
     Route::post('/classeurs', [Classeurs::class, 'create']);
     Route::put('/classeurs', [Classeurs::class, 'update']);
     Route::delete('/classeurs', [Classeurs::class, 'delete']);
-    // Route::post('/delete-more', [Classeurs::class, 'deleteMore']);
+    // Route::post('/classeurs-more/{id}', [Classeurs::class, 'deleteMore']);
+    Route::get('/classeurs/{id}', [Classeurs::class, 'more']);
+    Route::get('/services/classeurs/{id}', [Classeurs::class, 'more']);
 
     Route::get('/services', [Services::class, 'show'])->name('services');
     Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('service.more');
