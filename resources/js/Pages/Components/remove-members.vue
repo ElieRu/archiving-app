@@ -37,11 +37,11 @@ export default {
 </script>
 
 <template>
-    <div id="add-members" class="modal fade" role="dialog" tabindex="-1">
+    <div id="remove-members" class="modal fade" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header border-0">
-                    <h4 class="modal-title">Ajout</h4>
+                    <h4 class="modal-title">Restruction</h4>
                     <button
                         class="btn-close"
                         type="button"
@@ -109,13 +109,13 @@ export default {
                 </div>
                 <div class="modal-footer border-0">
                     <button
-                        class="btn btn-primary"
+                        class="btn btn-danger"
                         type="button"
                         style="width: 100%"
-                        :disabled="!users_checked.length"
+                        :disabled="!this.users_checked.length"
                         @click="submit()"
                     >
-                        Ajouter
+                        Supprimer
                     </button>
                 </div>
             </div>

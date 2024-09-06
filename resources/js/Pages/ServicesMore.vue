@@ -10,6 +10,7 @@ import Pagination from "./Components/pagination.vue";
 import UpdateModalClasseur from "./Components/update-documents-classeur.vue";
 import ClasseurComponent from "./Components/classeur-component.vue";
 import DocumentComponent from "./Components/document-component.vue";
+import RemoreMembers from "./Components/remove-members.vue";
 import AddMembers from "./Components/add-members.vue";
 
 import { Link } from "@inertiajs/vue3";
@@ -28,9 +29,10 @@ export default {
         UpdateModalClasseur,
         DocumentComponent,
         Link,
-        AddMembers,
+        RemoreMembers,
+        AddMembers
     },
-    props: ["user", "users", "service", "classeurs", "documents"],
+    props: ["user", "users", "service", "classeurs", "documents", "add_users"],
     data() {
         return {
             switchSearch: true,
@@ -59,6 +61,9 @@ export default {
     computed: {
         get_users () {
             return this.users
+        },
+        add_users () {
+            return this.add_users
         }
     },
 };
@@ -147,14 +152,20 @@ export default {
                                     :service_id="this.service.id"
                                 />
                             </div>
-                            <div class="col-sm-6 d-flex justify-content-end">
+                            <div v-if="user.role == 'admin'" class="col-sm-6 d-flex justify-content-end">
+                                <button
+                                    data-bs-target="#remove-members"
+                                    data-bs-toggle="modal"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    Restruction
+                                </button>
                                 <button
                                     data-bs-target="#add-members"
                                     data-bs-toggle="modal"
                                     class="btn btn-primary btn-sm"
-                                    v-if="user.role == 'admin'"
                                 >
-                                    Membres
+                                    Ajout
                                 </button>
                                 <MyButtons
                                     @switch-list="switchDocs"
@@ -193,6 +204,7 @@ export default {
         </div>
         <propertiesModalClasseur :data="this.myClasseur" />
         <UpdateModalClasseur :data="this.myClasseur" table="services" />
-        <AddMembers :users="get_users" :service_id="service.id" />
+        <RemoreMembers :users="get_users" :service_id="service.id" />
+        <AddMembers :users="add_users" :service_id="service.id" />
     </body>
 </template>
