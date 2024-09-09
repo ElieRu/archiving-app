@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/services', [Services::class, 'show'])->name('services.show');
     Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('service.more');
+    Route::post('/services/{id}', [ServicesMore::class, 'addMermbers'])->name('service.addMembers');
     Route::delete('/services/{id}', [ServicesMore::class, 'deleteMembers'])->name('service.blockMembers');
     
     Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
