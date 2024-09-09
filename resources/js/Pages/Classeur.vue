@@ -7,6 +7,8 @@ import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import DocumentComponent from "./Components/document-component.vue";
 import Pagination from "./Components/pagination.vue";
+import PropertiesModal from "./Components/properties-modal.vue";
+import UpdateModal from "./Components/update-documents.vue";
 import { Link, router } from "@inertiajs/vue3";
 
 export default {
@@ -20,12 +22,15 @@ export default {
         DocumentComponent,
         Pagination,
         Link,
+        PropertiesModal,
+        UpdateModal,
     },
     props: ["user", "classeur", "documents", "service"],
     data() {
         return {
             switchList: true,
             myDocument: {},
+            myClasseur: {},
             docId: null,
         };
     },
@@ -42,7 +47,7 @@ export default {
         },
     },
     mounted() {
-        console.log(this.documents);
+        // console.log(this.documents);
     },
 };
 </script>
@@ -84,8 +89,18 @@ export default {
                                             d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
                                         ></path></svg
                                     ><span style="font-size: 13px"
-                                        ><Link :href="service ? `/services` : '/documents'">
-                                            {{ service ? 'Services' : 'Documents' }}
+                                        ><Link
+                                            :href="
+                                                service
+                                                    ? `/services`
+                                                    : '/documents'
+                                            "
+                                        >
+                                            {{
+                                                service
+                                                    ? "Services"
+                                                    : "Documents"
+                                            }}
                                         </Link></span
                                     >
                                 </div>
@@ -163,6 +178,8 @@ export default {
                                     <MyButtons
                                         @switch-list="switchDocs"
                                         :create_classeur="true"
+                                        :service_id="service ? service.id : ''"
+                                        :classeur_id="this.classeur.id"
                                     />
                                 </div>
                             </div>
@@ -171,6 +188,7 @@ export default {
                                     :documents="this.documents"
                                     @get-document="getDocument"
                                     @get-document-id="getDocumentId"
+                                    render_page="services"
                                 />
                             </div>
                         </div>
@@ -180,5 +198,7 @@ export default {
             </div>
             <TopPage />
         </div>
+        <UpdateModal :data="this.myDocument" />
+        <PropertiesModal :data="this.myDocument" />
     </body>
 </template>

@@ -14,7 +14,6 @@ import ShareModal from "./Components/share-modal.vue";
 import Pagination from "./Components/pagination.vue";
 import ClasseurComponent from "./Components/classeur-component.vue";
 import DocumentComponent from "./Components/document-component.vue";
-import BreadCrumbs from "./Components/bread-crumbs.vue";
 
 export default {
     components: {
@@ -33,7 +32,6 @@ export default {
         Pagination,
         ClasseurComponent,
         DocumentComponent,
-        BreadCrumbs,
     },
     props: ["user", "users", "documents", "services", "classeurs"],
     data() {
@@ -44,7 +42,6 @@ export default {
             switchList: true,
             switchSearch: true,
             checkedClasseurs: [],
-            pages: [{ link: "documents", label: "Documents" }],
         };
     },
     methods: {
@@ -166,6 +163,7 @@ export default {
                                 :documents="this.documents"
                                 @get-document="getDocument"
                                 @get-document-id="getDocumentId"
+                                render_page="documents"
                             />
                             <Pagination
                                 :datas="this.documents"

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\createService;
 use App\Http\Requests\updateServiceRequest;
-use App\Http\Requests\UpdateServiceRequest as RequestsUpdateServiceRequest;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +14,16 @@ class Services extends Controller
 {
     public function show()
     {
+        $services = DB::table('services')
+            ->join('services_users', 'services_users.service_id', '=', 'services.id')
+            ->where('services_users.user_id', '=', Auth::user()->id)
+            ->get();
+        
+        $all = Service::all();
+
         return Inertia::render('Services', [
             'user' => Auth::user(),
-            'services' => Service::all()
+            'services' => Auth::user()->role == 'admin' ? $all : $services
         ]);
     }
 
