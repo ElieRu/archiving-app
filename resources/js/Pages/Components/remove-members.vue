@@ -18,6 +18,7 @@ export default {
         submit() {
             this.datas.users_checked = this.users_checked;
             this.datas.id = this.id;
+            console.log(this.datas)
             this.datas.delete(`/services/${this.service_id}`, {
                 onSuccess: () => {
                     this.users_checked = [];

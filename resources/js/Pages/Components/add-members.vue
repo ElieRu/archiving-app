@@ -10,6 +10,7 @@ export default {
             search: "",
             datas: useForm({
                 users_checked: null,
+                service_id: null,
                 id: null,
             }),
         };
@@ -18,7 +19,8 @@ export default {
         submit() {
             this.datas.users_checked = this.users_checked;
             this.datas.id = this.id;
-            this.datas.delete(`/services/${this.service_id}`, {
+            this.datas.service_id = this.service_id;
+            this.datas.post(`/services/${this.service_id}`, {
                 onSuccess: () => {
                     this.users_checked = [];
                     this.$refs.closeBtn.click();
