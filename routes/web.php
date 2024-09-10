@@ -7,6 +7,7 @@ use App\Http\Controllers\Archivage;
 use App\Http\Controllers\Classeurs;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Documents;
+use App\Http\Controllers\Etagere;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\Profile;
 use App\Http\Controllers\Services;
@@ -46,10 +47,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/services/{id}', [ServicesMore::class, 'addMermbers'])->name('service.addMembers');
     Route::delete('/services/{id}', [ServicesMore::class, 'deleteMembers'])->name('service.blockMembers');
     
-    Route::get('/archivage', [Archivage::class, 'show'])->name('archivage');
+    Route::get('/archivage', [Archivage::class, 'show'])->name('archivage.index');
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
     Route::put('/user/password', [Agents::class, 'updatePassword']);
+
+    // Archivage...
+    Route::post('/etageres', [Etagere::class, 'create']);
+    Route::post('/delete-etageres', [Etagere::class, 'remove']);
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -61,6 +66,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/agents-add', [AddAgents::class, 'show']);
     Route::put('/agents-add', [Agents::class, 'update']);
     Route::put('/upload-image', [Agents::class, 'uploadImage']);
+    
     // Services
     Route::post('/services', [Services::class, 'create'])->name('services');
     Route::put('/services', [Services::class, 'update'])->name('services');

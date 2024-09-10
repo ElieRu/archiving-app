@@ -5,6 +5,7 @@ import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import { Link, useForm } from "@inertiajs/vue3";
 export default {
     components: {
         NavBar,
@@ -13,8 +14,40 @@ export default {
         Footer,
         MyButtons,
         TopPage,
+        Link,
     },
-    props: ["user"],
+    props: ["user", "etageres"],
+    data() {
+        return {
+            datas: useForm({
+                number: null,
+            }),
+            search: "",
+            disable: false
+        };
+    },
+    computed: {
+        get_etageres() {
+            return Object.values(this.etageres).filter((etagere) =>
+                etagere.nom.toLowerCase().includes(this.search.toLowerCase())
+            );
+        },
+    },
+    methods: {
+        submit() {
+            this.disable = true
+            this.datas.number =
+                this.etageres.length == 0 ? 1 : this.etageres.length;
+            this.datas.post(`/etageres`, {
+                onSuccess: () => {
+                    this.disable = false
+                }
+            }, {
+                preserveScroll: true,
+                preserveState: true,
+            });
+        },
+    },
 };
 </script>
 
@@ -26,27 +59,74 @@ export default {
                 <div id="content">
                     <NavBarTop :user="user" />
                     <div class="container-fluid">
-                        <div
-                            class="d-flex justify-content-between align-items-center"
-                        >
-                            <div class="d-flex">
-                                <h3 class="text-dark mb-1">Archivage</h3>
+                        <div class="d-flex align-items-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 -32 576 576"
+                                width="1em"
+                                height="1em"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M543.8 287.6c17 0 32-14 32-32.1c1-9-3-17-11-24L512 185V64c0-17.7-14.3-32-32-32H448c-17.7 0-32 14.3-32 32v36.7L309.5 7c-6-5-14-7-21-7s-15 1-22 8L10 231.5c-7 7-10 15-10 24c0 18 14 32.1 32 32.1h32v69.7c-.1 .9-.1 1.8-.1 2.8V472c0 22.1 17.9 40 40 40h16c1.2 0 2.4-.1 3.6-.2c1.5 .1 3 .2 4.5 .2H160h24c22.1 0 40-17.9 40-40V448 384c0-17.7 14.3-32 32-32h64c17.7 0 32 14.3 32 32v64 24c0 22.1 17.9 40 40 40h24 32.5c1.4 0 2.8 0 4.2-.1c1.1 .1 2.2 .1 3.3 .1h16c22.1 0 40-17.9 40-40V455.8c.3-2.6 .5-5.3 .5-8.1l-.7-160.2h32z"
+                                ></path>
+                            </svg>
+                            <div class="d-flex align-items-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="-96 0 512 512"
+                                    width="1em"
+                                    height="1em"
+                                    fill="currentColor"
+                                    style="
+                                        margin-right: 10px;
+                                        margin-left: 10px;
+                                    "
+                                >
+                                    <path
+                                        d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
+                                    ></path></svg
+                                ><span style="font-size: 13px"
+                                    ><Link href="/archivage">
+                                        Archivage
+                                    </Link></span
+                                >
                             </div>
                         </div>
                         <div class="row my-3">
-                            <div class="col-sm-6 d-flex">
-                                <SearchBar />
-                            </div>
-                            <div class="col-sm-6 d-flex justify-content-end">
-                                <MyButtons />
-                            </div>
-                        </div>
-                        <div class="row gy-3">
-                            <div class="col-sm-4 col-lg-3 col-xl-2">
-                                <div class="border rounded p-2">
+                            <div class="col-10 d-flex">
+                                <div
+                                    id="dataTable_filter"
+                                    class="text-md-end d-flex justify-content-end dataTables_filter"
+                                >
                                     <div
-                                        class="d-flex justify-content-center"
-                                        style="position: relative"
+                                        class="bg-white border rounded d-flex align-items-center p-1"
+                                    >
+                                        <input
+                                            class="border-0 shadow-none form-control form-control-sm"
+                                            type="search"
+                                            aria-controls="dataTable"
+                                            placeholder="Recherche"
+                                            v-model="search"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 d-flex justify-content-end">
+                                <div class="d-flex align-items-center">
+                                    <button
+                                        class="btn btn-primary btn-sm d-flex align-items-center"
+                                        type="button"
+                                        style="
+                                            margin-right: 10px;
+                                            height: 30.33px;
+                                        "
+                                        v-if="
+                                            user.role === 'admin' ||
+                                            user.role === 'archiviste'
+                                        "
+                                        @click="submit()"
+                                        :disabled="disable"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -54,150 +134,95 @@ export default {
                                             width="1em"
                                             height="1em"
                                             fill="currentColor"
-                                            style="
-                                                font-size: 100px;
-                                                padding-top: 20px;
-                                                padding-bottom: 7px;
-                                            "
                                         >
                                             <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
                                             <path
-                                                d="M251.7 127.6l0 0c10.5 10.5 24.7 16.4 39.6 16.4H448c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H197.5c4.2 0 8.3 1.7 11.3 4.7l33.9-33.9L208.8 84.7l42.9 42.9zM48 240H464V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V240zM285.7 93.7L242.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H291.3c-2.1 0-4.2-.8-5.7-2.3z"
-                                            ></path>
-                                        </svg>
-                                        <div
-                                            class="dropdown"
-                                            style="
-                                                position: absolute;
-                                                top: 0px;
-                                                right: 0px;
-                                            "
-                                        >
-                                            <button
-                                                class="btn btn-primary bg-transparent border-0"
-                                                aria-expanded="false"
-                                                data-bs-toggle="dropdown"
-                                                type="button"
-                                            >
-                                                <svg
-                                                    class="text-body-secondary"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="-192 0 512 512"
-                                                    width="1em"
-                                                    height="1em"
-                                                    fill="currentColor"
-                                                >
-                                                    <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                                    <path
-                                                        d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
-                                                    ></path>
-                                                </svg>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Ouvrir</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Modifier</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Supprimer</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Propriètés</a
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span style="font-size: 13px"
-                                        >Nouveau dossier</span
-                                    >
+                                                d="M512 416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96C0 60.7 28.7 32 64 32H192c20.1 0 39.1 9.5 51.2 25.6l19.2 25.6c6 8.1 15.5 12.8 25.6 12.8H448c35.3 0 64 28.7 64 64V416zM232 376c0 13.3 10.7 24 24 24s24-10.7 24-24V312h64c13.3 0 24-10.7 24-24s-10.7-24-24-24H280V200c0-13.3-10.7-24-24-24s-24 10.7-24 24v64H168c-13.3 0-24 10.7-24 24s10.7 24 24 24h64v64z"
+                                            ></path></svg
+                                        ><span
+                                            class="d-none d-sm-block"
+                                            style="margin-left: 6px"
+                                            >Etagère</span
+                                        ></button
+                                    ><label
+                                        class="form-label"
+                                        for="file"
+                                        style="margin-bottom: 0px"
+                                    ></label
+                                    ><input
+                                        id="file"
+                                        class="d-none"
+                                        type="file"
+                                    />
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-lg-3 col-xl-2">
-                                <div class="border rounded p-2">
-                                    <div
-                                        class="d-flex justify-content-center"
-                                        style="position: relative"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="-64 0 512 512"
-                                            width="1em"
-                                            height="1em"
-                                            fill="currentColor"
-                                            style="
-                                                font-size: 100px;
-                                                padding-top: 20px;
-                                                padding-bottom: 7px;
-                                            "
-                                        >
-                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                            <path
-                                                d="M320 464c8.8 0 16-7.2 16-16V160H256c-17.7 0-32-14.3-32-32V48H64c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16H320zM0 64C0 28.7 28.7 0 64 0H229.5c17 0 33.3 6.7 45.3 18.7l90.5 90.5c12 12 18.7 28.3 18.7 45.3V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64z"
-                                            ></path>
-                                        </svg>
+                        </div>
+                        <div class="row gy-2">
+                            <div
+                                class="col-12 col-md-6 col-xl-4"
+                                v-for="(etagere, index) in get_etageres"
+                                :key="index"
+                            >
+                                <div class="card">
+                                    <div class="card-body">
                                         <div
-                                            class="dropdown"
-                                            style="
-                                                position: absolute;
-                                                top: 0px;
-                                                right: 0px;
-                                            "
+                                            class="d-flex justify-content-between align-items-center"
                                         >
-                                            <button
-                                                class="btn btn-primary bg-transparent border-0"
-                                                aria-expanded="false"
-                                                data-bs-toggle="dropdown"
-                                                type="button"
+                                            <h4
+                                                style="
+                                                    text-decoration: underline;
+                                                "
                                             >
-                                                <svg
-                                                    class="text-body-secondary"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="-192 0 512 512"
-                                                    width="1em"
-                                                    height="1em"
-                                                    fill="currentColor"
+                                                <Link
+                                                    :href="`/archivage/etageres/${etagere.id}`"
+                                                    class="text-capitalize"
+                                                    >{{ etagere.nom }}</Link
                                                 >
-                                                    <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-                                                    <path
-                                                        d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
-                                                    ></path>
-                                                </svg>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Lecture</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Modifier</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Supprimer</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Partager</a
-                                                ><a
-                                                    class="dropdown-item"
-                                                    href="#"
-                                                    >Propriètés</a
-                                                >
+                                            </h4>
+                                            <div>
+                                                <div class="dropdown">
+                                                    <button
+                                                        class="btn btn-primary bg-transparent border-0"
+                                                        aria-expanded="false"
+                                                        data-bs-toggle="dropdown"
+                                                        type="button"
+                                                    >
+                                                        <svg
+                                                            class="text-body-emphasis"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="-192 0 512 512"
+                                                            width="1em"
+                                                            height="1em"
+                                                            fill="currentColor"
+                                                        >
+                                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                                                            <path
+                                                                d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
+                                                            ></path>
+                                                        </svg>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <a
+                                                            class="dropdown-item"
+                                                            href="#"
+                                                            data-bs-target="#service-modal"
+                                                            data-bs-toggle="modal"
+                                                            >Modifier</a
+                                                        ><Link
+                                                            class="dropdown-item"
+                                                            href="delete-etageres"
+                                                            method="post"
+                                                            :data="{ id: etagere.id }"
+                                                            >Supprimer</Link
+                                                        >
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                        <p class="card-text">
+                                            Nullam id dolor id nibh ultricies..
+                                        </p>
                                     </div>
-                                    <span style="font-size: 13px"
-                                        >Nouveau fichier.pdf</span
-                                    >
                                 </div>
                             </div>
                         </div>
