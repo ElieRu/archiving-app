@@ -5,6 +5,7 @@ import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import UpdateEtagereModal from "./Components/update-etagere-modal.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 export default {
     components: {
@@ -15,6 +16,7 @@ export default {
         MyButtons,
         TopPage,
         Link,
+        UpdateEtagereModal
     },
     props: ["user", "etageres"],
     data() {
@@ -23,7 +25,8 @@ export default {
                 number: null,
             }),
             search: "",
-            disable: false
+            disable: false,
+            my_etagere: ''
         };
     },
     computed: {
@@ -35,18 +38,25 @@ export default {
     },
     methods: {
         submit() {
-            this.disable = true
+            this.disable = true;
             this.datas.number =
                 this.etageres.length == 0 ? 1 : this.etageres.length;
-            this.datas.post(`/etageres`, {
-                onSuccess: () => {
-                    this.disable = false
+            this.datas.post(
+                `/etageres`,
+                {
+                    onSuccess: () => {
+                        this.disable = false;
+                    },
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
                 }
-            }, {
-                preserveScroll: true,
-                preserveState: true,
-            });
+            );
         },
+        get_etagere(etagere) {
+            this.my_etagere = etagere
+        }
     },
 };
 </script>
@@ -180,7 +190,14 @@ export default {
                                                 >
                                             </h4>
                                             <div>
-                                                <div class="dropdown">
+                                                <div
+                                                    class="dropdown"
+                                                    v-if="
+                                                        user.role === 'admin' ||
+                                                        user.role ===
+                                                            'archiviste'
+                                                    "
+                                                >
                                                     <button
                                                         class="btn btn-primary bg-transparent border-0"
                                                         aria-expanded="false"
@@ -202,17 +219,22 @@ export default {
                                                         </svg>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a
+                                                        <Link
                                                             class="dropdown-item"
-                                                            href="#"
-                                                            data-bs-target="#service-modal"
+                                                            style="cursor: pointer;"
+                                                            href=""
+                                                            data-bs-target="#update-etagere-modal"
                                                             data-bs-toggle="modal"
-                                                            >Modifier</a
+                                                            @click.prevent="get_etagere(etagere)"
+                                                            >Modifier</Link
                                                         ><Link
                                                             class="dropdown-item"
                                                             href="delete-etageres"
+                                                            as="button"
                                                             method="post"
-                                                            :data="{ id: etagere.id }"
+                                                            :data="{
+                                                                id: etagere.id,
+                                                            }"
                                                             >Supprimer</Link
                                                         >
                                                     </div>
@@ -220,7 +242,11 @@ export default {
                                             </div>
                                         </div>
                                         <p class="card-text">
-                                            Nullam id dolor id nibh ultricies..
+                                            {{
+                                                etagere.description
+                                                    ? etagere.description
+                                                    : "Description **"
+                                            }}
                                         </p>
                                     </div>
                                 </div>
@@ -232,5 +258,6 @@ export default {
             </div>
             <TopPage />
         </div>
+        <UpdateEtagereModal :etagere="this.my_etagere"/>
     </body>
 </template>

@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     // Archivage...
     Route::post('/etageres', [Etagere::class, 'create']);
     Route::post('/delete-etageres', [Etagere::class, 'remove']);
+    Route::get('/archivage/etageres/{id}', [Etagere::class, 'more']);
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

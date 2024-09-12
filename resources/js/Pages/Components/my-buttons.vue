@@ -2,7 +2,7 @@
 <script>
 export default {
     emits: ['switch-list'],
-    props: ['service_id', 'classeur_id', 'create_classeur'],
+    props: ['service_id', 'classeur_id', 'create_classeur', 'hideDocBtn'],
     methods: {
         addClasseur() {
             this.$inertia.post(`/classeurs`, {
@@ -61,6 +61,7 @@ export default {
                 class="btn btn-primary btn-sm d-flex align-items-center"
                 role="button"
                 style="height: 30.33px"
+                v-if="hideDocBtn"
                 ><svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 -32 576 576"
