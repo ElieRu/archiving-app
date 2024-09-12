@@ -1,6 +1,6 @@
 <script>
 export default {
-    props: ["switchSearch", "lenClas", "lenDocs", "table", "service_id"],
+    props: ["switchSearch", "lenClas", "lenDocs", "table", "service_id", "hideSwitch"],
     emits: ["switch-list"],
     data() {
         return {
@@ -50,7 +50,7 @@ export default {
                 placeholder="Recherche"
                 v-model="search"
             />
-            <div class="dropdown">
+            <div class="dropdown" v-if="hideSwitch">
                 <button
                     class="btn btn-primary btn-sm border-0"
                     aria-expanded="false"
