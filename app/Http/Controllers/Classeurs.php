@@ -19,19 +19,33 @@ class Classeurs extends Controller
         dd('getting');
     }
 
-    public function create(Request $request)
+    public function create_classeur($classeurs, $classeur_id, $service_id, $etagere_id)
     {
-        $classeurs = Classeur::where('user_id', Auth::user()->id)->get();
         $lenClasseurs = count($classeurs) + 1;
         $defaultName = "classeur(" . $lenClasseurs . ")";
         Classeur::create([
             'nom' => $defaultName,
             'user_id' => Auth::user()->id,
-            'classeur_id' => $request->classeur_id ? $request->classeur_id : null,
-            'service_id' => $request->service_id ? $request->service_id : null,
+            'classeur_id' => $classeur_id,
+            'service_id' => $service_id,
+            'etagere_id' => $etagere_id,
         ]);
+    }
 
-        if ($request->service_id) {
+    public function create(Request $request)
+    {
+        if ($request->etagere_id) {
+            $classeurs = Classeur::where('etagere_id', Auth::user()->id)->get();
+            // $lenClasseurs = count($classeurs) + 1;
+            // $defaultName = "classeur(" . $lenClasseurs . ")";
+            // dd($defaultName);
+            $this->create_classeur($classeurs, $request->classeur_id, $request->service_id, $request->etagere_id);
+            return redirect()->route('etagere.more', [
+                'id' => $request->etagere_id
+            ]);
+        } else {
+            $classeurs = Classeur::where('user_id', Auth::user()->id)->get();
+            $this->create_classeur($classeurs, $request->classeur_id, $request->service_id, $request->etagere_id);
             return redirect()->route('service.more', [
                 'id' => $request->service_id
             ]);

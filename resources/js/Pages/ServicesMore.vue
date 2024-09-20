@@ -30,7 +30,7 @@ export default {
         DocumentComponent,
         Link,
         RemoreMembers,
-        AddMembers
+        AddMembers,
     },
     props: ["user", "users", "service", "classeurs", "documents", "add_users"],
     data() {
@@ -59,12 +59,12 @@ export default {
         },
     },
     computed: {
-        get_users () {
-            return this.users
+        get_users() {
+            return this.users;
         },
-        add_users () {
-            return this.add_users
-        }
+        add_users() {
+            return this.add_users;
+        },
     },
 };
 </script>
@@ -129,15 +129,13 @@ export default {
                                 ><span
                                     style="font-size: 13px"
                                     class="text-capitalize"
-                                    ><Link href="/documents">
-                                        {{
-                                            service.nom.length < 15
-                                                ? service.nom
-                                                : service.nom.slice(0, 15) +
-                                                  "..."
-                                        }}
-                                    </Link></span
                                 >
+                                    {{
+                                        service.nom.length < 15
+                                            ? service.nom
+                                            : service.nom.slice(0, 15) + "..."
+                                    }}
+                                </span>
                             </div>
                         </div>
                         <div class="row my-3">
@@ -152,7 +150,10 @@ export default {
                                     :service_id="this.service.id"
                                 />
                             </div>
-                            <div v-if="user.role == 'admin'" class="col-sm-6 d-flex justify-content-end">
+                            <div
+                                v-if="user.role == 'admin'"
+                                class="col-sm-6 d-flex justify-content-end"
+                            >
                                 <button
                                     data-bs-target="#remove-members"
                                     data-bs-toggle="modal"

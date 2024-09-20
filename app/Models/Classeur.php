@@ -9,6 +9,6 @@ class Classeur extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'description', 'user_id', "service_id"];
+    protected $fillable = ['nom', 'description', 'user_id', "service_id", "etagere_id"];
 
 }

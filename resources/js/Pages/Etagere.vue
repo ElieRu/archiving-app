@@ -6,6 +6,10 @@ import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import { Link } from "@inertiajs/vue3";
+import Pagination from "./Components/pagination.vue";
+import ClasseurComponent from "./Components/classeur-component.vue";
+import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
+
 export default {
     components: {
         NavBar,
@@ -15,8 +19,21 @@ export default {
         MyButtons,
         TopPage,
         Link,
+        Pagination,
+        ClasseurComponent,
+        propertiesModalClasseur
     },
-    props: ["user", "etagere"],
+    props: ["user", "etagere", "classeurs"],
+    data() {
+        return {
+            myClasseur: {},
+        }
+    },
+    methods: {
+        getClasseur(classeur) {
+            this.myClasseur = classeur;
+        },
+    }
 };
 </script>
 
@@ -93,6 +110,7 @@ export default {
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons
+                                    :etagere_id="etagere.id"
                                     v-if="
                                         user.role == 'admin' ||
                                         user.role == 'archiviste'
@@ -101,12 +119,24 @@ export default {
                                 />
                             </div>
                         </div>
-                        <div class="row gy-3">content</div>
+                        <div class="row gy-3">
+                            <ClasseurComponent
+                                :classeurs="this.classeurs.data"
+                                @get-classeur="getClasseur"
+                                table="services"
+                                :etagere_id="etagere.id"
+                            />
+                            <Pagination
+                                :datas="this.classeurs"
+                                v-if="this.classeurs.data.length >= 1"
+                            />
+                        </div>
                     </div>
                 </div>
                 <Footer />
             </div>
             <TopPage />
         </div>
+        <propertiesModalClasseur :data="this.myClasseur" />
     </body>
 </template>

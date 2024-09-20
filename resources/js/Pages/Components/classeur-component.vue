@@ -1,7 +1,7 @@
 <script>
 import { Link, useForm } from "@inertiajs/vue3";
 export default {
-    props: ["classeurs", "table", "service_id"],
+    props: ["classeurs", "table", "service_id", "etagere_id"],
     emits: ["get-classeur"],
     data() {
         return {
@@ -35,7 +35,7 @@ export default {
                     // /${this.service_id ? this.service_id : ''
                     this.$inertia.replace(
                         `/${this.table}/${
-                            this.service_id ? this.service_id : ""
+                            this.service_id ? this.service_id : null
                         }`,
                         {
                             preserveState: true,

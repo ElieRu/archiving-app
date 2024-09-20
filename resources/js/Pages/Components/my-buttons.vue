@@ -1,17 +1,27 @@
-
 <script>
 export default {
-    emits: ['switch-list'],
-    props: ['service_id', 'classeur_id', 'create_classeur', 'hideDocBtn'],
+    emits: ["switch-list"],
+    props: [
+        "service_id",
+        "classeur_id",
+        "etagere_id",
+        "create_classeur",
+        "hideDocBtn",
+    ],
     methods: {
         addClasseur() {
-            this.$inertia.post(`/classeurs`, {
-                service_id: this.service_id,
-            }, {
-                onSuccess: () => {
-                    this.$emit('switch-list', true)
+            this.$inertia.post(
+                `/classeurs`,
+                {
+                    service_id: this.service_id ? this.service_id : null,
+                    etagere_id: this.etagere_id ? this.etagere_id : null,
+                },
+                {
+                    onSuccess: () => {
+                        this.$emit("switch-list", true);
+                    },
                 }
-            })
+            );
         },
         onChange(e) {
             this.file = e.target.files[0];
@@ -21,16 +31,16 @@ export default {
                     service_id: this.service_id,
                     classeur_id: this.classeur_id,
                     file: this.file,
-                }, {
+                },
+                {
                     onSuccess: () => {
-                        this.$emit('switch-list', false)
-                    }
+                        this.$emit("switch-list", false);
+                    },
                 }
             );
-            
         },
-    }
-}
+    },
+};
 </script>
 
 <template>
@@ -77,10 +87,6 @@ export default {
                     >Document</span
                 ></a
             ></label
-        ><input 
-            id="file" 
-            class="d-none" 
-            type="file"
-            @change="onChange" />
+        ><input id="file" class="d-none" type="file" @change="onChange" />
     </div>
 </template>
