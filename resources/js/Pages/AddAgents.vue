@@ -179,7 +179,7 @@ export default {
                                                     v-model="form.poste"
                                                 >
                                                     <optgroup
-                                                        label="This is a group"
+                                                        label="Personnels"
                                                     >
                                                         <option
                                                             value="caissier"
@@ -189,6 +189,16 @@ export default {
                                                         </option>
                                                         <option value="agent">
                                                             Agent
+                                                        </option>
+                                                    </optgroup>
+                                                    <optgroup
+                                                        label="Gestionnaire"
+                                                    >
+                                                        <option value="admin">
+                                                            Administrateur
+                                                        </option>
+                                                        <option value="archiviste">
+                                                            Archiviste
                                                         </option>
                                                     </optgroup>
                                                 </select>

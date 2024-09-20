@@ -9,9 +9,9 @@ import UpdateModal from "./Components/update-documents.vue";
 import UpdateModalClasseur from "./Components/update-documents-classeur.vue";
 import { Link, router } from "@inertiajs/vue3";
 import PropertiesModal from "./Components/properties-modal.vue";
-import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
 import ShareModal from "./Components/share-modal.vue";
 import Pagination from "./Components/pagination.vue";
+import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
 import ClasseurComponent from "./Components/classeur-component.vue";
 import DocumentComponent from "./Components/document-component.vue";
 
