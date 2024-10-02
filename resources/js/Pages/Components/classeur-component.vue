@@ -1,7 +1,7 @@
 <script>
 import { Link, useForm } from "@inertiajs/vue3";
 export default {
-    props: ["classeurs", "table", "service_id", "etagere_id"],
+    props: ["classeurs", "table", "service_id", "etagere_name", "etagere_id"],
     emits: ["get-classeur"],
     data() {
         return {
@@ -61,9 +61,13 @@ export default {
                 style="position: relative"
             >
                 <Link
-                    :href="`classeurs/${classeur.id}`"
+                    :href="`/classeurs/${classeur.id}`"
                     method="get"
-                    :data="{ service_id: this.service_id }"
+                    :data="{ 
+                        service_id: this.service_id,
+                        etagere_name: this.etagere_name,
+                        etagere_id: this.etagere_id
+                    }"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

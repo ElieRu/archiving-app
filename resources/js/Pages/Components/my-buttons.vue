@@ -6,7 +6,7 @@ export default {
         "classeur_id",
         "etagere_id",
         "create_classeur",
-        "hideDocBtn",
+        "hideDocBtn"
     ],
     methods: {
         addClasseur() {
@@ -30,10 +30,12 @@ export default {
                 {
                     service_id: this.service_id,
                     classeur_id: this.classeur_id,
+                    etagere_id: this.etagere_id,
                     file: this.file,
                 },
                 {
-                    onSuccess: () => {
+                    onSuccess: (props) => {
+                        console.log(props);
                         this.$emit("switch-list", false);
                     },
                 }

@@ -125,6 +125,7 @@ export default {
                                 @get-classeur="getClasseur"
                                 table="services"
                                 :etagere_id="etagere.id"
+                                :etagere_name="etagere.nom"
                             />
                             <Pagination
                                 :datas="this.classeurs"

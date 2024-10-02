@@ -63,7 +63,6 @@ class Documents extends Controller
 
     public function create(Request $request)
     {
-        // dd($request->foreign_key);
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -79,17 +78,34 @@ class Documents extends Controller
                 'taille' => $fileSize,
                 'extension' => $extension,
                 'user_id' => Auth::user()->id,
-                'service_id' => $request->service_id ? $request->service_id : null,
-                'classeur_id' => $request->classeur_id ? $request->classeur_id : null
+                'service_id' => $request->service_id,
+                'classeur_id' => $request->classeur_id,
+                'etagere_id' => $request->etagere_id,
             ]);
 
-            if ($request->service_id) {
-                return redirect()->route('service.more', [
-                    'id' => $request->service_id
-                ]);
-            }
+            // Classeurs
 
-            return redirect()->route('document.show');
+            return to_route('classeur.more', [
+                'id' => $request->classeur_id
+            ]);
+
+            // if ($request->service_id) {
+            //     return redirect()->route('service.more', [
+            //         'id' => $request->service_id
+            //     ]);
+            // }
+
+            // if ($request->classeur_id) {
+            //     return redirect()->route('classeurs.more', [
+            //         'id' => $request->classeur_id
+            //     ]);
+            // }
+            
+            // if ($request->classeur_id && $request->etagere_id) {
+                // return redirect()->route('classeur.more', [
+                //     'id' => $request->classeur_id
+                // ]);
+            // }
         }
     }
 
