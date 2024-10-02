@@ -15,6 +15,8 @@ import propertiesModalClasseur from "./Components/properties-modal-classeur.vue"
 import ClasseurComponent from "./Components/classeur-component.vue";
 import DocumentComponent from "./Components/document-component.vue";
 
+const etagere_id = 1
+
 export default {
     components: {
         NavBar,
@@ -145,6 +147,7 @@ export default {
                                 class="col-sm-6 d-flex justify-content-end align-items-center"
                             >
                                 <MyButtons @switch-list="switchDocs" />
+                                
                             </div>
                         </div>
                         <div class="row gy-3" v-if="switchList">

@@ -168,4 +168,9 @@ class Classeurs extends Controller
                 ->get()
         ]);
     }
+
+    public function call()
+    {
+        dd('good');
+    }
 }

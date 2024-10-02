@@ -25,13 +25,19 @@ export default {
         PropertiesModal,
         UpdateModal,
     },
-    props: ["user", "classeur", "documents", "service"],
+    props: ["id", "user", "classeur", "documents", "service"],
     data() {
         return {
             switchList: true,
             myDocument: {},
             myClasseur: {},
             docId: null,
+            etagereName: new URLSearchParams(window.location.search).get(
+                "etagere_name"
+            ),
+            etagereId: new URLSearchParams(window.location.search).get(
+                "etagere_id"
+            ),
         };
     },
     methods: {
@@ -90,6 +96,7 @@ export default {
                                         ></path></svg
                                     ><span style="font-size: 13px"
                                         ><Link
+                                            v-if="!etagereId"
                                             :href="
                                                 service
                                                     ? `/services`
@@ -101,6 +108,12 @@ export default {
                                                     ? "Services"
                                                     : "Documents"
                                             }}
+                                        </Link>
+                                        <Link
+                                            v-if="etagereId"
+                                            href="/archivage"
+                                        >
+                                            Archivage
                                         </Link></span
                                     >
                                 </div>
@@ -132,6 +145,39 @@ export default {
                                                 service.nom.length < 15
                                                     ? service.nom
                                                     : service.nom.slice(0, 15) +
+                                                      "..."
+                                            }}
+                                        </Link></span
+                                    >
+                                </div>
+                                <div
+                                    v-if="etagereId"
+                                    class="d-flex align-items-center"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="-96 0 512 512"
+                                        width="1em"
+                                        height="1em"
+                                        fill="currentColor"
+                                        style="
+                                            margin-right: 10px;
+                                            margin-left: 10px;
+                                        "
+                                    >
+                                        <path
+                                            d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
+                                        ></path></svg
+                                    ><span
+                                        style="font-size: 13px"
+                                        class="text-capitalize"
+                                        ><Link
+                                            :href="`/archivage/etageres/${etagereId}`"
+                                        >
+                                            {{
+                                                etagereName.length < 15
+                                                    ? etagereName
+                                                    : etagereName.slice(0, 15) +
                                                       "..."
                                             }}
                                         </Link></span
@@ -180,11 +226,13 @@ export default {
                                         :create_classeur="true"
                                         :service_id="service ? service.id : ''"
                                         :classeur_id="this.classeur.id"
+                                        :hideDocBtn="true"
+                                        :etagere_id="this.etagereId"
                                     />
                                 </div>
                             </div>
                             <div class="row gy-3" v-if="switchList">
-                                <DocumentComponent
+                                <DocumentComdocumennent
                                     :documents="this.documents"
                                     @get-document="getDocument"
                                     @get-document-id="getDocumentId"
