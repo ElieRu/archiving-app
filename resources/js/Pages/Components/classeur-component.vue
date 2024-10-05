@@ -1,7 +1,15 @@
 <script>
 import { Link, useForm } from "@inertiajs/vue3";
+import axios from "axios";
 export default {
-    props: ["classeurs", "table", "service_id", "etagere_name", "etagere_id"],
+    props: [
+        "url",
+        "classeurs",
+        "table",
+        "service_id",
+        "etagere_name",
+        "etagere_id",
+    ],
     emits: ["get-classeur"],
     data() {
         return {
@@ -9,6 +17,7 @@ export default {
                 id: null,
                 table: null,
                 service_id: null,
+                etagere_id: null,
             }),
         };
     },
@@ -28,21 +37,10 @@ export default {
             this.datas.id = id;
             this.datas.table = this.table;
             this.datas.service_id = this.service_id;
-
-            this.datas.delete(`/classeurs`, {
-                onSuccess: (res) => {
-                    // this.$inertia.replace(`/${this.table}`, {
-                    // /${this.service_id ? this.service_id : ''
-                    this.$inertia.replace(
-                        `/${this.table}/${
-                            this.service_id ? this.service_id : null
-                        }`,
-                        {
-                            preserveState: true,
-                            preserveScroll: true,
-                        }
-                    );
-                },
+            this.datas.etagere_id = this.etagere_id;
+            this.datas.delete(this.url, {
+                preserveScroll: true,
+                preserveState: true,
             });
         },
     },
@@ -63,10 +61,10 @@ export default {
                 <Link
                     :href="`/classeurs/${classeur.id}`"
                     method="get"
-                    :data="{ 
+                    :data="{
                         service_id: this.service_id,
                         etagere_name: this.etagere_name,
-                        etagere_id: this.etagere_id
+                        etagere_id: this.etagere_id,
                     }"
                 >
                     <svg

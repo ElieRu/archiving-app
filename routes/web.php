@@ -36,8 +36,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/share', [Documents::class, 'share']);
 
     Route::post('/classeurs', [Classeurs::class, 'create']);
-    Route::put('/classeurs', [Classeurs::class, 'update']);
-    Route::delete('/classeurs', [Classeurs::class, 'delete']);
+    Route::put('/etageres/{id}', [Classeurs::class, 'update']);
+    Route::delete('/etageres/{id}', [Classeurs::class, 'delete']);
     // Route::post('/classeurs-more/{id}', [Classeurs::class, 'deleteMore']);
     Route::get('/classeurs/{id}', [Classeurs::class, 'more'])->name('classeur.more');
     Route::get('/services/classeurs/{id}', [Classeurs::class, 'more']);
@@ -47,15 +47,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/services/{id}', [ServicesMore::class, 'addMermbers'])->name('service.addMembers');
     Route::delete('/services/{id}', [ServicesMore::class, 'deleteMembers'])->name('service.blockMembers');
     
-    Route::get('/archivage', [Archivage::class, 'show'])->name('archivage.index');
+    // Route::get('/archivage', [Archivage::class, 'show'])->name('archivage.index');
+    
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
     Route::put('/user/password', [Agents::class, 'updatePassword']);
 
     // Archivage...
+    Route::get('/etageres', [Etagere::class, 'index'])->name('etageres.index');
     Route::post('/etageres', [Etagere::class, 'create']);
-    Route::post('/delete-etageres', [Etagere::class, 'remove']);
-    Route::get('/archivage/etageres/{id}', [Etagere::class, 'more'])->name('etagere.more');
+    Route::put('/etageres', [Etagere::class, 'update']);
+    Route::get('/etageres-delete', [Etagere::class, 'remove']);
+    Route::get('/etageres/{id}', [Etagere::class, 'more'])->name('etagere.more');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

@@ -10,29 +10,27 @@ export default {
                 nom: null,
                 description: null,
             },
-            err: false,
+            disable: false,
             display: false,
         };
     },
     methods: {
         submit() {
-            this.err = true;
+            this.disable = true;
+            this.display = false;
             this.$inertia.put("/etageres", this.form, {
                 onSuccess: (res) => {
                     if (res.props.updated) {
-                        this.err = false;
+                        this.disable = false;
                         this.$refs.closeModal.click();
-                        this.form.nom = "";
-                        this.form.description = "";
-                        this.$inertia.replace("/etageres", {
-                            preserveScroll: true,
-                            preserveState: true,
-                        });
                     } else {
-                        this.err = false;
+                        this.disable = false;
                         this.display = true;
                     }
                 },
+                onError: () => {
+                    console.log('error');                    
+                }
             });
         },
     },
@@ -109,7 +107,7 @@ export default {
                                     class="btn btn-primary"
                                     style="width: 100%"
                                     type="submit"
-                                    :disabled="err"
+                                    :disabled="disable"
                                 >
                                     Modifier
                                 </button>

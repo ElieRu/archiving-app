@@ -74,7 +74,7 @@ export default {
                 <li class="nav-item">
                     <Link
                         class="nav-link d-flex align-items-center"
-                        href="/archivage"
+                        href="/etageres"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 -32 576 576"

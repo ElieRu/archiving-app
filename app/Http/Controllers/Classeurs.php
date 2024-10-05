@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classeur;
 use App\Models\Document;
+use App\Models\Etagere;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
@@ -17,6 +18,20 @@ class Classeurs extends Controller
     public function index()
     {
         dd('getting');
+    }
+
+    public function returnArchive(Request $request)
+    {
+        $etagere = Etagere::findOrFail($request->etagere_id);
+            $classeurs = Classeur::where('etagere_id', '=', $request->etagere_id)
+                ->paginate(24)
+                ->withQueryString();
+
+            return Inertia::render('Etagere', [
+                'user' => Auth::user(),
+                'etagere' => $etagere,
+                'classeurs' => $classeurs
+            ]);
     }
 
     public function create_classeur($classeurs, $classeur_id, $service_id, $etagere_id)
@@ -102,15 +117,20 @@ class Classeurs extends Controller
 
     public function delete(Request $request)
     {
-        // dd($request);
         Classeur::findOrFail($request->id)->delete();
         if ($request->table === 'documents') {
             return Inertia::render('Documents');
         }
 
-        return Inertia::render('ServicesMore', [
-            'id' => $request->service_id
-        ]);
+        if ($request->table === 'etageres') {
+            return $this->returnArchive($request);
+        }
+
+        if ($request->table === 'services') {
+            return Inertia::render('ServicesMore', [
+                'id' => $request->service_id
+            ]);
+        }
     }
 
     public function more(Request $request)

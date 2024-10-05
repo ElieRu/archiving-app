@@ -1,6 +1,6 @@
 <script>
 export default {
-    emits: ["switch-list"],
+    emits: ["upgrade-list", "switch-list"],
     props: [
         "service_id",
         "classeur_id",
@@ -34,8 +34,8 @@ export default {
                     file: this.file,
                 },
                 {
-                    onSuccess: (props) => {
-                        console.log(props);
+                    onSuccess: ({props}) => {
+                        this.$emit("upgrade-list", props.documents);
                         this.$emit("switch-list", false);
                     },
                 }
