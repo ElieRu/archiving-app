@@ -176,6 +176,7 @@ export default {
                         </div>
                         <div class="row gy-3" v-if="switchList">
                             <ClasseurComponent
+                                :url="`/services/${service.id}`"
                                 :classeurs="this.classeurs.data"
                                 @get-classeur="getClasseur"
                                 table="services"

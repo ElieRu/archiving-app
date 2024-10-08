@@ -108,7 +108,7 @@ export default {
                         </div>
                         <div class="row my-3">
                             <div class="col-sm-6 d-flex">
-                                <SearchBar :hideSwitch="false" />
+                                <SearchBar :hideSwitch="false" :url="`/etageres/${etagere.id}`" />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons
@@ -141,7 +141,7 @@ export default {
             </div>
             <TopPage />
         </div>
-        <UpdateModalClasseur :url="`/etageres/${etagere.id}`" :data="this.myClasseur" table="services" />
+        <UpdateModalClasseur :url="`/etageres/${etagere.id}`" :etagere_id="etagere.id" :data="this.myClasseur" table="services" />
         <propertiesModalClasseur :data="this.myClasseur" />
     </body>
 </template>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 use function Laravel\Prompts\alert;
+use function Laravel\Prompts\search;
 use function Termwind\render;
 
 class Etagere extends Controller
@@ -60,6 +61,13 @@ class Etagere extends Controller
     {
         $etagere = ModelsEtagere::findOrFail($request->id);
         $classeurs = Classeur::where('etagere_id', '=', $request->id)
+            ->where(
+                'user_id',
+                '=',
+                Auth::user()->id
+            )->when($request->search, function ($query, $search) {
+                $query->where('nom', 'like', "%{$search}%");
+            })
             ->paginate(24)
             ->withQueryString();
 

@@ -152,6 +152,7 @@ export default {
                         </div>
                         <div class="row gy-3" v-if="switchList">
                             <ClasseurComponent
+                                :url="`/documents`"
                                 :classeurs="this.classeurs.data"
                                 @get-classeur="getClasseur"
                                 table="documents"
@@ -188,6 +189,6 @@ export default {
             :docId="docId"
         />
         <propertiesModalClasseur :data="this.myClasseur" />
-        <UpdateModalClasseur :data="this.myClasseur" table="documents" />
+        <UpdateModalClasseur :url="`/documents`" :data="this.myClasseur" table="documents" />
     </body>
 </template>

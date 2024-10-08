@@ -3,7 +3,7 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["data", "table", "url"],
+    props: ["data", "table", "url", "etagere_id"],
     data() {
         return {
             form: {
@@ -11,8 +11,9 @@ export default {
                 titre: null,
                 type: null,
                 description: null,
+                etagere_id: null,
             },
-            err: false,
+            disable: false,
             display: false,
         };
     },
@@ -24,25 +25,20 @@ export default {
     },
     methods: {
         submit() {
-            this.err = true;
-            this.$inertia.put(this.url, this.form, {
-                onSuccess: () => {
-                    this.err = false;
+            this.disable = true;
+            this.display = false;
+            this.form.etagere_id = this.etagere_id;
+            axios
+                .put("/documents", this.form)
+                .then((res) => {
+                    this.disable = false;
+                    this.display = false;
                     this.$refs.closeModal.click();
-                    if (this.table) {
-                        // this.$inertia.replace(
-                        //     `/${this.table}/${
-                        //         this.form.service_id ? this.form.service_id : ""
-                        //     }`,
-                        //     { preserveScroll: true, preserveState: true }
-                        // );
-                    }
-                },
-                onError: () => {
-                    this.err = false;
+                })
+                .catch((err) => {
                     this.display = true;
-                },
-            });
+                    this.disable = false;
+                });
         },
     },
 };
@@ -112,7 +108,7 @@ export default {
                                     class="btn btn-primary"
                                     style="width: 100%"
                                     type="submit"
-                                    :disabled="err"
+                                    :disabled="disable"
                                 >
                                     Modifier
                                 </button>

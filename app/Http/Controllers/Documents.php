@@ -85,9 +85,9 @@ class Documents extends Controller
 
             // Classeurs
 
-            return to_route('classeur.more', [
-                'id' => $request->classeur_id
-            ]);
+            // return to_route('classeur.more', [
+            //     'id' => $request->classeur_id
+            // ]);
 
             // if ($request->service_id) {
             //     return redirect()->route('service.more', [
@@ -95,21 +95,21 @@ class Documents extends Controller
             //     ]);
             // }
 
-            // if ($request->classeur_id) {
-            //     return redirect()->route('classeurs.more', [
-            //         'id' => $request->classeur_id
-            //     ]);
-            // }
+            if ($request->classeur_id) {
+                return redirect()->route('classeur.more', [
+                    'id' => $request->classeur_id
+                ]);
+            }
             
-            // if ($request->classeur_id && $request->etagere_id) {
-                // return redirect()->route('classeur.more', [
-                //     'id' => $request->classeur_id
-                // ]);
-            // }
+            if ($request->classeur_id && $request->etagere_id) {
+                return redirect()->route('classeur.more', [
+                    'id' => $request->classeur_id
+                ]);
+            }
         }
     }
 
-    public function update(DocumentRequest $request)
+    public function update(Request $request)
     {
         $documents = Document::where('user_id', '=', Auth::user()->id)->get();
         DB::table('documents')

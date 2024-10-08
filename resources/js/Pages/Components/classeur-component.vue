@@ -1,5 +1,5 @@
 <script>
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 export default {
     props: [
@@ -29,16 +29,15 @@ export default {
             return this.classeurs;
         },
     },
-    mounted() {
-        // alert(this.service_id)
-    },
     methods: {
         deleteClasseur(id) {
             this.datas.id = id;
             this.datas.table = this.table;
             this.datas.service_id = this.service_id;
             this.datas.etagere_id = this.etagere_id;
-            this.datas.delete(this.url, {
+            const url = this.url;
+            // alert(url)
+            this.datas.delete(url, {
                 preserveScroll: true,
                 preserveState: true,
             });

@@ -1,6 +1,14 @@
 <script>
 export default {
-    props: ["switchSearch", "lenClas", "lenDocs", "table", "service_id", "hideSwitch"],
+    props: [
+        "switchSearch", 
+        "lenClas", 
+        "lenDocs", 
+        "table", 
+        "service_id", 
+        "hideSwitch",
+        "url"
+    ],
     emits: ["switch-list"],
     data() {
         return {
@@ -11,12 +19,14 @@ export default {
         search() {
             if (!this.switchSearch) {
                 this.$inertia.get(
-                    `/${this.table}/${this.service_id ? this.service_id : ''}`,
+                    // `/${this.table}/${this.service_id ? this.service_id : ''}`,
+                    this.url,
                     {
                         search: this.search,
                     },
                     {
                         preserveState: true,
+                        preserveScroll: true,
                         replace: true,
                     }
                 );

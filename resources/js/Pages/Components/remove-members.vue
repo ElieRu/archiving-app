@@ -1,5 +1,5 @@
 <script>
-import { useForm } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
@@ -18,12 +18,16 @@ export default {
         submit() {
             this.datas.users_checked = this.users_checked;
             this.datas.id = this.id;
-            console.log(this.datas)
-            this.datas.delete(`/services/${this.service_id}`, {
+            
+            this.datas.post(`/remove-members/${this.service_id}`, {
                 onSuccess: () => {
                     this.users_checked = [];
                     this.$refs.closeBtn.click();
-                },
+                    router.replace(`/services/${this.service_id}`, {
+                        preserveScroll: true,
+                        preserveState: true
+                    })
+                }
             });
         },
     },

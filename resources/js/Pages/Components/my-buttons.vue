@@ -6,7 +6,7 @@ export default {
         "classeur_id",
         "etagere_id",
         "create_classeur",
-        "hideDocBtn"
+        "hideDocBtn",
     ],
     methods: {
         addClasseur() {
@@ -34,10 +34,14 @@ export default {
                     file: this.file,
                 },
                 {
-                    onSuccess: ({props}) => {
+                    onSuccess: ({ props }) => {
                         this.$emit("upgrade-list", props.documents);
                         this.$emit("switch-list", false);
                     },
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
                 }
             );
         },
