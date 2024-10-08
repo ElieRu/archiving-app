@@ -9,6 +9,7 @@ export default {
         "service_id",
         "etagere_name",
         "etagere_id",
+        "open_classeur",
     ],
     emits: ["get-classeur"],
     data() {
@@ -58,12 +59,20 @@ export default {
                 style="position: relative"
             >
                 <Link
-                    :href="`/classeurs/${classeur.id}`"
+                    :href="
+                        this.table == 'documents'
+                            ? `/documents/classeurs/${classeur.id}`
+                        : this.table == 'etageres'
+                            ? `/etageres/${this.etagere_id}/classeurs/${classeur.id}` 
+                        : this.table == 'services' 
+                            ? `/services/${this.service_id}/classeurs/${classeur.id}` 
+                            : ''
+                    "
                     method="get"
                     :data="{
-                        service_id: this.service_id,
-                        etagere_name: this.etagere_name,
-                        etagere_id: this.etagere_id,
+                        // service_id: this.service_id,
+                        // etagere_name: this.etagere_name,
+                        // etagere_id: this.etagere_id,
                     }"
                 >
                     <svg

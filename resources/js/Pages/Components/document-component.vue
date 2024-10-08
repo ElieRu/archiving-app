@@ -3,7 +3,7 @@ import { Link, router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["documents", "render_page"],
+    props: ["classeur_id", "documents", "render_page"],
     emits: ["get-document", "get-document-id"],
     components: {
         Link,
@@ -13,6 +13,7 @@ export default {
             datas: useForm({
                 id: null,
                 render_page: null,
+                classeur_id: null,
             }),
         };
     },
@@ -26,7 +27,8 @@ export default {
         deleteDocument(id) {
             this.datas.id = id;
             this.datas.render_page = this.render_page;
-            this.datas.delete("/documents");
+            this.datas.classeur_id = this.classeur_id;
+            this.datas.delete(`/documents/classeurs/${this.classeur_id}`);
         },
     },
 };
@@ -64,7 +66,7 @@ export default {
                     class="dropdown"
                     style="position: absolute; top: 0px; right: 0px"
                 >
-                    <button111111
+                    <button
                         class="btn btn-primary bg-transparent border-0"
                         aria-expanded="false"
                         data-bs-toggle="dropdown"
@@ -83,7 +85,7 @@ export default {
                                 d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
                             ></path>
                         </svg>
-                    </button111111>
+                    </button>
                     <div class="dropdown-menu">
                         <a
                             class="dropdown-item"

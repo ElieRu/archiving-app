@@ -7,11 +7,13 @@ export default {
         "etagere_id",
         "create_classeur",
         "hideDocBtn",
+        "route"
     ],
     methods: {
         addClasseur() {
+            // alert(this.route)
             this.$inertia.post(
-                `/classeurs`,
+                this.route,
                 {
                     service_id: this.service_id ? this.service_id : null,
                     etagere_id: this.etagere_id ? this.etagere_id : null,
@@ -19,14 +21,17 @@ export default {
                 {
                     onSuccess: () => {
                         this.$emit("switch-list", true);
-                    },
+                    }
+                }, {
+                    preserveScroll: true,
+                    preserveState: true
                 }
             );
         },
         onChange(e) {
             this.file = e.target.files[0];
             this.$inertia.post(
-                `/documents`,
+                `/documents/classeurs/${this.classeur_id}`,
                 {
                     service_id: this.service_id,
                     classeur_id: this.classeur_id,

@@ -169,6 +169,7 @@ export default {
                                     Ajout
                                 </button>
                                 <MyButtons
+                                    :route="`/documents`"
                                     @switch-list="switchDocs"
                                     :service_id="this.service.id"
                                 />
@@ -176,6 +177,7 @@ export default {
                         </div>
                         <div class="row gy-3" v-if="switchList">
                             <ClasseurComponent
+                                :open_classeur="`documents/classeurs/`"
                                 :url="`/services/${service.id}`"
                                 :classeurs="this.classeurs.data"
                                 @get-classeur="getClasseur"

@@ -29,47 +29,53 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [Dashboard::class, 'show'])->name('dashboard');
     Route::get('/home', [Dashboard::class, 'show'])->name('dashboard');
 
-    // Documents...
+    // Documents 
     Route::get('/documents', [Documents::class, 'show'])->name('document.show');
     Route::post('/documents', [Classeurs::class, 'create']);
     Route::put('/documents', [Classeurs::class, 'update']);
     Route::delete('/documents', [Classeurs::class, 'delete']);
-    // Route::put('/documents', [Documents::class, 'update']);
-    // Route::delete('/documents', [Documents::class, 'delete']);
+    
+    // Documents > Classeurs
+    Route::get('/documents/classeurs/{id}', [Documents::class, 'index'])->name('classeur.more');
+    Route::post('/documents/classeurs/{id}', [Documents::class, 'create']);
+    Route::put('/documents/classeurs', [Documents::class, 'update']);
+    Route::delete('/documents/classeurs/{id}', [Documents::class, 'delete']);
     Route::post('/share', [Documents::class, 'share']);
-    //     
 
-    Route::post('/classeurs', [Classeurs::class, 'create']);
-    Route::get('/classeurs/{id}', [Classeurs::class, 'more'])->name('classeur.more');
+    // Archivage
+    Route::get('/etageres', [Etagere::class, 'index'])->name('etageres.index');
+    Route::post('/etageres', [Etagere::class, 'create']);
+    Route::put('/etageres', [Etagere::class, 'update']);
 
-    // Services...
+    // Archivage > Etageres
+    Route::get('/etageres/{id}', [Etagere::class, 'more'])->name('etagere.more');
+    Route::get('/etageres-delete', [Etagere::class, 'remove']);
+    Route::put('/etageres/{id}', [Classeurs::class, 'update']);
+    Route::delete('/etageres/{id}', [Classeurs::class, 'delete']);
+
+    // Archivage > Etageres > Classeurs
+    Route::get('/etageres/{etagere_id}/classeurs/{id}', [Classeurs::class, 'more'])->name('etagere.more');
+
+    // Services
     Route::get('/services', [Services::class, 'show'])->name('services.show');
-
-    // Services more...
     Route::get('/services/{id}', [ServicesMore::class, 'show'])->name('service.more');
     Route::post('/services/{id}', [ServicesMore::class, 'add_members'])->name('service.addMembers');
     Route::post('/remove-members/{id}', [ServicesMore::class, 'remove_members'])->name('service.blockMembers');
     Route::delete('/services/{id}', [ServicesMore::class, 'remove_class'])->name('service.blockMembers');
 
-    Route::get('/services/classeurs/{id}', [Classeurs::class, 'more']);
+    // Services > More > Classeur
+    Route::get('/services/{service_id}/classeurs/{id}', [Classeurs::class, 'more']);
 
     // Route::get('/archivage', [Archivage::class, 'show'])->name('archivage.index');
 
+    
+    
+    
+    // Other Routes
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
     Route::put('/user/password', [Agents::class, 'updatePassword']);
 
-    // Archivage... 
-    Route::get('/etageres', [Etagere::class, 'index'])->name('etageres.index');
-    Route::post('/etageres', [Etagere::class, 'create']);
-    Route::put('/etageres', [Etagere::class, 'update']);
-
-    // classeur...
-    Route::get('/etageres-delete', [Etagere::class, 'remove']);
-    Route::get('/etageres/{id}', [Etagere::class, 'more'])->name('etagere.more');
-    Route::put('/etageres/{id}', [Classeurs::class, 'update']);
-    Route::delete('/etageres/{id}', [Classeurs::class, 'delete']);
-    // 
     
 });
 

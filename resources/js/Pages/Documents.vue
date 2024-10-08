@@ -146,7 +146,9 @@ export default {
                             <div
                                 class="col-sm-6 d-flex justify-content-end align-items-center"
                             >
-                                <MyButtons @switch-list="switchDocs" />
+                                <MyButtons
+                                    route="/documents" 
+                                    @switch-list="switchDocs" />
                                 
                             </div>
                         </div>

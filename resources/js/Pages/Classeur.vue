@@ -25,7 +25,7 @@ export default {
         PropertiesModal,
         UpdateModal,
     },
-    props: ["id", "user", "classeur", "documents", "service"],
+    props: ["id", "user", "classeur", "documents", "service", "etagere", "back_menu"],
     data() {
         return {
             switchList: true,
@@ -122,7 +122,7 @@ export default {
                                         >
                                     </div>
                                     <div
-                                        v-if="this.service"
+                                        v-if="this.back_menu"
                                         class="d-flex align-items-center"
                                     >
                                         <svg
@@ -157,7 +157,7 @@ export default {
                                         >
                                     </div>
                                     <div
-                                        v-if="etagereId"
+                                        v-if="!this.back_menu"
                                         class="d-flex align-items-center"
                                     >
                                         <svg
@@ -178,12 +178,12 @@ export default {
                                             style="font-size: 13px"
                                             class="text-capitalize"
                                             ><Link
-                                                :href="`/etageres/${etagereId}`"
+                                                :href="`/etageres/${this.etagere.id}`"
                                             >
                                                 {{
-                                                    etagereName.length < 15
-                                                        ? etagereName
-                                                        : etagereName.slice(
+                                                    this.etagere.nom.length < 15
+                                                        ? this.etagere.nom
+                                                        : this.etagere.nom.slice(
                                                               0,
                                                               15
                                                           ) + "..."
@@ -245,10 +245,11 @@ export default {
                             </div>
                             <div class="row gy-3" v-if="switchList">
                                 <DocumentComponent
+                                    :classeur_id="this.classeur.id"
                                     :documents="this.documents"
                                     @get-document="getDocument"
                                     @get-document-id="getDocumentId"
-                                    render_page="services"
+                                    render_page="documents"
                                 />
                             </div>
                         </div>

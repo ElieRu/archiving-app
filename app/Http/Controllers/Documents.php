@@ -18,6 +18,37 @@ use function PHPSTORM_META\type;
 
 class Documents extends Controller
 {
+    public function index(Request $request)
+    {
+        $classeur = Classeur::findOrFail($request->id);
+
+        if ($request->service_id) {
+            $documents = Document::where('service_id', '=', $request->service_id)
+                ->where('classeur_id', '=', $request->id)
+                ->paginate(24)
+                ->withQueryString();
+            $service = Service::where('id', '=', $request->service_id)->get()->last();
+
+            return Inertia::render('Classeur', [
+                'user' => Auth::user(),
+                'classeur' => $classeur,
+                'documents' => $documents,
+                'service' => $service
+            ]);
+        } else {
+            $documents = Document::where('classeur_id', '=', $request->id)
+                ->where('user_id', '=', Auth::user()->id)
+                ->paginate(24)
+                ->withQueryString();
+
+            return Inertia::render('Classeur', [
+                'user' => Auth::user(),
+                'classeur' => $classeur,
+                'documents' => $documents
+            ]);
+        }
+    }
+
     public function show(Request $request)
     {
         $classeurs = Classeur::query()
@@ -135,11 +166,11 @@ class Documents extends Controller
     {
         Document::findOrFail($request->id)->delete();
         if ($request->render_page === 'documents') {
-            return $this->show($request);
+            $request->id = $request->classeur_id;
+            return $this->index($request);
         } else if ($request->render_page === 'services') {
             return redirect()->route('services.show');
         }
-        return $this->show($request);
     }
 
     public function share(Request $request)

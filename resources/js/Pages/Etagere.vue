@@ -112,6 +112,7 @@ export default {
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons
+                                    :route="`/documents`"
                                     :etagere_id="etagere.id"
                                     v-if="
                                         user.role == 'admin' ||

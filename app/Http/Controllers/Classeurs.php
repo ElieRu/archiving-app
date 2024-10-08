@@ -256,7 +256,6 @@ class Classeurs extends Controller
     public function more(Request $request)
     {
         $classeur = Classeur::findOrFail($request->id);
-
         if ($request->service_id) {
             $documents = Document::where('service_id', '=', $request->service_id)
                 ->where('classeur_id', '=', $request->id)
@@ -268,9 +267,11 @@ class Classeurs extends Controller
                 'user' => Auth::user(),
                 'classeur' => $classeur,
                 'documents' => $documents,
-                'service' => $service
+                'service' => $service,
+                'back_menu' => true
             ]);
         } else {
+            $etagere = Etagere::findOrFail($request->etagere_id);
             $documents = Document::where('classeur_id', '=', $request->id)
                 ->where('user_id', '=', Auth::user()->id)
                 ->paginate(24)
@@ -279,7 +280,9 @@ class Classeurs extends Controller
             return Inertia::render('Classeur', [
                 'user' => Auth::user(),
                 'classeur' => $classeur,
-                'documents' => $documents
+                'documents' => $documents,
+                'back_menu' => false,
+                'etagere' => $etagere
             ]);
         }
     }
