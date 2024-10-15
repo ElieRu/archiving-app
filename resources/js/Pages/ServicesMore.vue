@@ -12,6 +12,7 @@ import ClasseurComponent from "./Components/classeur-component.vue";
 import DocumentComponent from "./Components/document-component.vue";
 import RemoreMembers from "./Components/remove-members.vue";
 import AddMembers from "./Components/add-members.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 
 import { Link } from "@inertiajs/vue3";
 
@@ -31,19 +32,18 @@ export default {
         Link,
         RemoreMembers,
         AddMembers,
+        OffCanvas
     },
     props: ["user", "users", "service", "classeurs", "documents", "add_users"],
     data() {
         return {
             switchSearch: true,
-            switchList: true,
             myClasseur: {},
         };
     },
     methods: {
         switchDocs(value) {
             this.switchSearch = value;
-            this.switchList = value;
         },
         sortList(value) {
             alert(value);
@@ -141,41 +141,48 @@ export default {
                         <div class="row my-3">
                             <div class="col-sm-6 d-flex">
                                 <SearchBar
-                                    @switch-list="switchDocs"
-                                    @sort-list="sortList"
-                                    :switchSearch="switchSearch"
-                                    :lenClas="this.classeurs.total"
-                                    :lenDocs="this.documents.total"
-                                    table="services"
-                                    :service_id="this.service.id"
+                                    :route="`/services/${this.service.id}`"
                                 />
                             </div>
                             <div
                                 v-if="user.role == 'admin'"
                                 class="col-sm-6 d-flex justify-content-end"
                             >
-                                <button
-                                    data-bs-target="#remove-members"
-                                    data-bs-toggle="modal"
-                                    class="btn btn-primary btn-sm"
-                                >
-                                    Restruction
-                                </button>
-                                <button
-                                    data-bs-target="#add-members"
-                                    data-bs-toggle="modal"
-                                    class="btn btn-primary btn-sm"
-                                >
-                                    Ajout
-                                </button>
                                 <MyButtons
-                                    @switch-list="switchDocs"
+                                    :route="`/documents`"
                                     :service_id="this.service.id"
                                 />
+                                <div class="dropdown" style="margin-left: 10px;">
+                                    <button
+                                        class="btn btn-primary dropdown-toggle"
+                                        aria-expanded="false"
+                                        data-bs-toggle="dropdown"
+                                        type="button"
+                                    >
+                                        Membres
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a
+                                            class="dropdown-item"
+                                            style="cursor: pointer;"
+                                            data-bs-target="#add-members"
+                                            data-bs-toggle="modal"
+                                            >Ajouter</a
+                                        ><a
+                                            class="dropdown-item"
+                                            style="cursor: pointer;"
+                                            data-bs-target="#remove-members"
+                                            data-bs-toggle="modal"
+                                            >Restruction</a
+                                        >
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row gy-3" v-if="switchList">
+                        <div class="row gy-3">
                             <ClasseurComponent
+                                :open_classeur="`documents/classeurs/`"
+                                :url="`/services/${service.id}`"
                                 :classeurs="this.classeurs.data"
                                 @get-classeur="getClasseur"
                                 table="services"
@@ -183,18 +190,7 @@ export default {
                             />
                             <Pagination
                                 :datas="this.classeurs"
-                                v-if="this.classeurs.data.length >= 1"
-                            />
-                        </div>
-                        <div class="row gy-3" v-if="!switchList">
-                            <DocumentComponent
-                                :documents="this.documents"
-                                @get-document="getDocument"
-                                @get-document-id="getDocumentId"
-                            />
-                            <Pagination
-                                :datas="this.documents"
-                                v-if="this.documents.data.length >= 1"
+                                v-if="this.classeurs.last_page > 1"
                             />
                         </div>
                     </div>
@@ -208,4 +204,5 @@ export default {
         <RemoreMembers :users="get_users" :service_id="service.id" />
         <AddMembers :users="add_users" :service_id="service.id" />
     </body>
+    <OffCanvas :user="user" />
 </template>

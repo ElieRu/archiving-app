@@ -1,32 +1,43 @@
 <script>
 export default {
-    emits: ["switch-list"],
+    emits: ["upgrade-list", "switch-list"],
     props: [
         "service_id",
         "classeur_id",
         "etagere_id",
         "create_classeur",
-        "hideDocBtn"
+        "hideDocBtn",
+        "route",
     ],
+    data() {
+        return {
+            disable: false,
+        }
+    },
     methods: {
         addClasseur() {
+            this.disable = true
             this.$inertia.post(
-                `/classeurs`,
+                this.route,
                 {
                     service_id: this.service_id ? this.service_id : null,
                     etagere_id: this.etagere_id ? this.etagere_id : null,
                 },
                 {
                     onSuccess: () => {
+                        this.disable = false
                         this.$emit("switch-list", true);
-                    },
+                    }
+                }, {
+                    preserveScroll: true,
+                    preserveState: true
                 }
             );
         },
         onChange(e) {
             this.file = e.target.files[0];
             this.$inertia.post(
-                `/documents`,
+                `/documents/classeurs/${this.classeur_id}`,
                 {
                     service_id: this.service_id,
                     classeur_id: this.classeur_id,
@@ -34,10 +45,14 @@ export default {
                     file: this.file,
                 },
                 {
-                    onSuccess: (props) => {
-                        console.log(props);
+                    onSuccess: ({ props }) => {
+                        this.$emit("upgrade-list", props.documents);
                         this.$emit("switch-list", false);
                     },
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
                 }
             );
         },
@@ -50,9 +65,9 @@ export default {
         <button
             class="btn btn-primary btn-sm d-flex align-items-center"
             type="button"
-            style="margin-right: 10px; height: 30.33px"
             @click="addClasseur()"
             v-if="!create_classeur"
+            :disabled="this.disable"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +85,7 @@ export default {
             ></button
         ><label class="form-label" for="file" style="margin-bottom: 0px"
             ><a
-                class="btn btn-primary btn-sm d-flex align-items-center"
+                class="btn btn-primary d-flex align-items-center"
                 role="button"
                 style="height: 30.33px"
                 v-if="hideDocBtn"

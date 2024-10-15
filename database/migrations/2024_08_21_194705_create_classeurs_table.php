@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('classeurs', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->nullable()->max(50);
+            $table->string('type')->nullable()->max(50);
             $table->string('description')->nullable()->max(250);
-            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

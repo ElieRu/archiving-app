@@ -6,6 +6,7 @@ import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
 import UpdateEtagereModal from "./Components/update-etagere-modal.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 export default {
     components: {
@@ -16,7 +17,8 @@ export default {
         MyButtons,
         TopPage,
         Link,
-        UpdateEtagereModal
+        UpdateEtagereModal,
+        OffCanvas
     },
     props: ["user", "etageres"],
     data() {
@@ -24,17 +26,9 @@ export default {
             datas: useForm({
                 number: null,
             }),
-            search: "",
             disable: false,
             my_etagere: ''
         };
-    },
-    computed: {
-        get_etageres() {
-            return Object.values(this.etageres).filter((etagere) =>
-                etagere.nom.toLowerCase().includes(this.search.toLowerCase())
-            );
-        },
     },
     methods: {
         submit() {
@@ -97,7 +91,7 @@ export default {
                                         d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
                                     ></path></svg
                                 ><span style="font-size: 13px"
-                                    ><Link href="/archivage">
+                                    ><Link href="/etageres">
                                         Archivage
                                     </Link></span
                                 >
@@ -109,17 +103,7 @@ export default {
                                     id="dataTable_filter"
                                     class="text-md-end d-flex justify-content-end dataTables_filter"
                                 >
-                                    <div
-                                        class="bg-white border rounded d-flex align-items-center p-1"
-                                    >
-                                        <input
-                                            class="border-0 shadow-none form-control form-control-sm"
-                                            type="search"
-                                            aria-controls="dataTable"
-                                            placeholder="Recherche"
-                                            v-model="search"
-                                        />
-                                    </div>
+                                    <SearchBar route="/etageres"/>
                                 </div>
                             </div>
                             <div class="col-2 d-flex justify-content-end">
@@ -170,7 +154,7 @@ export default {
                         <div class="row gy-2">
                             <div
                                 class="col-12 col-md-6 col-xl-4"
-                                v-for="(etagere, index) in get_etageres"
+                                v-for="(etagere, index) in this.etageres"
                                 :key="index"
                             >
                                 <div class="card">
@@ -184,7 +168,7 @@ export default {
                                                 "
                                             >
                                                 <Link
-                                                    :href="`/archivage/etageres/${etagere.id}`"
+                                                    :href="`/etageres/${etagere.id}`"
                                                     class="text-capitalize"
                                                     >{{ etagere.nom }}</Link
                                                 >
@@ -229,9 +213,9 @@ export default {
                                                             >Modifier</Link
                                                         ><Link
                                                             class="dropdown-item"
-                                                            href="delete-etageres"
+                                                            href="etageres-delete"
                                                             as="button"
-                                                            method="post"
+                                                            method="get"
                                                             :data="{
                                                                 id: etagere.id,
                                                             }"
@@ -260,4 +244,5 @@ export default {
         </div>
         <UpdateEtagereModal :etagere="this.my_etagere"/>
     </body>
+    <OffCanvas :user="user" />
 </template>

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->integer('taille')->nullable();
             $table->string('extension')->max(50)->nullable();
             $table->string('description')->max(255)->nullable();
-            $table->foreignId('user_id')->nullable()->constrained();
-            $table->foreignId('classeur_id')->nullable()->constrained();
-            $table->foreignId('service_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('classeur_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

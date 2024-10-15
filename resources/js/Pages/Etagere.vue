@@ -9,6 +9,8 @@ import { Link } from "@inertiajs/vue3";
 import Pagination from "./Components/pagination.vue";
 import ClasseurComponent from "./Components/classeur-component.vue";
 import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
+import UpdateModalClasseur from "./Components/update-documents-classeur.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 
 export default {
     components: {
@@ -21,7 +23,9 @@ export default {
         Link,
         Pagination,
         ClasseurComponent,
-        propertiesModalClasseur
+        propertiesModalClasseur,
+        UpdateModalClasseur,
+        OffCanvas
     },
     props: ["user", "etagere", "classeurs"],
     data() {
@@ -73,7 +77,7 @@ export default {
                                         d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"
                                     ></path></svg
                                 ><span style="font-size: 13px"
-                                    ><Link href="/archivage">
+                                    ><Link href="/etageres">
                                         Archivage
                                     </Link></span
                                 >
@@ -106,10 +110,11 @@ export default {
                         </div>
                         <div class="row my-3">
                             <div class="col-sm-6 d-flex">
-                                <SearchBar :hideSwitch="false" />
+                                <SearchBar :route="`/etageres/${etagere.id}`" />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons
+                                    :route="`/documents`"
                                     :etagere_id="etagere.id"
                                     v-if="
                                         user.role == 'admin' ||
@@ -121,15 +126,16 @@ export default {
                         </div>
                         <div class="row gy-3">
                             <ClasseurComponent
+                                :url="`/etageres/${etagere.id}`"
                                 :classeurs="this.classeurs.data"
                                 @get-classeur="getClasseur"
-                                table="services"
+                                table="etageres"
                                 :etagere_id="etagere.id"
                                 :etagere_name="etagere.nom"
                             />
                             <Pagination
                                 :datas="this.classeurs"
-                                v-if="this.classeurs.data.length >= 1"
+                                v-if="this.classeurs.last_page > 1"
                             />
                         </div>
                     </div>
@@ -138,6 +144,8 @@ export default {
             </div>
             <TopPage />
         </div>
+        <UpdateModalClasseur :url="`/etageres/${etagere.id}`" :etagere_id="etagere.id" :data="this.myClasseur" table="services" />
         <propertiesModalClasseur :data="this.myClasseur" />
     </body>
+    <OffCanvas :user="user" />
 </template>

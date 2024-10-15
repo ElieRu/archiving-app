@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Classeur;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,12 @@ class Agents extends Controller
             'poste' => $request->poste,
             'email' => $request->email,
             'password' => $defaultPassword
+        ]);
+
+        Classeur::create([
+            'nom' => 'accueil',
+            'type' => 'default',
+            'user_id' => User::all()->last()->id,
         ]);
 
         return Inertia::render('Agents', [

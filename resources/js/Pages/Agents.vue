@@ -9,6 +9,7 @@ import TopPage from "./Components/top-page.vue";
 import ResetModal from "./Components/reset-modal.vue";
 import DeleteModal from "./Components/delete-modal.vue";
 import Pagination from "./Components/pagination.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 import { Link } from '@inertiajs/vue3'
 
 export default {
@@ -23,7 +24,8 @@ export default {
         ResetModal,
         DeleteModal,
         Pagination,
-        Link
+        Link,
+        OffCanvas
     },
     props: ['user', 'users'],
     datas() {
@@ -241,7 +243,7 @@ export default {
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <Pagination :datas="users" v-if="this.users.data.length >= 1" />
+                                    <Pagination :datas="users" v-if="this.users.last_page > 1" />
                                 </div>
                             </div>
                         </div>
@@ -254,4 +256,5 @@ export default {
         <ResetModal/>
         <DeleteModal/>
     </body>
+    <OffCanvas :user="user" />
 </template>

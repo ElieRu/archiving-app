@@ -10,16 +10,19 @@ export default {
             checkedUsers: [],
             checkedServices: [],
             checkedClasseurs: [],
+            checkedClasseurServices: [],
             searchQuery: "",
             formShare: useForm({
                 usersCategory: "",
                 checkedUsers: "",
                 checkedServices: "",
                 checkedClasseurs: "",
+                checkedClasseurServices: "",
                 docId: "",
             }),
         };
     },
+    mounted() {},
     computed: {
         filteredDatas() {
             if (this.category == "agents") {
@@ -51,30 +54,28 @@ export default {
             this.checkedServices = [];
             this.checkedClasseurs = [];
             this.checkedUsers = [];
+            this.checkedClasseurServices = [];
             this.category = category;
         },
         selectedUsers() {
             this.formShare.checkedUsers = this.checkedUsers;
             this.formShare.checkedServices = this.checkedServices;
             this.formShare.checkedClasseurs = this.checkedClasseurs;
+            this.formShare.checkedClasseurServices = this.checkedClasseurServices;
             this.formShare.docId = this.docId;
-            this.formShare.post(
-                "/share",
-                {
-                    onSuccess: () => {
-                        this.checkedUsers = [];
-                        this.checkedServices = [];
-                        this.checkedClasseurs = [];
-                        this.category = "agents";
-                        this.$refs.closeModal.click();
-                        this.$inertia.replace("/documents", {
-                            preserveScroll: true,
-                            preserveState: true,
-                        });
-                    },
-                },
-                { preserveScroll: true, preserveState: true }
-            );
+            axios
+                .post(`/documents/share`, this.formShare)
+                .then((res) => {
+                    this.$refs.closeModal.click();
+                    this.checkedUsers = [];
+                    this.checkedServices = [];
+                    this.checkedClasseurs = [];
+                    this.checkedClasseurServices = [];
+                    this.category = "agents";
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
     },
 };
@@ -176,7 +177,7 @@ export default {
                                             <input
                                                 :id="`checked-${user.id}`"
                                                 type="checkbox"
-                                                :value="user.id"
+                                                :value="user"
                                                 v-model="checkedUsers"
                                             />
                                         </td>
@@ -220,7 +221,7 @@ export default {
                                             <input
                                                 :id="`checked-${service.id}`"
                                                 type="checkbox"
-                                                :value="service.id"
+                                                :value="service"
                                                 v-model="checkedServices"
                                             />
                                         </td>
@@ -295,7 +296,8 @@ export default {
                         :disabled="
                             !checkedUsers.length &&
                             !checkedServices.length &&
-                            !checkedClasseurs.length
+                            !checkedClasseurs.length &&
+                            !checkedClasseurServices.length
                         "
                     >
                         Partager

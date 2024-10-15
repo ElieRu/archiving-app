@@ -3,7 +3,14 @@ import { Link, router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["documents", "render_page"],
+    props: [
+        "classeur",
+        "actual_page",
+        "documents",
+        "etagere",
+        "etageres",
+        "service",
+    ],
     emits: ["get-document", "get-document-id"],
     components: {
         Link,
@@ -12,8 +19,12 @@ export default {
         return {
             datas: useForm({
                 id: null,
-                render_page: null,
+                actual_page: null,
+                classeur_id: null,
+                etagere_id: null,
+                service_id: null,
             }),
+            route: "",
         };
     },
     computed: {
@@ -21,12 +32,30 @@ export default {
             return this.documents;
         },
     },
-    mounted() {},
+    mounted() {
+        if (this.actual_page === "documents") {
+            this.route = `/documents/classeurs/${this.classeur.id}`;
+        } else if (this.actual_page === "etageres") {
+            this.route = `/etageres/${this.etagere.id}/classeurs/${this.classeur.id}`;
+        } else {
+            // Dedicate to the *services case
+            this.route = `/services/${this.service.id}/classeurs/${this.classeur_id}`;
+        }
+    },
     methods: {
         deleteDocument(id) {
             this.datas.id = id;
-            this.datas.render_page = this.render_page;
-            this.datas.delete("/documents");
+            // this.datas.actual_page = this.actual_page;
+            this.datas.classeur_id = this.classeur ? this.classeur.id : null;
+            this.datas.etagere_id = this.etagere ? this.etagere.id : null;
+            this.datas.service_id = this.service ? this.service.id : null;
+            this.datas.delete(this.route);
+        },
+        download(id) {
+            alert(id);
+        },
+        archiving() {
+            alert(id);
         },
     },
 };
@@ -64,7 +93,7 @@ export default {
                     class="dropdown"
                     style="position: absolute; top: 0px; right: 0px"
                 >
-                    <button111111
+                    <button
                         class="btn btn-primary bg-transparent border-0"
                         aria-expanded="false"
                         data-bs-toggle="dropdown"
@@ -83,7 +112,7 @@ export default {
                                 d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
                             ></path>
                         </svg>
-                    </button111111>
+                    </button>
                     <div class="dropdown-menu">
                         <a
                             class="dropdown-item"
@@ -100,11 +129,21 @@ export default {
                             @click="$emit('get-document-id', document.id)"
                             >Partager</a
                         ><a
+                            v-if="etageres"
+                            class="dropdown-item"
+                            style="cursor: pointer"
+                            data-bs-target="#archiving-modal"
+                            data-bs-toggle="modal"
+                            @click="$emit('get-document-id', document.id)"
+                            >Archiver</a
+                        >
+                        <!-- <a
                             class="dropdown-item"
                             style="cursor: pointer"
                             @click="download(document.id)"
                             >Télécharger</a
-                        ><a
+                        > -->
+                        <a
                             class="dropdown-item"
                             style="cursor: pointer"
                             @click="deleteDocument(document.id)"

@@ -24,10 +24,10 @@ export default {
                         this.$refs.closeModal.click();
                         this.form.nom = "";
                         this.form.description = "";
-                        this.$inertia.replace("/services", {
-                            preserveScroll: true,
-                            preserveState: true,
-                        });
+                        // this.$inertia.replace("/services", {
+                        //     preserveScroll: true,
+                        //     preserveState: true,
+                        // });
                     } else {
                         this.err = false;
                         this.display = true;

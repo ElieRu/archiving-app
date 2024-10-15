@@ -1,7 +1,16 @@
 <script>
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
+import axios from "axios";
 export default {
-    props: ["classeurs", "table", "service_id", "etagere_name", "etagere_id"],
+    props: [
+        "url",
+        "classeurs",
+        "table",
+        "service_id",
+        "etagere_name",
+        "etagere_id",
+        "open_classeur",
+    ],
     emits: ["get-classeur"],
     data() {
         return {
@@ -9,6 +18,7 @@ export default {
                 id: null,
                 table: null,
                 service_id: null,
+                etagere_id: null,
             }),
         };
     },
@@ -20,29 +30,17 @@ export default {
             return this.classeurs;
         },
     },
-    mounted() {
-        // alert(this.service_id)
-    },
     methods: {
         deleteClasseur(id) {
             this.datas.id = id;
             this.datas.table = this.table;
             this.datas.service_id = this.service_id;
-
-            this.datas.delete(`/classeurs`, {
-                onSuccess: (res) => {
-                    // this.$inertia.replace(`/${this.table}`, {
-                    // /${this.service_id ? this.service_id : ''
-                    this.$inertia.replace(
-                        `/${this.table}/${
-                            this.service_id ? this.service_id : null
-                        }`,
-                        {
-                            preserveState: true,
-                            preserveScroll: true,
-                        }
-                    );
-                },
+            this.datas.etagere_id = this.etagere_id;
+            const url = this.url;
+            // alert(url)
+            this.datas.delete(url, {
+                preserveScroll: true,
+                preserveState: true,
             });
         },
     },
@@ -61,12 +59,20 @@ export default {
                 style="position: relative"
             >
                 <Link
-                    :href="`/classeurs/${classeur.id}`"
+                    :href="
+                        this.table == 'documents'
+                            ? `/documents/classeurs/${classeur.id}`
+                        : this.table == 'etageres'
+                            ? `/etageres/${this.etagere_id}/classeurs/${classeur.id}` 
+                        : this.table == 'services' 
+                            ? `/services/${this.service_id}/classeurs/${classeur.id}` 
+                            : ''
+                    "
                     method="get"
-                    :data="{ 
-                        service_id: this.service_id,
-                        etagere_name: this.etagere_name,
-                        etagere_id: this.etagere_id
+                    :data="{
+                        // service_id: this.service_id,
+                        // etagere_name: this.etagere_name,
+                        // etagere_id: this.etagere_id,
                     }"
                 >
                     <svg
@@ -89,6 +95,7 @@ export default {
                 <div
                     class="dropdown"
                     style="position: absolute; top: 0px; right: 0px"
+                    v-if="!classeur.type"
                 >
                     <button
                         class="btn btn-primary bg-transparent border-0"

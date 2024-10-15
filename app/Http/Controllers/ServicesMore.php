@@ -33,18 +33,18 @@ class ServicesMore extends Controller
 
     public function show(Request $request)
     {
-        // dd($request->id);
         $service = Service::findOrFail($request->id);
-        // dd($request->searchClasseur);
         if ($request->role) {
             $classeurs = Classeur::where('id', '=', $service->id)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('classeurs.nom', 'like', "%{$search}%");
+                })
                 ->get();
         } else {
-            $classeurs = Classeur::query()
-                ->where('user_id', '=', Auth::user()->id)
-                ->where('service_id', '=', $service->id)
-                ->when($request->searchClasseur, function ($query, $searchClasseur) {
-                    $query->where('classeurs.nom', 'like', "%{$searchClasseur}%");
+            $classeurs = Classeur::
+                where('service_id', '=', $service->id)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('nom', 'like', "%{$search}%");
                 })
                 ->paginate(24)
                 ->withQueryString();
@@ -58,10 +58,8 @@ class ServicesMore extends Controller
         $users = DB::table('users')
             ->join('services_users', 'services_users.user_id', '=', 'users.id')
             ->where('services_users.service_id', '=', $request->id)
-            ->select('services_users.id as id', 'users.name', 'users.postname', 'services_users.service_id')
+            ->select('services_users.id as id', 'users.name', 'users.postname', 'services_users.service_id', 'services_users.user_id')
             ->get();
-
-            // dd($users);
 
         if (!$users->isEmpty()) {
             $all_users = DB::table('users')
@@ -72,11 +70,13 @@ class ServicesMore extends Controller
                 ->select('users.id as id', 'users.name', 'users.postname', 'services_users.service_id')
                 ->get();
             $array_users = [];
+
             foreach ($all_users as $row) {
-                if (!in_array($row->id, $users->pluck('id')->toArray())) {
+                if (!in_array($row->id, $users->pluck('user_id')->toArray())) {
                     $array_users[] = $row;
-                } 
+                }
             }
+
             $add_users = collect($array_users);
             return $this->returnDatas($users, $add_users, $service, $classeurs, $documents);
         } else {
@@ -88,7 +88,7 @@ class ServicesMore extends Controller
         }
     }
 
-    public function addMermbers(Request $request)
+    public function add_members(Request $request)
     {
         for ($i = 0; $i < count($request->users_checked); $i++) {
             Services_user::create([
@@ -99,11 +99,21 @@ class ServicesMore extends Controller
         return $this->show($request);
     }
 
-    public function deleteMembers(Request $request)
+    public function remove_members(Request $request)
     {
         for ($i = 0; $i < count($request->users_checked); $i++) {
             Services_user::findOrFail($request->users_checked[$i])->delete();
         }
+        
         return $this->show($request);
+    }
+
+    public function remove_class(Request $request)
+    {
+        Classeur::findOrFail($request->id)->delete();
+        if ($request->table === 'services') {
+            $request->id = $request->service_id;
+            return $this->show($request);
+        }
     }
 }

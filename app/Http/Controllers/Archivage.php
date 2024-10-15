@@ -9,11 +9,11 @@ use Inertia\Inertia;
 
 class Archivage extends Controller
 {
-    public function show()
+    public function index()
     {
         return Inertia::render('Archivage', [
             'user' => Auth::user(),
-            'etageres' => Etagere::all()
+            'etageres' => Etagere::all(),
         ]);
     }
 }

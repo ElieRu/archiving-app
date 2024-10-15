@@ -4,6 +4,7 @@ import NavBarTop from "./Components/nav-bar-top.vue";
 import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 import TopPage from "./Components/top-page.vue";
 export default {
     components: {
@@ -13,6 +14,7 @@ export default {
         Footer,
         MyButtons,
         TopPage,
+        OffCanvas
     },
     props: ['user'],
 };
@@ -57,4 +59,5 @@ export default {
             <TopPage />
         </div>
     </body>
+    <OffCanvas :user="user" />
 </template>
