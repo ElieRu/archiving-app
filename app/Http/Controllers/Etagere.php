@@ -16,11 +16,16 @@ use function Termwind\render;
 
 class Etagere extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $etageres = ModelsEtagere::query()
+            ->when($request->search, function ($query, $search) {
+                $query->where('nom', 'like', "%{$search}%");
+            })->get();
+
         return Inertia::render('Archivage', [
             'user' => Auth::user(),
-            'etageres' => ModelsEtagere::all(),
+            'etageres' => $etageres,
         ]);
     }
 
@@ -30,6 +35,15 @@ class Etagere extends Controller
         ModelsEtagere::create([
             'nom' => $default_name,
             'user_id' => Auth::user()->id
+        ]);
+
+        $last = ModelsEtagere::all()->last();
+
+        Classeur::create([
+            'nom' => 'accueil',
+            'type' => 'default',
+            'user_id' => Auth::user()->id,
+            'etagere_id' => $last->id,
         ]);
 
         return to_route('etageres.index');
@@ -61,11 +75,8 @@ class Etagere extends Controller
     {
         $etagere = ModelsEtagere::findOrFail($request->id);
         $classeurs = Classeur::where('etagere_id', '=', $request->id)
-            ->where(
-                'user_id',
-                '=',
-                Auth::user()->id
-            )->when($request->search, function ($query, $search) {
+            ->where('service_id', null)
+            ->when($request->search, function ($query, $search) {
                 $query->where('nom', 'like', "%{$search}%");
             })
             ->paginate(24)

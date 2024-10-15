@@ -9,6 +9,9 @@ import DocumentComponent from "./Components/document-component.vue";
 import Pagination from "./Components/pagination.vue";
 import PropertiesModal from "./Components/properties-modal.vue";
 import UpdateModal from "./Components/update-documents.vue";
+import ShareModal from "./Components/share-modal.vue";
+import ArchivingModal from "./Components/archiving-modal.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 import { Link, router } from "@inertiajs/vue3";
 
 export default {
@@ -24,26 +27,33 @@ export default {
         Link,
         PropertiesModal,
         UpdateModal,
+        ShareModal,
+        ArchivingModal,
+        OffCanvas
     },
-    props: ["id", "user", "classeur", "documents", "service", "etagere", "back_menu"],
+    props: [
+        "id",
+        "user",
+        "users",
+        "classeurs",
+        "classeur",
+        "documents",
+        "services",
+        "service",
+        "etagere",
+        "etageres",
+        "back_menu",
+    ],
     data() {
         return {
-            switchList: true,
             myDocument: {},
             myClasseur: {},
             docId: null,
-            etagereName: new URLSearchParams(window.location.search).get(
-                "etagere_name"
-            ),
-            etagereId: new URLSearchParams(window.location.search).get(
-                "etagere_id"
-            ),
         };
     },
     methods: {
         switchDocs(value) {
             this.switchSearch = value;
-            this.switchList = value;
         },
         upgradeList(docs) {
             this.documents = docs;
@@ -55,9 +65,12 @@ export default {
             this.docId = docId;
         },
     },
-    mounted() {
-        // console.log(this.documents.data);
+    computed: {
+        get_classeurs() {
+            return this.classeurs;
+        },
     },
+    mounted() {},
 };
 </script>
 
@@ -100,7 +113,7 @@ export default {
                                             ></path></svg
                                         ><span style="font-size: 13px"
                                             ><Link
-                                                v-if="!etagereId"
+                                                v-if="!this.etagere.id"
                                                 :href="
                                                     service
                                                         ? `/services`
@@ -114,7 +127,7 @@ export default {
                                                 }}
                                             </Link>
                                             <Link
-                                                v-if="etagereId"
+                                                v-if="this.etagere.id"
                                                 href="/etageres"
                                             >
                                                 Archivage
@@ -122,7 +135,7 @@ export default {
                                         >
                                     </div>
                                     <div
-                                        v-if="this.back_menu"
+                                        v-if="this.service && this.back_menu"
                                         class="d-flex align-items-center"
                                     >
                                         <svg
@@ -143,7 +156,7 @@ export default {
                                             style="font-size: 13px"
                                             class="text-capitalize"
                                             ><Link
-                                                :href="`/services/${service.id}`"
+                                                :href="`/services/${this.service.id}`"
                                             >
                                                 {{
                                                     service.nom.length < 15
@@ -157,7 +170,7 @@ export default {
                                         >
                                     </div>
                                     <div
-                                        v-if="!this.back_menu"
+                                        v-if="this.back_menu && this.etagere"
                                         class="d-flex align-items-center"
                                     >
                                         <svg
@@ -223,11 +236,15 @@ export default {
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 d-flex">
-                                    <label
-                                        ><input
-                                            class="form form-control"
-                                            placeholder="Recherche"
-                                    /></label>
+                                    <SearchBar
+                                        :route="
+                                            this.service && !this.etagere
+                                                ? `/services/${this.service.id}/classeurs/${this.classeur.id}`
+                                                : !this.service && this.etagere
+                                                ? `/etageres/${this.etagere.id}/classeurs/${this.classeur.id}`
+                                                : `/documents/classeurs/${classeur.id}`
+                                        "
+                                    />
                                 </div>
                                 <div
                                     class="col-sm-6 d-flex justify-content-end align-items-center"
@@ -239,19 +256,33 @@ export default {
                                         :service_id="service ? service.id : ''"
                                         :classeur_id="this.classeur.id"
                                         :hideDocBtn="true"
-                                        :etagere_id="this.etagereId"
+                                        :etagere_id="this.etagere.id"
+                                        :route="`/documents/classeurs/${this.classeur.id}`"
                                     />
                                 </div>
                             </div>
-                            <div class="row gy-3" v-if="switchList">
+                            <div class="row gy-3">
                                 <DocumentComponent
-                                    :classeur_id="this.classeur.id"
+                                    :classeur="this.classeur"
                                     :documents="this.documents"
                                     @get-document="getDocument"
                                     @get-document-id="getDocumentId"
-                                    render_page="documents"
+                                    :service="this.service"
+                                    :etagere="this.etagere"
+                                    :etageres="this.etageres"
+                                    :actual_page="
+                                        this.service && !this.etagere
+                                            ? 'services'
+                                            : !this.service && this.etagere
+                                            ? 'etageres'
+                                            : 'documents'
+                                    "
                                 />
                             </div>
+                            <Pagination
+                                :datas="this.documents"
+                                v-if="this.documents.last_page > 1"
+                            />
                         </div>
                     </div>
                 </div>
@@ -259,7 +290,17 @@ export default {
             </div>
             <TopPage />
         </div>
-        <UpdateModal :data="this.myDocument" />
+        <UpdateModal :classeur="this.classeur" :data="this.myDocument" />
+        <ShareModal
+            :users="this.users"
+            :services="this.services"
+            :classeurs="get_classeurs.data"
+            :docId="docId"
+        />
+        <ArchivingModal 
+            :etageres="etageres ? etageres : ''"
+            :docId="docId" />
         <PropertiesModal :data="this.myDocument" />
     </body>
+    <OffCanvas :user="user" />
 </template>

@@ -7,11 +7,16 @@ export default {
         "etagere_id",
         "create_classeur",
         "hideDocBtn",
-        "route"
+        "route",
     ],
+    data() {
+        return {
+            disable: false,
+        }
+    },
     methods: {
         addClasseur() {
-            // alert(this.route)
+            this.disable = true
             this.$inertia.post(
                 this.route,
                 {
@@ -20,6 +25,7 @@ export default {
                 },
                 {
                     onSuccess: () => {
+                        this.disable = false
                         this.$emit("switch-list", true);
                     }
                 }, {
@@ -59,9 +65,9 @@ export default {
         <button
             class="btn btn-primary btn-sm d-flex align-items-center"
             type="button"
-            style="margin-right: 10px; height: 30.33px"
             @click="addClasseur()"
             v-if="!create_classeur"
+            :disabled="this.disable"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +85,7 @@ export default {
             ></button
         ><label class="form-label" for="file" style="margin-bottom: 0px"
             ><a
-                class="btn btn-primary btn-sm d-flex align-items-center"
+                class="btn btn-primary d-flex align-items-center"
                 role="button"
                 style="height: 30.33px"
                 v-if="hideDocBtn"

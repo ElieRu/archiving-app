@@ -95,6 +95,7 @@ export default {
                 <div
                     class="dropdown"
                     style="position: absolute; top: 0px; right: 0px"
+                    v-if="!classeur.type"
                 >
                     <button
                         class="btn btn-primary bg-transparent border-0"

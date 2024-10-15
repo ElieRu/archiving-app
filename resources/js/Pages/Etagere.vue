@@ -10,6 +10,7 @@ import Pagination from "./Components/pagination.vue";
 import ClasseurComponent from "./Components/classeur-component.vue";
 import propertiesModalClasseur from "./Components/properties-modal-classeur.vue";
 import UpdateModalClasseur from "./Components/update-documents-classeur.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 
 export default {
     components: {
@@ -23,7 +24,8 @@ export default {
         Pagination,
         ClasseurComponent,
         propertiesModalClasseur,
-        UpdateModalClasseur
+        UpdateModalClasseur,
+        OffCanvas
     },
     props: ["user", "etagere", "classeurs"],
     data() {
@@ -108,7 +110,7 @@ export default {
                         </div>
                         <div class="row my-3">
                             <div class="col-sm-6 d-flex">
-                                <SearchBar :hideSwitch="false" :url="`/etageres/${etagere.id}`" />
+                                <SearchBar :route="`/etageres/${etagere.id}`" />
                             </div>
                             <div class="col-sm-6 d-flex justify-content-end">
                                 <MyButtons
@@ -133,7 +135,7 @@ export default {
                             />
                             <Pagination
                                 :datas="this.classeurs"
-                                v-if="this.classeurs.data.length >= 1"
+                                v-if="this.classeurs.last_page > 1"
                             />
                         </div>
                     </div>
@@ -145,4 +147,5 @@ export default {
         <UpdateModalClasseur :url="`/etageres/${etagere.id}`" :etagere_id="etagere.id" :data="this.myClasseur" table="services" />
         <propertiesModalClasseur :data="this.myClasseur" />
     </body>
+    <OffCanvas :user="user" />
 </template>

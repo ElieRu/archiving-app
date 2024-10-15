@@ -38,9 +38,10 @@ Route::middleware(['auth'])->group(function () {
     // Documents > Classeurs
     Route::get('/documents/classeurs/{id}', [Documents::class, 'index'])->name('classeur.more');
     Route::post('/documents/classeurs/{id}', [Documents::class, 'create']);
-    Route::put('/documents/classeurs', [Documents::class, 'update']);
+    Route::put('/documents/classeurs/{id}', [Documents::class, 'update']);
     Route::delete('/documents/classeurs/{id}', [Documents::class, 'delete']);
-    Route::post('/share', [Documents::class, 'share']);
+    Route::post('/documents/share', [Documents::class, 'share']);
+    Route::post('/documents/archiving', [Documents::class, 'archiving']);
 
     // Archivage
     Route::get('/etageres', [Etagere::class, 'index'])->name('etageres.index');
@@ -54,7 +55,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/etageres/{id}', [Classeurs::class, 'delete']);
 
     // Archivage > Etageres > Classeurs
-    Route::get('/etageres/{etagere_id}/classeurs/{id}', [Classeurs::class, 'more'])->name('etagere.more');
+    Route::get('/etageres/{etagere_id}/classeurs/{id}', [Classeurs::class, 'more'])->name('etagere.classeur');
+    Route::delete('/etageres/{etagere_id}/classeurs/{id}', [Documents::class, 'delete']);
 
     // Services
     Route::get('/services', [Services::class, 'show'])->name('services.show');
@@ -64,19 +66,16 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/services/{id}', [ServicesMore::class, 'remove_class'])->name('service.blockMembers');
 
     // Services > More > Classeur
-    Route::get('/services/{service_id}/classeurs/{id}', [Classeurs::class, 'more']);
+    Route::get('/services/{service_id}/classeurs/{id}', [Classeurs::class, 'more'])->name('service.classeur');
+    Route::delete('/services/{service_id}/classeurs/{id}', [Documents::class, 'delete']);
+
 
     // Route::get('/archivage', [Archivage::class, 'show'])->name('archivage.index');
 
-    
-    
-    
     // Other Routes
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
-    Route::put('/user/password', [Agents::class, 'updatePassword']);
-
-    
+    Route::put('/user/password', [Agents::class, 'updatePassword']);    
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

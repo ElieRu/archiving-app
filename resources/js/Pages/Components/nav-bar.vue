@@ -10,10 +10,10 @@ export default {
 
 <template>
     <nav
-        class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark"
+        class="navbar d-none d-sm-block align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark"
     >
         <div class="container-fluid d-flex flex-column p-0">
-            <a
+            <Link
                 class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
                 href="/"
             >
@@ -34,7 +34,7 @@ export default {
                 <div class="sidebar-brand-text mx-3">
                     <span>REGIDESO</span>
                 </div>
-            </a>
+            </Link>
             <hr class="sidebar-divider my-0" />
             <ul id="accordionSidebar" class="navbar-nav text-light">
                 <li class="nav-item">

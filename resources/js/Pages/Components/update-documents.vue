@@ -3,7 +3,7 @@ import { router, useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    props: ["data", "updated"],
+    props: ["data", "updated", "classeur"],
     data() {
         return {
             form: {
@@ -25,8 +25,9 @@ export default {
     methods: {
         submit() {
             this.err = true;
+            // alert(this.classeur.id)
             axios
-                .put("/documents", this.form)
+                .put(`/documents/classeurs/${this.classeur.id}`, this.form)
                 .then((res) => {
                     try {
                         if (res.status === 200) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\createService;
 use App\Http\Requests\updateServiceRequest;
+use App\Models\Classeur;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,14 +13,21 @@ use Inertia\Inertia;
 
 class Services extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        $services = DB::table('services')
+        $services = Service::query()
             ->join('services_users', 'services_users.service_id', '=', 'services.id')
             ->where('services_users.user_id', '=', Auth::user()->id)
+            ->when($request->search, function ($query, $search) {
+                $query->where('services.nom', 'like', "%{$search}%");
+            })
+            ->select('services.nom', 'services.id', 'services.description', 'services.user_id', 'services.id')
             ->get();
         
-        $all = Service::all();
+        $all = Service::query()
+            ->when($request->search, function ($query, $search) {
+                $query->where('services.nom', 'like', "%{$search}%");
+            })->get();
 
         return Inertia::render('Services', [
             'user' => Auth::user(),
@@ -29,9 +37,18 @@ class Services extends Controller
 
     public function create(createService $request)
     {
-        Service::create([
+        $create_service = Service::create([
             'nom' => $request->nom,
-            // 'description' => $request->description,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        $last = Service::all()->last();
+
+        Classeur::create([
+            'nom' => 'accueil',
+            'type' => 'default',
+            'user_id' => Auth::user()->id,
+            'service_id' => $last->id,
         ]);
 
         return Inertia::render('Services', [

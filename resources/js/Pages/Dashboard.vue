@@ -1,10 +1,12 @@
 <script>
 import NavBar from "./Components/nav-bar.vue";
 import NavBarTop from "./Components/nav-bar-top.vue";
+import OffCanvas from "./Components/off-canvas.vue";
 import Footer from "./Components/footer.vue";
 import SearchBar from "./Components/search-bar.vue";
 import MyButtons from "./Components/my-buttons.vue";
 import TopPage from "./Components/top-page.vue";
+import Services from "./Services.vue";
 export default {
     components: {
         NavBar,
@@ -13,9 +15,22 @@ export default {
         Footer,
         MyButtons,
         TopPage,
+        OffCanvas
     },
-
-    props: ["user"],
+    props: [
+        "user", 
+        "users",
+        "classeurs", 
+        "documents", 
+        "services",
+        "etageres",
+        "etageres_classeurs",
+        "etageres_documents",
+        "classeurs_services",
+        "documents_services",
+        "classeursServicesConcernes"
+    ],
+    mounted() {}
 };
 </script>
 
@@ -30,20 +45,7 @@ export default {
                         <div
                             class="d-flex justify-content-between align-items-center mb-4"
                         >
-                            <h3 class="text-dark mb-0">Dashboard</h3>
-                            <a
-                                class="btn btn-primary btn-sm d-flex align-items-center"
-                                role="button"
-                                href="#"
-                                ><i
-                                    class="fas fa-download fa-sm text-white-50"
-                                ></i
-                                ><span
-                                    class="d-none d-md-block"
-                                    style="margin-left: 5px"
-                                    >Générer un rapport</span
-                                ></a
-                            >
+                            <h3 class="text-dark mb-0">Tableau de bord</h3>
                         </div>
                         <div class="row">
                             <div class="col-md-6 col-xl-3 mb-4">
@@ -58,15 +60,12 @@ export default {
                                                 <div
                                                     class="text-uppercase text-primary fw-bold text-xs mb-1"
                                                 >
-                                                    <span
-                                                        >Earnings
-                                                        (monthly)</span
-                                                    >
+                                                    <span>Classeur{{ this.classeurs > 1 ? 's' : '' }}</span>
                                                 </div>
                                                 <div
                                                     class="text-dark fw-bold h5 mb-0"
                                                 >
-                                                    <span>$40,000</span>
+                                                    <span>{{ this.classeurs ? this.classeurs : 'Aucun' }}</span>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
@@ -90,72 +89,17 @@ export default {
                                                 <div
                                                     class="text-uppercase text-success fw-bold text-xs mb-1"
                                                 >
-                                                    <span
-                                                        >Earnings (annual)</span
-                                                    >
+                                                    <span>Document{{ this.documents > 1 ? 's' : '' }}</span>
                                                 </div>
                                                 <div
                                                     class="text-dark fw-bold h5 mb-0"
                                                 >
-                                                    <span>$215,000</span>
+                                                    <span>{{ this.documents ? this.documents : 'Aucun' }}</span>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
                                                 <i
                                                     class="fas fa-dollar-sign fa-2x text-gray-300"
-                                                ></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-xl-3 mb-4">
-                                <div class="card shadow border-start-info py-2">
-                                    <div class="card-body">
-                                        <div
-                                            class="row align-items-center no-gutters"
-                                        >
-                                            <div class="col me-2">
-                                                <div
-                                                    class="text-uppercase text-info fw-bold text-xs mb-1"
-                                                >
-                                                    <span>Tasks</span>
-                                                </div>
-                                                <div
-                                                    class="row g-0 align-items-center"
-                                                >
-                                                    <div class="col-auto">
-                                                        <div
-                                                            class="text-dark fw-bold h5 mb-0 me-3"
-                                                        >
-                                                            <span>50%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div
-                                                            class="progress progress-sm"
-                                                        >
-                                                            <div
-                                                                class="progress-bar bg-info"
-                                                                aria-valuenow="50"
-                                                                aria-valuemin="0"
-                                                                aria-valuemax="100"
-                                                                style="
-                                                                    width: 50%;
-                                                                "
-                                                            >
-                                                                <span
-                                                                    class="visually-hidden"
-                                                                    >50%</span
-                                                                >
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <i
-                                                    class="fas fa-clipboard-list fa-2x text-gray-300"
                                                 ></i>
                                             </div>
                                         </div>
@@ -174,14 +118,41 @@ export default {
                                                 <div
                                                     class="text-uppercase text-warning fw-bold text-xs mb-1"
                                                 >
-                                                    <span
-                                                        >Pending Requests</span
-                                                    >
+                                                    <span>Service{{ this.services > 1 ? 's' : '' }}</span>
                                                 </div>
                                                 <div
                                                     class="text-dark fw-bold h5 mb-0"
                                                 >
-                                                    <span>18</span>
+                                                    <span>{{ this.services ? this.services : 'Aucun' }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i
+                                                    class="fas fa-comments fa-2x text-gray-300"
+                                                ></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-3 mb-4">
+                                <div
+                                    class="card shadow border-start-warning py-2"
+                                >
+                                    <div class="card-body">
+                                        <div
+                                            class="row align-items-center no-gutters"
+                                        >
+                                            <div class="col me-2">
+                                                <div
+                                                    class="text-uppercase text-danger fw-bold text-xs mb-1"
+                                                >
+                                                    <span>Agent{{ this.users > 1 ? 's' : '' }}</span>
+                                                </div>
+                                                <div
+                                                    class="text-dark fw-bold h5 mb-0"
+                                                >
+                                                    <span>{{ this.users ? this.users : 'Aucun' }}</span>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
@@ -194,89 +165,103 @@ export default {
                                 </div>
                             </div>
                         </div>
+                        <div v-if="user.role">
+                            <div class="mb-4">
+                                <h3 class="text-dark mb-0">Archivage</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-lg-4 mb-4">
+                                            <div
+                                                class="card text-white bg-primary shadow"
+                                            >
+                                                <div class="card-body">
+                                                    <p class="m-0">Etagere{{ this.etageres > 1 ? 's' : '' }}</p>
+                                                    <p
+                                                        class="text-white-50 small m-0"
+                                                    >
+                                                        {{ this.etageres ? this.etageres : 'Aucun' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-4">
+                                            <div
+                                                class="card text-white bg-success shadow"
+                                            >
+                                                <div class="card-body">
+                                                    <p class="m-0">Classeur{{ this.etageres_classeurs > 1 ? 's' : '' }}</p>
+                                                    <p
+                                                        class="text-white-50 small m-0"
+                                                    >
+                                                        {{ this.etageres_classeurs ? this.etageres_classeurs : "Aucun" }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mb-4">
+                                            <div
+                                                class="card text-white bg-info shadow"
+                                            >
+                                                <div class="card-body">
+                                                    <p class="m-0">Document{{ this.etageres_documents > 1 ? 's' : ''}}</p>
+                                                    <p
+                                                        class="text-white-50 small m-0"
+                                                    >
+                                                        {{ this.etageres_documents ? this.etageres_documents : "Aucun" }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h3 class="text-dark mb-0">Services concernés</h3>
+                        </div>
                         <div class="row">
                             <div class="col">
                                 <div class="row">
-                                    <div class="col-lg-6 mb-4">
-                                        <div
-                                            class="card text-white bg-primary shadow"
-                                        >
-                                            <div class="card-body">
-                                                <p class="m-0">Primary</p>
-                                                <p
-                                                    class="text-white-50 small m-0"
-                                                >
-                                                    #4e73df
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div
-                                            class="card text-white bg-success shadow"
-                                        >
-                                            <div class="card-body">
-                                                <p class="m-0">Success</p>
-                                                <p
-                                                    class="text-white-50 small m-0"
-                                                >
-                                                    #1cc88a
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div
-                                            class="card text-white bg-info shadow"
-                                        >
-                                            <div class="card-body">
-                                                <p class="m-0">Info</p>
-                                                <p
-                                                    class="text-white-50 small m-0"
-                                                >
-                                                    #36b9cc
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
+                                    <div class="col-lg-4 mb-4">
                                         <div
                                             class="card text-white bg-warning shadow"
                                         >
                                             <div class="card-body">
-                                                <p class="m-0">Warning</p>
+                                                <p class="m-0">Service{{ this.services > 1 ? 's' : '' }}</p>
                                                 <p
                                                     class="text-white-50 small m-0"
                                                 >
-                                                    #f6c23e
+                                                    {{ this.services ? this.services : 'Aucun' }}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 mb-4">
+                                    <div class="col-lg-4 mb-4">
                                         <div
                                             class="card text-white bg-danger shadow"
                                         >
                                             <div class="card-body">
-                                                <p class="m-0">Danger</p>
+                                                <p class="m-0">Classeur{{ this.classeurs_services > 1 ? 's' : '' }}</p>
                                                 <p
                                                     class="text-white-50 small m-0"
                                                 >
-                                                    #e74a3b
+                                                    {{ this.classeurs_services ? this.classeurs_services : 'Aucun' }}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 mb-4">
+                                    <div class="col-lg-4 mb-4">
                                         <div
                                             class="card text-white bg-secondary shadow"
                                         >
                                             <div class="card-body">
-                                                <p class="m-0">Secondary</p>
+                                                <p class="m-0">Document{{ this.documents_services > 1 ? 's' : '' }}</p>
                                                 <p
                                                     class="text-white-50 small m-0"
                                                 >
-                                                    #858796
+                                                    {{ this.documents_services ? this.documents_services : "Aucun" }}
                                                 </p>
                                             </div>
                                         </div>
@@ -291,4 +276,5 @@ export default {
             <TopPage />
         </div>
     </body>
+    <OffCanvas :user="user" />
 </template>

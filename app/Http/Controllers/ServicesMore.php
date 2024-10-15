@@ -36,13 +36,15 @@ class ServicesMore extends Controller
         $service = Service::findOrFail($request->id);
         if ($request->role) {
             $classeurs = Classeur::where('id', '=', $service->id)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('classeurs.nom', 'like', "%{$search}%");
+                })
                 ->get();
         } else {
-            $classeurs = Classeur::query()
-                ->where('user_id', '=', Auth::user()->id)
-                ->where('service_id', '=', $service->id)
-                ->when($request->searchClasseur, function ($query, $searchClasseur) {
-                    $query->where('classeurs.nom', 'like', "%{$searchClasseur}%");
+            $classeurs = Classeur::
+                where('service_id', '=', $service->id)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('nom', 'like', "%{$search}%");
                 })
                 ->paginate(24)
                 ->withQueryString();
