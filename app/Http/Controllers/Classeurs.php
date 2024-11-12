@@ -40,9 +40,11 @@ class Classeurs extends Controller
     {
         $classeurs = Classeur::query()
             ->where(
-                'user_id', Auth::user()->id
+                'user_id',
+                Auth::user()->id
             )->where(
-                'service_id', null
+                'service_id',
+                null
             )->when($request->search, function ($query, $search) {
                 $query->where('classeurs.nom', 'like', "%{$search}%");
             })
@@ -130,6 +132,7 @@ class Classeurs extends Controller
 
     public function create_classeur($classeurs, $request)
     {
+        // dd('not cereated');
         $lenClasseurs = count($classeurs) + 1;
         $defaultName = "classeur(" . $lenClasseurs . ")";
         Classeur::create([
@@ -237,7 +240,29 @@ class Classeurs extends Controller
     {
         Classeur::findOrFail($request->id)->delete();
         if ($request->table === 'documents') {
-            return $this->returnDocument($request);
+            $classeurs = Classeur::query()
+                ->where('user_id', Auth::user()->id)
+                ->where('service_id', null)
+                ->where('etagere_id', null)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('classeurs.nom', 'like', "%{$search}%");
+                })
+                ->paginate(24)
+                ->withQueryString();
+
+            $documents = Document::where('user_id', Auth::user()->id)
+                ->where('service_id', null)
+                ->where('classeur_id', '=', null);
+
+            return Inertia::render('Documents', [
+                'user' => Auth::user(),
+                'documents' => $documents,
+                'users' => User::all()
+                    ->where('role', '=', null)
+                    ->where('id', '!=', Auth::user()->id),
+                'services' => Service::all(),
+                'classeurs' => $classeurs
+            ]);
         }
 
         if ($request->table === 'etageres') {

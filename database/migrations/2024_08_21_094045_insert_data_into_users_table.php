@@ -19,6 +19,7 @@ return new class extends Migration
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
                 'role' => 'admin',
+                'poste' => 'administrateur',
                 'password' => $defaultPassword
             ]);
     }

@@ -117,7 +117,7 @@ export default {
                                         "
                                         v-if="
                                             user.role === 'admin' ||
-                                            user.role === 'archiviste'
+                                            user.poste === 'archiviste'
                                         "
                                         @click="submit()"
                                         :disabled="disable"

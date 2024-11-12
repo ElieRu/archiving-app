@@ -75,7 +75,7 @@ Route::middleware(['auth'])->group(function () {
     // Other Routes
     Route::get('/apropos', [Apropos::class, 'show'])->name('apropos');
     Route::get('/profile', [Profile::class, 'show'])->name('profile');
-    Route::put('/user/password', [Agents::class, 'updatePassword']);    
+    Route::put('/profile', [Agents::class, 'updatePassword']);    
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
