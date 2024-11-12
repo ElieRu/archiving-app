@@ -10,6 +10,7 @@ export default {
         "etagere",
         "etageres",
         "service",
+        "role"
     ],
     emits: ["get-document", "get-document-id"],
     components: {
@@ -122,6 +123,7 @@ export default {
                             @click="$emit('get-document', document)"
                             >Modifier</a
                         ><a
+                            v-if="actual_page !== 'etageres'"
                             class="dropdown-item"
                             style="cursor: pointer"
                             data-bs-target="#share-modal"
@@ -144,6 +146,7 @@ export default {
                             >Télécharger</a
                         > -->
                         <a
+                            v-if="actual_page !== 'etageres' || (role == 'archiviste' || role == 'admin')"
                             class="dropdown-item"
                             style="cursor: pointer"
                             @click="deleteDocument(document.id)"

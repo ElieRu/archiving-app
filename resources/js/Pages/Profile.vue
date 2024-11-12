@@ -38,7 +38,8 @@ export default {
             image: "",
             disable: false,
             err: false,
-            disPass: false
+            disPass: false,
+            validForm: false,
         };
     },
     methods: {
@@ -56,13 +57,23 @@ export default {
                 });
         },
         updatePassword() {
-            this.disPass = true
-            this.$inertia.put("/user/password", this.formPassword, {
-                onSuccess: () => {
-                    this.disPass = false
-                    this.$inertia.replace('/profile', {preserveScroll: true, preserveState: true})
-                }, preserveScroll: true, preserveState: true,
-            })
+            this.disPass = true;
+            this.validForm = false;
+            this.$inertia.put(
+                "/profile",
+                this.formPassword,
+                {
+                    onSuccess: ({ props }) => {
+                        if (props.errorPassword) {
+                            this.disPass = false;
+                            this.validForm = true;
+                        } else {
+                            router.post("/logout")
+                        }
+                    },
+                },
+                { preserveScroll: true, preserveState: true }
+            );
         },
         onChange(e) {
             this.image = e.target.files[0];
@@ -176,7 +187,8 @@ export default {
                                                     "
                                                 />
                                             </div>
-                                            <div v-if="errorPassword"
+                                            <div
+                                                v-if="validForm"
                                                 class="bg-danger-subtle rounded mb-2"
                                                 style="padding: 5px"
                                             >
@@ -187,7 +199,13 @@ export default {
                                                 type="submit"
                                                 :disabled="disPass"
                                             >
-                                            <span v-if="disPass" style="margin-right: 5px;" class="spinner-border spinner-border-sm" role="status"></span><span>Mettre à jour</span>
+                                                <span
+                                                    v-if="disPass"
+                                                    style="margin-right: 5px"
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                ></span
+                                                ><span>Mettre à jour</span>
                                             </button>
                                         </form>
                                     </div>
@@ -307,9 +325,10 @@ export default {
                                                                             .form
                                                                             .poste
                                                                     "
+                                                                    :disabled="user.role"
                                                                 >
                                                                     <optgroup
-                                                                        label="This is a group"
+                                                                        label="Selectionnez"
                                                                     >
                                                                         <option
                                                                             value="caissier"
@@ -321,6 +340,12 @@ export default {
                                                                             value="agent"
                                                                         >
                                                                             Agent
+                                                                        </option>
+                                                                        <option
+                                                                            v-if="user.role"
+                                                                            value="administrateur"
+                                                                        >
+                                                                            Administrateur
                                                                         </option>
                                                                     </optgroup>
                                                                 </select>
@@ -345,7 +370,7 @@ export default {
                                                         </div>
                                                     </div>
                                                     <div
-                                                        v-if="err"
+                                                        v-if="validForm"
                                                         class="bg-danger-subtle rounded mb-2"
                                                         style="padding: 5px"
                                                     >
@@ -357,7 +382,17 @@ export default {
                                                             type="submit"
                                                             :disabled="disable"
                                                         >
-                                                        <span v-if="disable" style="margin-right: 5px;" class="spinner-border spinner-border-sm" role="status"></span><span>Personnalisez</span>
+                                                            <span
+                                                                v-if="disable"
+                                                                style="
+                                                                    margin-right: 5px;
+                                                                "
+                                                                class="spinner-border spinner-border-sm"
+                                                                role="status"
+                                                            ></span
+                                                            ><span
+                                                                >Personnalisez</span
+                                                            >
                                                         </button>
                                                     </div>
                                                 </form>

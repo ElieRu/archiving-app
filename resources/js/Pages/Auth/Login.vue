@@ -12,6 +12,7 @@ export default {
             },
             disable: false,
             err: false,
+            many_attempts: false
         };
     },
 
@@ -19,14 +20,20 @@ export default {
         submit() {
             this.disable = false;
             this.err = true;
+            this.many_attempts = false
             axios
                 .post("/login", this.form)
                 .then((res) => {
                     router.replace("/");
                 })
                 .catch((err) => {
-                    this.disable = true;
-                    this.err = false;
+                    if (err.response.data.message == 'Too Many Attempts.') {
+                        this.many_attempts = true
+                        this.err = false;
+                    } else {
+                        this.disable = true;
+                        this.err = false;
+                    }
                 });
         },
     },
@@ -74,6 +81,21 @@ export default {
                                                     v-model="form.password"
                                                 />
                                             </div>
+                                            
+                                            <div
+                                                v-if="many_attempts"
+                                                class="mb-3 bg-danger-subtle p-1"
+                                                style="border-radius: 20px"
+                                            >
+                                                <span
+                                                    style="
+                                                        font-size: 13px;
+                                                        margin-left: 8px;
+                                                    "
+                                                    >Veuillez patienter...</span
+                                                >
+                                            </div>
+
                                             <div
                                                 v-if="disable"
                                                 class="mb-3 bg-danger-subtle p-1"

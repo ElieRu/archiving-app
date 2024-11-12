@@ -44,7 +44,7 @@ export default {
                         class="d-sm-none"
                         data-bs-target="#offcanvas-menu"
                         data-bs-toggle="offcanvas"
-                        style="padding: 0; height: 30px; "
+                        style="padding: 0; height: 30px"
                     >
                         <svg
                             style="font-size: 22px"
@@ -128,7 +128,7 @@ export default {
                                 <div
                                     class="dropdown-menu shadow dropdown-menu-end animated--grow-in"
                                 >
-                                    <a class="dropdown-item" href="../profile"
+                                    <a class="dropdown-item" href="/profile"
                                         ><i
                                             class="fas fa-user fa-sm fa-fw me-2 text-gray-400"
                                         ></i

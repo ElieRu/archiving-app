@@ -71,7 +71,8 @@ export default {
                     <h6 class="dropdown-header">Poste</h6>
                     <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('')">Tous récupéré</a>
                     <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('caissier')">Caissiers</a>
-                    <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('agent')">Agents</a
+                    <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('agent')">Agents</a>
+                    <a class="dropdown-item" style="cursor: pointer;" @click="sortPoste('archiviste')">Archivistes</a
                     >
                 </div>
             </div>

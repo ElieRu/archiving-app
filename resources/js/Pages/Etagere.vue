@@ -118,7 +118,7 @@ export default {
                                     :etagere_id="etagere.id"
                                     v-if="
                                         user.role == 'admin' ||
-                                        user.role == 'archiviste'
+                                        user.poste == 'archiviste'
                                     "
                                     :hideDocBtn="false"
                                 />

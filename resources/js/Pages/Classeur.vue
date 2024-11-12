@@ -263,6 +263,7 @@ export default {
                             </div>
                             <div class="row gy-3">
                                 <DocumentComponent
+                                    :role="user.role ? user.role : user.poste"
                                     :classeur="this.classeur"
                                     :documents="this.documents"
                                     @get-document="getDocument"

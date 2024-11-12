@@ -96,7 +96,7 @@ export default {
                         <div
                             class="d-flex justify-content-between align-items-center"
                         >
-                            <h3 class="text-dark mb-4">Créer un agent</h3>
+                            <h3 class="text-dark mb-4">Ajouter un agent</h3>
                             <a
                                 class="btn btn-primary btn-sm"
                                 role="button"
@@ -191,13 +191,6 @@ export default {
                                                         </option>
                                                         <option value="agent">
                                                             Agent
-                                                        </option>
-                                                    </optgroup>
-                                                    <optgroup
-                                                        label="Gestionnaire"
-                                                    >
-                                                        <option value="admin">
-                                                            Administrateur
                                                         </option>
                                                         <option value="archiviste">
                                                             Archiviste

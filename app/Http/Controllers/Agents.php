@@ -61,9 +61,7 @@ class Agents extends Controller
     public function delete(Request $request)
     {
         User::findOrFail($request->id)->delete();
-        return Inertia::render('Agents', [
-            'users' => User::all()
-        ]);
+        return $this->show($request);
     }
 
     public function update(UserRequest $request)
@@ -110,12 +108,13 @@ class Agents extends Controller
     public function updatePassword(Request $request)
     {
         if (Hash::check($request->current_password, Auth::user()->password)) {
-            if ($request->password == $request->confirmation) {
+            if ($request->password === $request->confirmation) {
                 DB::table('users')
                     ->where('id', $request->id)
                     ->update([
                         'password' => Hash::make($request->current_password)
                     ]);
+                    
                 return Inertia('Profile', [
                     'user' => Auth::user(),
                     'errorPassword' => false
