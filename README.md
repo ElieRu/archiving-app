@@ -19,7 +19,7 @@
 ```bash
 # clone & Navigate to the project
 
-https://github.com/ElieRu/clever-security.git
+https://github.com/ElieRu/clever-security-app.git
 cd clever-security
 
 # Install depandacies
