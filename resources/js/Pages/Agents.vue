@@ -123,7 +123,7 @@ export default {
                                                                 class="rounded-circle me-2"
                                                                 width="30"
                                                                 height="30"
-                                                                :src="'/storage'+user.image"
+                                                                :src="user.image"
                                                             />{{ user.name }} {{ user.postname }}
                                                         </div>
                                                     </td>
